@@ -17,3 +17,20 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// Route::middleware('auth:api')->get('/users', 'Api\UserController@index')->name('api.users.index');
+// Route::middleware('auth:api')->get('/users/{id}', 'Api\UserController@show')->name('api.users.show');
+// Route::middleware('auth:api')->delete('/users/{id}', 'Api\UserController@show')->name('api.users.show');
+
+Route::middleware('auth:api')->group(function () {
+
+    Route::get('/users', 'Api\UserController@index')->name('api.users.index');
+    Route::get('/users/{id}', 'Api\UserController@show')->name('api.users.show');
+
+    Route::delete('/users/{id}', 'Api\UserController@destroy')->name('api.users.destroy');
+
+    Route::put('/users/update/{id}', 'Api\UserController@update')->name('api.users.update');
+
+    Route::post('/users/create', 'Api\UserController@store')->name('api.users.create');
+});
