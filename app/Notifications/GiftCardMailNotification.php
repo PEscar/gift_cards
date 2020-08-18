@@ -2,6 +2,10 @@
 
 namespace App\Notifications;
 
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -40,22 +44,32 @@ class GiftCardMailNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),
+            new SvgImageBackEnd()
+        );
 
-    // /**
-    //  * Get the array representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return array
-    //  */
-    // public function toArray($notifiable)
-    // {
-    //     return [
-    //         //
-    //     ];
-    // }
+        $writer = new Writer($renderer);
+        // dd($notifiable);
+        $mail = (new MailMessage)->line('Aquí tienes tu Gift Card !');
+
+        foreach ($notifiable->venta_productos as $key => $ventaProduct) {
+
+            // Si es gift card
+            if ( $ventaProduct->tipo_producto == 1 )
+            {
+                $mail->line(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card]));
+
+                $mail ->line(new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card]))));
+
+                $mail ->line(new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card]))));
+            }
+
+        }
+
+        $mail->line('Gracias por confiar en nosotros!');
+
+        return $mail;
+                    
+    }
 }

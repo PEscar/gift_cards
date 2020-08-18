@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Venta;
+use App\Notifications\GiftCardMailNotification;
+use Illuminate\Http\Request;
+use Response;
+
+class VentaController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $codigo
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function store(Request $request)
+    {
+        //
+    }
+
+    public function importOrderFromTiendaNube(Request $request)
+    {
+        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        $data = file_get_contents('php://input');
+        // dd($data);
+        // if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
+        // {
+            // Obtener id de la venta
+            $order_id = 279936732;
+            $venta = Venta::importOrderFromTiendaNubeById($order_id);
+
+            if ( $venta->pagada && $venta->tieneGiftcards() )
+            {
+                $venta->notify(new GiftCardMailNotification);
+            }
+        // }
+        // else
+        // {
+        //     \Log::error('Mensaje no validado: ' . json_encode($data));
+        // }
+    }
+}

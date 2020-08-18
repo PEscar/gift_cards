@@ -18,9 +18,13 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::middleware('auth:web')->group(function () {
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/giftcards/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
-Route::get('/giftcards/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/giftcards/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
+	Route::get('/giftcards/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
 
-Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
+	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
+
+	Route::get('/webhooks', 'Api\VentaController@importOrderFromTiendaNube');
+});

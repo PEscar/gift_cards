@@ -15,8 +15,10 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.1",
+        "laraveles/spanish": "^1.5",
         "simplesoftwareio/simple-qrcode": "^3.0",
         "spatie/laravel-permission": "^3.13",
+        "tiendanube/php-sdk": "^1.1",
         "yajra/laravel-datatables-oracle": "^9.10"
     },
     "require-dev": {

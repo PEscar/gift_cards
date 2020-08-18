@@ -30,4 +30,12 @@ class VentaProducto extends Model
     }
 
     // END ACCESORS
+
+    // FUNCTIONS
+
+    public function saveQrPdf()
+    {
+        
+    }
+    //END FUNCTIONS
 }
