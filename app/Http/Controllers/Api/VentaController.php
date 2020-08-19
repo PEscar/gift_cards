@@ -72,8 +72,8 @@ class VentaController extends Controller
 
     public function importOrderFromTiendaNube(Request $request)
     {
-        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
-        $data = file_get_contents('php://input');
+        // $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        // $data = file_get_contents('php://input');
         // dd($data);
         // if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
         // {
@@ -81,8 +81,12 @@ class VentaController extends Controller
             $order_id = 279936732;
             $venta = Venta::importOrderFromTiendaNubeById($order_id);
 
+            echo $venta->pagada.'|';
+            echo $venta->tieneGiftcards();
+
             if ( $venta->pagada && $venta->tieneGiftcards() )
             {
+                echo 'si';
                 $venta->notify(new GiftCardMailNotification);
             }
         // }

@@ -57,7 +57,8 @@ class Venta extends Model
         $venta->external_id = $order->body->id;
         $venta->date = date('Y-m-d H:i:s', strtotime($order->body->created_at));
         $venta->source_id = 0; // Tienda Nube
-        $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
+        // $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
+        $venta->pagada = 1;
         $venta->client_email = $order->body->customer->email;
         $venta->save();
 
