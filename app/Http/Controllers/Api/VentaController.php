@@ -96,4 +96,35 @@ class VentaController extends Controller
             \Log::error('Mensaje no validado: ' . json_encode($data));
         }
     }
+
+    public function updateOrderFromTiendaNube(Request $request)
+    {
+        echo 'llego algo';
+        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        $data = file_get_contents('php://input');
+
+        if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
+        {
+            echo 'el id que llego es: ' . $data;
+            \Log::error('data: ' . $data);
+            \Log::error('data: ' . json_decode($data, true)['id']);
+            // Obtener id de la venta
+            // $order_id = 279936732;
+            // $venta = Venta::importOrderFromTiendaNubeById($order_id);
+
+            // echo $venta->pagada.'|';
+            // echo $venta->tieneGiftcards();
+
+            // if ( $venta->pagada && $venta->tieneGiftcards() )
+            // {
+            //     echo 'si';
+            //     $venta->notify(new GiftCardMailNotification);
+            // }
+        }
+        else
+        {
+            echo 'mensjage update no validado';
+            \Log::error('Mensaje update no validado: ' . json_encode($data));
+        }
+    }
 }
