@@ -74,7 +74,7 @@ class VentaController extends Controller
     {
         // $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
         // $data = file_get_contents('php://input');
-        // dd($data);
+        // // dd($data);
         // if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
         // {
             // Obtener id de la venta
