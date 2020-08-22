@@ -307,21 +307,25 @@ img {
 }
 
 .caption-producto {
+    position: absolute;
     top: 28.3%;
     left: 21%;
 }
 
 .caption-vencimiento {
+    position: absolute;
     top: 45.55%;
     left: 23%;
 }
 
 .caption-codigo {
+    position: absolute;
     top: 45.3%;
     left: 58%;
 }
 
 .caption-qr {
+    position: absolute;
     top: 52.5%;
     left: 37%;
 }

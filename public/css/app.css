@@ -11013,40 +11013,40 @@ input[type=checkbox] {
   border-bottom: none;
 }
 
-/*.thumbnail > img {
-    display: block;
+.thumbnail > img {
+  display: block;
 }
 
 .thumbnail {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .caption {
-    font-size: 2.1rem;
-    font-weight: bold;
-    width: 100%;
-    position: absolute;
-    text-align: center;
-    margin-top: 0.45rem;
+  font-size: 1.7rem;
+  font-weight: bold;
+  width: 100%;
+  position: absolute;
+  margin-top: 0.45rem;
 }
 
 .caption-producto {
-    top: 28.3%;
-    left: 21%;
+  top: 21.8%;
+  left: 21%;
 }
 
 .caption-vencimiento {
-    top: 45.55%;
-    left: 21%;
+  top: 36.55%;
+  left: 21%;
 }
 
 .caption-codigo {
-    top: 45.3%;
-    left: 55%;
+  top: 36.3%;
+  left: 55%;
 }
 
 .caption-qr {
-    left: 21%;
-}*/
+  top: 45%;
+  left: 37%;
+}
 
