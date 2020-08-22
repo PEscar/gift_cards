@@ -45,7 +45,7 @@ class GiftCardMailNotification extends Notification
     public function toMail($notifiable)
     {
         $renderer = new ImageRenderer(
-            new RendererStyle(400),
+            new RendererStyle(140, 0, null),
             new SvgImageBackEnd()
         );
 
@@ -58,15 +58,30 @@ class GiftCardMailNotification extends Notification
             // Si es gift card
             if ( $ventaProduct->tipo_producto == 1 )
             {
-                $mail->line(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card]));
+                $qr_code = new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card])));
 
-                $mail ->line(new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card]))));
-
-                $mail ->line(new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card]))));
+                $img_src = asset('img/giftcard.jpeg');
+                
+                $mail ->line(new \Illuminate\Support\HtmlString('<div class="thumbnail">
+                      <img src="' . $img_src . '">
+                      <div class="caption caption-producto">
+                          <p>' . $ventaProduct->descripcion . '</p>
+                      </div>
+                      <div class="caption caption-vencimiento">
+                          <p>' . strtoupper(date('d/M/Y', strtotime($ventaProduct->created_at))) . '</p>
+                      </div>
+                      <div class="caption caption-codigo">
+                          <p>' . $ventaProduct->codigo_gift_card . '</p>
+                      </div>
+                      <div class="caption caption-qr">
+                          <p>' . $qr_code . '</p>
+                      </div>
+                  </div>'));
             }
 
         }
 
+        $mail->line(new \Illuminate\Support\HtmlString('&nbsp;'));
         $mail->line('Gracias por confiar en nosotros!');
 
         return $mail;

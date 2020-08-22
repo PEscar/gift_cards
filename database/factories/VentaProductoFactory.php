@@ -12,8 +12,8 @@ $factory->define(VentaProducto::class, function (Faker $faker) {
 		'sku' => $faker->ean8,
 		'descripcion' => $faker->text(10),
 		'tipo_producto' => random_int(0, 1),
-		'fecha_vencimiento' => random_int(0,1) ? $faker->date() : null,
-		'cantidad' => random_int(1, 2),
-		'codigo_gift_card' => $faker->uuid,
+		'fecha_vencimiento' => $faker->date(),
+		'cantidad' => 1,
+		'codigo_gift_card' => $faker->unique()->isbn10,
     ];
 });

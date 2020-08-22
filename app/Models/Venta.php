@@ -65,17 +65,23 @@ class Venta extends Model
         // Save products
         foreach ($order->body->products as $key => $orderProduct) {
             
-            $ventaProducto = new VentaProducto;
+            // Para generar el codigo formato isbn10 unico con faker
+            $ventaProducto = factory(VentaProducto::class)->make();
             $ventaProducto->sku = $orderProduct->sku;
             $ventaProducto->descripcion = $orderProduct->name;
             $ventaProducto->cantidad = $orderProduct->quantity;
 
-            $ventaProducto->tipo_producto = 0;
+            // Si es git card
             if ( in_array($ventaProducto->sku, $skus_gift_cards) )
             {
                 $ventaProducto->tipo_producto = 1; // Gift Card
                 $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
-                $ventaProducto->codigo_gift_card = \Str::uuid();
+            }
+            else {
+
+                $ventaProducto->tipo_producto = 0; //Producto común
+                $ventaProducto->fecha_vencimiento = null;
+                $ventaProducto->codigo_gift_card = null;
             }
 
             $venta->venta_productos()->save($ventaProducto);

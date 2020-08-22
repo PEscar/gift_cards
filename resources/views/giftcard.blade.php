@@ -25,6 +25,22 @@
                         </div>
                     </form>
 
+                    <!-- <div class="thumbnail">
+                      <img src="{{ asset('img/giftcard.jpeg') }}">
+                      <div class="caption caption-producto">
+                          <p>algun producto</p>
+                      </div>
+                      <div class="caption caption-vencimiento">
+                          <p>17/MAY/2019</p>
+                      </div>
+                      <div class="caption caption-codigo">
+                          <p>4476245366</p>
+                      </div>
+                      <div class="caption caption-qr">
+                          <p>{!! QrCode::size(310)->generate('http://192.168.0.18/giftcards/sadsad') !!}</p>
+                      </div>
+                  </div> -->
+
                 </div>
             </div>
         </div>
