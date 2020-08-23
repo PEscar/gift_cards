@@ -96,9 +96,16 @@ class VentaController extends Controller
             \Log::error('pagada: ' . $venta->pagada);
             \Log::error('tiene gcs' . $venta->tieneGiftcards());
 
-            if ( $venta->pagada && $venta->tieneGiftcards() )
+            if ( $venta->pagada )
             {
-                $venta->notify(new GiftCardMailNotification);
+                $venta->pagada = true;
+
+                if ( $venta->tieneGiftcards() )
+                {
+                    $venta->notify(new GiftCardMailNotification);
+                }
+
+                $venta->save();
             }
         }
         else
@@ -132,12 +139,16 @@ class VentaController extends Controller
             // Si la notificacion es de orden pagada
             if ( $data_decoded['event'] == 'order/paid' )
             {
+                $venta->pagada = true;
+
                 // Si la venta tiene productos que sean gigt cards
                 if ( $venta->tieneGiftcards() )
                 {
                     \Log::info('tiene gift cards !');
                     $venta->notify(new GiftCardMailNotification);
                 }
+
+                $venta->save();
             }
         }
         else

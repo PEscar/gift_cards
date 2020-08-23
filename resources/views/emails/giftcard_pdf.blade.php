@@ -7,7 +7,7 @@
       <p>{{ $item->descripcion }}</p>
   </div>
   <div class="caption caption-vencimiento">
-      <p>{{ strtoupper(date('d/M/Y', strtotime( $notifiable->fecha_vencimiento ))) }}</p>
+      <p>{{ strtoupper(date('d/M/Y', strtotime( $item->fecha_vencimiento ))) }}</p>
   </div>
   <div class="caption caption-codigo">
       <p>{{ $item->codigo_gift_card }}</p>
