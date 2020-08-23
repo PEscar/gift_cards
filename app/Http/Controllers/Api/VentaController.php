@@ -8,6 +8,13 @@ use App\Notifications\GiftCardMailNotification;
 use Illuminate\Http\Request;
 use Response;
 
+
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+use Barryvdh\DomPDF\Facade as PDF;
+
 class VentaController extends Controller
 {
     /**
@@ -128,5 +135,23 @@ class VentaController extends Controller
         // {
         //     \Log::error('Mensaje update no validado');
         // }
+    }
+
+    public function test_pdf_download()
+    {
+        $renderer = new ImageRenderer(
+            new RendererStyle(140, 0, null),
+            new SvgImageBackEnd()
+        );
+
+        $writer = new Writer($renderer);
+
+        $qr_code = new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => 'ASDSAD'])));
+
+        $notifiable = Venta::latest()->first();
+
+        $pdf = PDF::loadView('emails.giftcard_pdf', ['qr_code' => $qr_code, 'notifiable' => $notifiable, 'item' => $notifiable->venta_productos()->first()]);
+
+        return $pdf->download('asas.pdf');
     }
 }

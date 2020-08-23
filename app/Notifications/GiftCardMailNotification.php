@@ -83,7 +83,6 @@ class GiftCardMailNotification extends Notification
                 $pdf = PDF::loadView('emails.giftcard_pdf', ['qr_code' => $qr_code, 'notifiable' => $notifiable, 'item' => $ventaProduct]);
                 $mail->attachData($pdf->output(), "gift.pdf");
             }
-
         }
 
         $mail->line('Gracias por confiar en nosotros!');
