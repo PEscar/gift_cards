@@ -102,14 +102,13 @@ class VentaController extends Controller
 
     public function updateOrderFromTiendaNube(Request $request)
     {
-        echo 'llego algo para update';
         \Log::error('llego algo para update');
         $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
         $data = file_get_contents('php://input');
 
         if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
         {
-            echo 'el id que llego es: ' . $data;
+            \Log::error('mensajke de update wvaldiado');
             \Log::error('data: ' . $data);
             \Log::error('data: ' . json_decode($data, true)['id']);
             // Obtener id de la venta
@@ -127,8 +126,7 @@ class VentaController extends Controller
         }
         else
         {
-            echo 'mensjage update no validado';
-            \Log::error('Mensaje update no validado: ' . json_encode($data));
+            \Log::error('Mensaje update no validado');
         }
     }
 }

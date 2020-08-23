@@ -32,6 +32,3 @@ Route::middleware('auth:web')->group(function () {
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
 });
-
-Route::get('/orders/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
-Route::get('/orders/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
