@@ -34,6 +34,3 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/users/create', 'Api\UserController@store')->name('api.users.create');
 });
-
-Route::get('/orders/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
-Route::get('/orders/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
