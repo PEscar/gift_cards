@@ -86,7 +86,6 @@ class GiftCardMailNotification extends Notification
 
         }
 
-        $mail->line(new \Illuminate\Support\HtmlString('&nbsp;'));
         $mail->line('Gracias por confiar en nosotros!');
 
         return $mail;

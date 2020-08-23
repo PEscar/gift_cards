@@ -70,7 +70,7 @@ class VentaController extends Controller
         //
     }
 
-    public function importOrderFromTiendaNube(Request $request)
+    public function importOrderFromTiendaNube(Request $request, $order_id = null)
     {
         // echo 'llego algo para crear';
         \Log::error('llego algo para crear');
@@ -81,17 +81,17 @@ class VentaController extends Controller
         // {
         //     \Log::error('create order validado ok ok');
         //     // Obtener id de la venta
-        //     $order_id = 279936732;
-        //     $venta = Venta::importOrderFromTiendaNubeById($order_id);
+            $order_id = $order_id ? $order_id : 282794367;
+            $venta = Venta::importOrderFromTiendaNubeById($order_id);
 
-        //     echo $venta->pagada.'|';
-        //     echo $venta->tieneGiftcards();
+            echo $venta->pagada.'|';
+            echo $venta->tieneGiftcards();
 
-        //     if ( $venta->pagada && $venta->tieneGiftcards() )
-        //     {
-        //         echo 'si';
-        //         $venta->notify(new GiftCardMailNotification);
-        //     }
+            if ( $venta->pagada && $venta->tieneGiftcards() )
+            {
+                echo 'si';
+                $venta->notify(new GiftCardMailNotification);
+            }
         // }
         // else
         // {

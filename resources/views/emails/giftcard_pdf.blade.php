@@ -13,7 +13,6 @@
       <p>{{ $item->codigo_gift_card }}</p>
   </div>
   <div class="caption caption-qr">
-    <!-- <p>{{$qr_code}}</p> -->
     <img src="data:image/png;base64, {!! base64_encode(QrCode::format('svg')->size(200)->generate(route('giftcards.show', ['codigo' => $item->codigo_gift_card]))) !!} ">
   </div>
 </div>
