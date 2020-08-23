@@ -33,6 +33,6 @@ Route::middleware('auth:web')->group(function () {
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
 });
 
-Route::get('/orders/create/{order_id?}', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
-Route::get('/orders/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
+Route::any('/orders/create/{order_id?}', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
+Route::any('/orders/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
 Route::get('/orders/test_pdf_download', 'Api\VentaController@test_pdf_download')->name('tiendanube.orders.test_pdf_download');

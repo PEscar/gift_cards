@@ -79,32 +79,29 @@ class VentaController extends Controller
 
     public function importOrderFromTiendaNube(Request $request, $order_id = null)
     {
-        // echo 'llego algo para crear';
         \Log::error('llego algo para crear');
-        // $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
-        // $data = file_get_contents('php://input');
-        // // // dd($data);
-        // if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
-        // {
-        //     \Log::error('create order validado ok ok');
-        //     // Obtener id de la venta
-            $order_id = $order_id ? $order_id : 282794367;
+        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        $data = file_get_contents('php://input');
+
+        if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
+        {
+            \Log::error('create order validado ok ok');
+            // Obtener id de la venta
+            $order_id = json_decode($data, true)['id'];
             $venta = Venta::importOrderFromTiendaNubeById($order_id);
 
-            echo $venta->pagada.'|';
-            echo $venta->tieneGiftcards();
+            \Log::error('pagada: ' . $venta->pagada);
+            \Log::error('tiene gcs' . $venta->tieneGiftcards());
 
             if ( $venta->pagada && $venta->tieneGiftcards() )
             {
-                echo 'si';
                 $venta->notify(new GiftCardMailNotification);
             }
-        // }
-        // else
-        // {
-        //     echo 'mensjage no validado';
-        //     \Log::error('Mensaje no validado: ' . json_encode($data));
-        // }
+        }
+        else
+        {
+            \Log::error('Mensaje no validado: ' . $data);
+        }
     }
 
     public function updateOrderFromTiendaNube(Request $request)
