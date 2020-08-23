@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class VentaProducto extends Model
@@ -31,11 +32,12 @@ class VentaProducto extends Model
 
     // END ACCESORS
 
-    // FUNCTIONS
+    // RELATIONS
 
-    public function saveQrPdf()
+    public function entregadoPor()
     {
-        
+        return $this->belongsTo(User::class, 'entrega_id', 'id');
     }
-    //END FUNCTIONS
+
+    // END RELATIONS
 }

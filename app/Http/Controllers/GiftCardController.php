@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\VentaProducto;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GiftCardController extends Controller
 {
@@ -97,5 +97,15 @@ class GiftCardController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function entregar($codigo)
+    {
+        $gc = VentaProducto::where('codigo_gift_card', $codigo)->firstOrFail();
+        $gc->fecha_canje = \Illuminate\Support\Carbon::now();
+        $gc->entrega_id = Auth::id();
+        $gc->save();
+
+        return redirect()->route('giftcards.show', ['codigo' => $gc->codigo_gift_card]);
     }
 }

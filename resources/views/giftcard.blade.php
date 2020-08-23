@@ -60,6 +60,11 @@
                         ESTADO: <strong>VÁLIDA</strong>!<br>
                         CÓDIGO: <strong>{{ $gc->codigo_gift_card }}</strong>.<br>
                         CANTIDAD: <strong>#{{ $gc->cantidad }}</strong>
+
+                        <form method="POST" action="{{ route('giftcards.entregar', ['codigo' => $gc->codigo_gift_card]) }}">
+                            @csrf
+                            <button style="margin-top: -2rem;" id="btn_entregar" class="btn btn-success float-right">Entregar</button>
+                        </form>
                     </div>
                     @else
                     <div class="alert alert-danger" role="alert">
@@ -70,6 +75,7 @@
 
                         @if ($gc->fecha_canje != null)
                         ESTADO: <strong>CANJEADA</strong> el {{strtoupper(date('d/M/Y', strtotime($gc->fecha_canje)))}}<br>
+                        ENTREGÓ: <strong>{{ $gc->entregadoPor->name }}</strong>
                         @endif
 
                         @if ($gc->fecha_canje == null && $gc->fecha_vencimiento < date('Y-m-d'))
@@ -99,19 +105,4 @@
     </div>
     @endif
 </div>
-@endsection
-
-@section('scripts')
-    <script type="text/javascript">
-
-
-
-        $('#form_validar_giftcard').on('submit', function(e) {
-
-            e.preventDefault();
-            window.location.href = $('#form_validar_giftcard').attr('action') + $('input[name=codigo]').val();
-
-        });
-
-    </script>
 @endsection
