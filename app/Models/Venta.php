@@ -48,7 +48,7 @@ class Venta extends Model
     // desde .env
     public static function importOrderFromTiendaNubeById($order_id)
     {
-        $skus_gift_cards = ['11248', '11251'];
+        $skus_gift_cards = ['11251', '11247', '11248', '11249', '11250'];
 
         $api = new \TiendaNube\API(1222005, env('TIENDA_NUBE_ACCESS_TOKEN', null), 'La Parolaccia (comercial@fscarg.com)');
         $order = $api->get("orders/" . $order_id);
@@ -57,8 +57,7 @@ class Venta extends Model
         $venta->external_id = $order->body->id;
         $venta->date = date('Y-m-d H:i:s', strtotime($order->body->created_at));
         $venta->source_id = 0; // Tienda Nube
-        // $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
-        $venta->pagada = 1;
+        $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
         $venta->client_email = $order->body->customer->email;
         $venta->save();
 
