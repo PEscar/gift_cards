@@ -28,6 +28,32 @@ class Venta extends Model
 
 	// END RELATIONS
 
+    // SCOPES
+
+    /**
+     * Ventas from Tienda Nube
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTiendaNube($query)
+    {
+        return $query->where('source_id', 0);
+    }
+
+    /**
+     * Ventas pagadas 
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePagadas($query)
+    {
+        return $query->where('pagada', 1);
+    }
+
+    // END SCOPES
+
     public function tieneGiftcards()
     {
         $tiene = false;

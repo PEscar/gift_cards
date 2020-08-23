@@ -80,10 +80,13 @@ class VentaController extends Controller
     public function importOrderFromTiendaNube(Request $request, $order_id = null)
     {
         \Log::error('llego algo para crear');
+        \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
         $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
         $data = file_get_contents('php://input');
 
-        if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        // Validacion temporal
+        // if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
         {
             \Log::error('create order validado ok ok');
             // Obtener id de la venta
@@ -107,26 +110,35 @@ class VentaController extends Controller
     public function updateOrderFromTiendaNube(Request $request)
     {
         \Log::error('llego algo para update');
-        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
+        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
         $data = file_get_contents('php://input');
 
-        if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        \Log::info('max header: ' . $hmac_header);
+
+        // Validacion temporal
+        // if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
         {
             \Log::error('mensajke de update wvaldiado');
             \Log::error('data: ' . $data);
-            \Log::error('data id: ' . json_decode($data, true)['id']);
-        //     // Obtener id de la venta
-        //     // $order_id = 279936732;
-        //     // $venta = Venta::importOrderFromTiendaNubeById($order_id);
+            $data_decoded = json_decode($data, true);
+            \Log::error('data id: ' . $data_decoded['id']);
 
-        //     // echo $venta->pagada.'|';
-        //     // echo $venta->tieneGiftcards();
+            $venta = Venta::tiendanube()->where('external_id', $data_decoded['id'])->firstOrFail();
 
-        //     // if ( $venta->pagada && $venta->tieneGiftcards() )
-        //     // {
-        //     //     echo 'si';
-        //     //     $venta->notify(new GiftCardMailNotification);
-        //     // }
+            \Log::error('venta id: ' . $venta->id);
+
+            // Si la notificacion es de orden pagada
+            if ( $data_decoded['event'] == 'order/paid' )
+            {
+                // Si la venta tiene productos que sean gigt cards
+                if ( $venta->tieneGiftcards() )
+                {
+                    \Log::info('tiene gift cards !');
+                    $venta->notify(new GiftCardMailNotification);
+                }
+            }
         }
         else
         {
