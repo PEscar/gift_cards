@@ -107,14 +107,14 @@ class VentaController extends Controller
     public function updateOrderFromTiendaNube(Request $request)
     {
         \Log::error('llego algo para update');
-        // $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
-        // $data = file_get_contents('php://input');
+        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        $data = file_get_contents('php://input');
 
-        // if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
-        // {
-        //     \Log::error('mensajke de update wvaldiado');
-        //     \Log::error('data: ' . $data);
-        //     \Log::error('data: ' . json_decode($data, true)['id']);
+        if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        {
+            \Log::error('mensajke de update wvaldiado');
+            \Log::error('data: ' . $data);
+            \Log::error('data id: ' . json_decode($data, true)['id']);
         //     // Obtener id de la venta
         //     // $order_id = 279936732;
         //     // $venta = Venta::importOrderFromTiendaNubeById($order_id);
@@ -127,11 +127,11 @@ class VentaController extends Controller
         //     //     echo 'si';
         //     //     $venta->notify(new GiftCardMailNotification);
         //     // }
-        // }
-        // else
-        // {
-        //     \Log::error('Mensaje update no validado');
-        // }
+        }
+        else
+        {
+            \Log::error('Mensaje update no validado: ' . $data);
+        }
     }
 
     public function test_pdf_download()
