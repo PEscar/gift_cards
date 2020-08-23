@@ -83,7 +83,7 @@ class VentaController extends Controller
         $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
         $data = file_get_contents('php://input');
 
-        if ( $hmac_header == hash_hmac('sha256', $data, env('yllh6Sr1u0TSzYOQ6zyr1bPS2hQ42nmSPsOfomL2BPDdNy4x', 'falta')) )
+        if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
         {
             \Log::error('create order validado ok ok');
             // Obtener id de la venta
