@@ -133,6 +133,11 @@
 
                 ],
 
+                language: {
+
+                    url: "{{ asset('js/datatables.spanish.json') }}"
+                },
+
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);
                   },
