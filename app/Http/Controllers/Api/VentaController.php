@@ -81,16 +81,15 @@ class VentaController extends Controller
     {
         \Log::error('llego algo para crear');
         \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
-        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
+        $hmac_header = $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256');
 
         \Log::error('hmac header: ' . $hmac_header);
-        \Log::error('hmac header2: ' . $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256'));
 
         $data = file_get_contents('php://input');
 
         // Validacion temporal
-        // if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
-        if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
+        if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        // if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
         {
             \Log::error('create order validado ok ok');
             // Obtener id de la venta
@@ -122,16 +121,17 @@ class VentaController extends Controller
     {
         \Log::error('llego algo para update');
         \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
-        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
+        $hmac_header = $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256');
+
         \Log::error('hmac header: ' . $hmac_header);
-        \Log::error('hmac header2: ' . $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256'));
+
         $data = file_get_contents('php://input');
 
         \Log::info('max header: ' . $hmac_header);
 
         // Validacion temporal
-        // if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
-        if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
+        if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
+        // if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
         {
             \Log::error('mensajke de update wvaldiado');
             \Log::error('data: ' . $data);
