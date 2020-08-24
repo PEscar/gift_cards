@@ -24,23 +24,6 @@
                             </div>
                         </div>
                     </form>
-
-                    <!-- <div class="thumbnail">
-                      <img src="{{ asset('img/giftcard.jpeg') }}">
-                      <div class="caption caption-producto">
-                          <p>algun producto</p>
-                      </div>
-                      <div class="caption caption-vencimiento">
-                          <p>17/MAY/2019</p>
-                      </div>
-                      <div class="caption caption-codigo">
-                          <p>4476245366</p>
-                      </div>
-                      <div class="caption caption-qr">
-                          <p>{!! QrCode::size(310)->generate('http://192.168.0.18/giftcards/sadsad') !!}</p>
-                      </div>
-                  </div> -->
-
                 </div>
             </div>
         </div>
@@ -63,7 +46,7 @@
 
                         <form method="POST" action="{{ route('giftcards.entregar', ['codigo' => $gc->codigo_gift_card]) }}">
                             @csrf
-                            <button style="margin-top: -2rem;" id="btn_entregar" class="btn btn-success float-right">Entregar</button>
+                            <button style="margin-top: -2rem;" id="btn_entregar" class="btn btn-success float-right">Consumir</button>
                         </form>
                     </div>
                     @else
@@ -105,4 +88,13 @@
     </div>
     @endif
 </div>
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+        $('#form_validar_giftcard').on('submit', function(e) {
+            e.preventDefault();
+            window.location.href = $('#form_validar_giftcard').attr('action') + $('input[name=codigo]').val();
+        });
+    </script>
 @endsection

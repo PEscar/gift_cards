@@ -20,7 +20,7 @@ class CreateVentaProductoTable extends Migration
             $table->string('descripcion')->nullable()->comment('descripción del producto');
             $table->smallInteger('tipo_producto')->comment('0: prod. normal. 1: gift card');
             $table->date('fecha_vencimiento')->nullable()->comment('!= null para gift cards');
-            $table->date('fecha_canje')->nullable()->comment('!= null para gift cards canjeadas');
+            $table->dateTime('fecha_canje')->nullable()->comment('!= null para gift cards canjeadas');
             $table->foreignId('entrega_id')->nullable()->comment('id de usuario que realizo la entrega');
             $table->smallInteger('cantidad');
             $table->string('codigo_gift_card')->nullable();

@@ -32,9 +32,20 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li><a class="navbar-brand" href="{{ route('giftcards.show') }}">Gift Cards</a></li>
+                        <li class="nav-item dropdown navbar-brand">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                Gift Cards <span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('giftcards.show') }}">Validar</a>
+                                @if ( auth()->user() && auth()->user()->hasRole('Admin'))
+                                <a class="dropdown-item" href="{{ route('giftcards.index') }}">Administrar</a>
+                                @endif
+                            </div>
+                        </li>
                         @if ( auth()->user() && auth()->user()->hasRole('Admin'))
-                        <li><a class="navbar-brand" href="{{ route('usuarios.index') }}">Usuarios</a></li>
+                        <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a></li>
                         @endif
                     </ul>
 

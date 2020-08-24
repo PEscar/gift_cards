@@ -9,6 +9,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Response;
+use Str;
 
 class UserController extends Controller
 {
@@ -162,6 +163,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email_verified_at = date('Y-m-d H:i:s');
         $user->password = Hash::make('123123');
+        $user->api_token = Str::random(60);
         $user->save();
 
         if ( $request->admin )

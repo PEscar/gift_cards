@@ -61,27 +61,8 @@ class GiftCardMailNotification extends Notification
             {
                 $qr_code = new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card])));
 
-            //     // $img_src = asset('img/giftcard.jpeg');
-            //     $img_src = 'http://laparolaccia-online.com/img/giftcard.jpeg';
-                
-            //     $mail ->line(new \Illuminate\Support\HtmlString('<div class="thumbnail">
-            //           <img src="' . $img_src . '">
-            //           <div class="caption caption-producto">
-            //               <p>' . $ventaProduct->descripcion . '</p>
-            //           </div>
-            //           <div class="caption caption-vencimiento">
-            //               <p>' . strtoupper(date('d/M/Y', strtotime($ventaProduct->created_at))) . '</p>
-            //           </div>
-            //           <div class="caption caption-codigo">
-            //               <p>' . $ventaProduct->codigo_gift_card . '</p>
-            //           </div>
-            //           <div class="caption caption-qr">
-            //               <p>' . $qr_code . '</p>
-            //           </div>
-            //       </div>'));
-            
                 $pdf = PDF::loadView('emails.giftcard_pdf', ['qr_code' => $qr_code, 'notifiable' => $notifiable, 'item' => $ventaProduct]);
-                $mail->attachData($pdf->output(), "gift.pdf");
+                $mail->attachData($pdf->output(), "$ventaProduct->codigo_gift_card.pdf");
             }
         }
 

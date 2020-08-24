@@ -28,6 +28,7 @@ Route::middleware('auth:web')->group(function () {
 
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('/giftcards/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
+	Route::get('/giftcards/administrar', 'GiftCardController@index')->name('giftcards.index');
 	Route::get('/giftcards/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
 	Route::post('/giftcards/{codigo}', 'GiftCardController@entregar')->name('giftcards.entregar');
 
