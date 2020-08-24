@@ -81,7 +81,10 @@ class VentaController extends Controller
     {
         \Log::error('llego algo para crear');
         \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
-        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');;
+        $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
+
+        \Log::error('hmac header: ' . $hmac_header);
+
         $data = file_get_contents('php://input');
 
         // Validacion temporal
@@ -119,6 +122,7 @@ class VentaController extends Controller
         \Log::error('llego algo para update');
         \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
         $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
+        \Log::error('hmac header: ' . $hmac_header);
         $data = file_get_contents('php://input');
 
         \Log::info('max header: ' . $hmac_header);
