@@ -84,6 +84,7 @@ class VentaController extends Controller
         $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
 
         \Log::error('hmac header: ' . $hmac_header);
+        \Log::error('hmac header2: ' . $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256'));
 
         $data = file_get_contents('php://input');
 
@@ -123,6 +124,7 @@ class VentaController extends Controller
         \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
         $hmac_header = $request->header('HTTP_X_LINKEDSTORE_HMAC_SHA256');
         \Log::error('hmac header: ' . $hmac_header);
+        \Log::error('hmac header2: ' . $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256'));
         $data = file_get_contents('php://input');
 
         \Log::info('max header: ' . $hmac_header);
