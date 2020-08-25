@@ -400,6 +400,8 @@
 
                     // Show message
                     showSnackbar('Usuario #' + $('#update_user_id').val() + ' actualizado.');
+
+                    $('#form_update_user').trigger("reset");
                 })
                 .fail(function(data) {
                     showSnackBarFromErrors(data);
@@ -443,6 +445,8 @@
 
                     // Show message
                     showSnackbar('Usuario creado.');
+
+                    $('#form_create_user').trigger("reset");
                 })
                 .fail(function(data) {
                     showSnackBarFromErrors(data);

@@ -17,7 +17,7 @@
                     <form id="form_validar_giftcard" action="{{ route('giftcards.show') }}/">
                         <div class="form-row">
                             <div class="col-9">
-                                <input type="text" name="codigo" class="form-control form-control-lg" value="{{ $codigo }}" placeholder="Gift Card  Code">
+                                <input type="text" name="codigo" autocomplete="off" class="form-control form-control-lg" value="{{ $codigo }}" placeholder="Gift Card  Code">
                             </div>
                             <div class="col-3">
                                 <input style="width: 100%" type="submit" value="Buscar" name="Buscar" class="btn btn-primary btn-lg">
