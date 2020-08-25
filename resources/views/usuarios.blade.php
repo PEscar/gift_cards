@@ -64,8 +64,6 @@
     </div>
 </div>
 
-<div id="snackbar">Some text some message..</div>
-
 <!-- set up the modal to start hidden and fade in and out -->
 <div id="update_user_modal" class="modal fade">
     <div class="modal-dialog">
@@ -262,32 +260,6 @@
     <script type="text/javascript">
 
         $(function () {
-
-            function showSnackbar(msg) {
-              // Get the snackbar DIV
-              var x = document.getElementById("snackbar");
-
-              $("#snackbar").html(msg);
-
-              // Add the "show" class to DIV
-              x.className = "show";
-
-              // After 3 seconds, remove the show class from DIV
-              setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-            }
-
-            function showSnackBarFromErrors(data)
-            {
-                var errors = data.responseJSON;
-                var msg = '';
-
-                for (let field in errors.errors)
-                {
-                    msg += errors.errors[field] + '<br>';
-                }
-
-                showSnackbar(msg);
-            }
 
             // Load table through ajax
             var table = $('#users_table').DataTable({

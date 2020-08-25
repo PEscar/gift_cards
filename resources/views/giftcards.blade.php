@@ -67,40 +67,12 @@
     </div>
 </div>
 
-<div id="snackbar"></div>
-
 @endsection
 
 @section('scripts')
     <script type="text/javascript">
 
         $(function () {
-
-            function showSnackbar(msg) {
-              // Get the snackbar DIV
-              var x = document.getElementById("snackbar");
-
-              $("#snackbar").html(msg);
-
-              // Add the "show" class to DIV
-              x.className = "show";
-
-              // After 3 seconds, remove the show class from DIV
-              setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-            }
-
-            function showSnackBarFromErrors(data)
-            {
-                var errors = data.responseJSON;
-                var msg = '';
-
-                for (let field in errors.errors)
-                {
-                    msg += errors.errors[field] + '<br>';
-                }
-
-                showSnackbar(msg);
-            }
 
             // Load table through ajax
             var table = $('#gcs_table').DataTable({

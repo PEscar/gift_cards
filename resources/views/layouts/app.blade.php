@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" ></script>
     <script src="{{ asset('js/datatables.min.js') }}" ></script>
+    <script src="{{ asset('js/snackbar.js') }}" ></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -68,6 +69,10 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                                    <a class="dropdown-item" href="{{ route('password.update.show') }}">Cambiar Contraseña
+                                    </a>
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -84,6 +89,8 @@
                 </div>
             </div>
         </nav>
+
+        <div id="snackbar"></div>
 
         <main class="py-4">
             @yield('content')

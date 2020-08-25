@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePassowrdRequest;
 use App\Http\Requests\UserRequest;
 use App\User;
 use DataTables;
@@ -174,5 +175,23 @@ class UserController extends Controller
         $user->sedes()->sync($request->sedes);
 
         return Response::json(null, 201);
+    }
+
+    // Process update password form submit
+    public function updatePassword(UpdatePassowrdRequest $request)
+    {
+        $user = auth()->user();
+
+        if ( !Hash::check($request->password_actual, $user->password) )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "contraseña_actual" => ['Su contraseña actual es incorrecta.'],
+            ]);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return Response::json(null, 200);
     }
 }

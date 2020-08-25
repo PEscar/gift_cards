@@ -32,4 +32,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/users/create', 'Api\UserController@store')->name('api.users.create');
 
     Route::get('/giftcards', 'Api\GiftCardController@index')->name('api.giftcards.index');
+
+    Route::put('/password', 'Api\UserController@updatePassword')->name('password.change');
 });

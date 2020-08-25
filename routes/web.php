@@ -33,6 +33,7 @@ Route::middleware('auth:web')->group(function () {
 	Route::post('/giftcards/{codigo}', 'GiftCardController@entregar')->name('giftcards.entregar');
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
+	Route::get('/password', 'UserController@showUpdatePasswordView')->name('password.update.show');
 });
 
 Route::any('/orders/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');

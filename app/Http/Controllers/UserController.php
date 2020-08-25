@@ -61,4 +61,10 @@ class UserController extends Controller
     {
         //
     }
+
+    // Show update password view
+    public function showUpdatePasswordView()
+    {
+        return view('auth.passwords.password_change');
+    }
 }

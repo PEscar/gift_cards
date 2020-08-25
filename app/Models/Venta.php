@@ -85,6 +85,7 @@ class Venta extends Model
         $venta->source_id = 0; // Tienda Nube
         $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
         $venta->client_email = $order->body->customer->email;
+        $venta->comentario = $order->body->note;
         $venta->save();
 
         // Save products
