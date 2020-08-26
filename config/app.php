@@ -14,7 +14,7 @@ return [
     */
 
     // 'name' => env('APP_NAME', 'Parolaccia Gift Cards'),
-    'name' => 'Parolaccia Gift Cards',
+    'name' => env('APP_ENV', 'local') == 'local' ? 'Test Parolaccia Gift Cards' : 'Parolaccia Gift Cards',
 
     /*
     |--------------------------------------------------------------------------
