@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Venta;
 use App\Models\VentaProducto;
 use DataTables;
 use Illuminate\Http\Request;
@@ -21,12 +22,12 @@ class GiftCardController extends Controller
 
         return Datatables::of($data)
 
-                ->addColumn('id', function($row){
+                // ->addColumn('id', function($row){
 
-                    return $row->venta->id;
-                })
+                //     return $row->venta->id;
+                // })
 
-                ->rawColumns(['id'])
+                // ->rawColumns(['id'])
 
                 ->addColumn('codigo', function($row){
 
@@ -35,12 +36,29 @@ class GiftCardController extends Controller
 
                 ->rawColumns(['codigo'])
 
+                ->addColumn('producto', function($row){
+
+                    return $row->descripcion;
+                })
+
+                ->rawColumns(['producto'])
+
                 ->addColumn('fecha_venta', function($row){
 
                     return strtoupper(date('d/M/Y H:i', strtotime($row->venta->created_at)));
                 })
 
                 ->rawColumns(['fecha_venta'])
+
+                ->addColumn('concepto', function($row){
+
+                    return $row->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' :
+                        ( $row->venta->source_id == Venta::SOURCE_CANJE ? 'Canje' : (
+                            $row->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Mayorista'
+                        ) );
+                })
+
+                ->rawColumns(['concepto'])
 
                 ->addColumn('fecha_pago', function($row){
 
@@ -56,19 +74,26 @@ class GiftCardController extends Controller
 
                 ->rawColumns(['fecha_vencimiento'])
 
-                ->addColumn('fecha_canje', function($row){
+                ->addColumn('fecha_asignacion', function($row){
 
-                    return $row->fecha_canje ? strtoupper(date('d/M/Y', strtotime($row->fecha_canje))) : null;
+                    return $row->fecha_asignacion ? strtoupper(date('d/M/Y H:i', strtotime($row->fecha_asignacion))) : null;
                 })
 
-                ->rawColumns(['fecha_canje'])
+                ->rawColumns(['fecha_asignacion'])
 
-                ->addColumn('usuario_entrega', function($row){
+                ->addColumn('fecha_consumicion', function($row){
 
-                    return $row->entregadoPor ? $row->entregadoPor->name : null;
+                    return $row->fecha_consumicion ? strtoupper(date('d/M/Y H:i', strtotime($row->fecha_consumicion))) : null;
                 })
 
-                ->rawColumns(['usuario_entrega'])
+                ->rawColumns(['fecha_consumicion'])
+
+                ->addColumn('usuario_asignacion', function($row){
+
+                    return $row->asignadaPor ? $row->asignadaPor->name : null;
+                })
+
+                ->rawColumns(['usuario_asignacion'])
 
                 ->addColumn('estado', function($row){
 

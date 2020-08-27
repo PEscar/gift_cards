@@ -9,6 +9,11 @@ class Venta extends Model
 {
 	use Notifiable;
 
+    const SOURCE_TIENDA_NUBE = 0;
+    const SOURCE_CANJE = 1;
+    const SOURCE_INVITACION = 2;
+    const SOURCE_MAYORISTA = 3;
+
     /**
      * Route notifications for the mail channel.
      *

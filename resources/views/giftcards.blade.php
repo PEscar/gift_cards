@@ -17,14 +17,17 @@
                     <table id="gcs_table" class="table table-bordered data-table">
                         <thead>
                             <tr>
-                                <th>ID VENTA</th>
+                                <!-- <th>ID VENTA</th> -->
                                 <th>Código</th>
+                                <th>Producto</th>
+                                <th>Concepto</th>
+                                <th>Estado</th>
                                 <th>Fecha Venta</th>
                                 <th>Fecha Pago</th>
-                                <th>Fecha Vencimiento</th>
-                                <th>Fecha Canje</th>
-                                <th>Usuario Entrega</th>
-                                <th>Estado</th>
+                                <th>Fecha Venc.</th>
+                                <th>Fecha Asig.</th>
+                                <th>Fecha Cons.</th>
+                                <th>Usuario</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -125,9 +128,15 @@
 
                 columns: [
 
-                    {data: 'id', name: 'id'},
+                    // {data: 'id', name: 'id'},
 
                     {data: 'codigo', name: 'codigo'},
+
+                    {data: 'producto', name: 'producto'},
+
+                    {data: 'concepto', name: 'concepto'},
+
+                    {data: 'estado', name: 'estado'},
 
                     {data: 'fecha_venta', name: 'fecha_venta'},
 
@@ -135,11 +144,11 @@
 
                     {data: 'fecha_vencimiento', name: 'fecha_vencimiento'},
 
-                    {data: 'fecha_canje', name: 'fecha_canje'},
+                    {data: 'fecha_asignacion', name: 'fecha_asignacion'},
 
-                    {data: 'usuario_entrega', name: 'usuario_entrega'},
+                    {data: 'fecha_consumicion', name: 'fecha_consumicion'},
 
-                    {data: 'estado', name: 'estado'},
+                    {data: 'usuario_asignacion', name: 'usuario_asignacion'},
 
                     {data: 'action', name: 'action', orderable: false, searchable: false},
 
@@ -149,6 +158,8 @@
 
                     url: "{{ asset('js/datatables.spanish.json') }}"
                 },
+
+                responsive: true,
 
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);

@@ -19,7 +19,7 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>Admin</th>
+                                <th>Nivel</th>
                                 <th>Sedes</th>
                                 <th>Acciones</th>
                             </tr>
@@ -84,12 +84,6 @@
 
                         <div class="col-md-6">
                             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                            @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
                     </div>
 
@@ -98,20 +92,18 @@
 
                         <div class="col-md-6">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="admin" class="col-md-4 col-form-label text-md-right">Admin</label>
+                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Admin</label>
 
                         <div class="col-md-6">
-                            <input id="admin" type="checkbox" name="admin">
+                            <select class="form-control" name="nivel" id="nivel">
+                                <option value="Admin" {{ auth()->user()->hasRole('Admin') ? 'selected=selected' : '' }}>Admin</option>
+                                <option value="Nivel1" {{ auth()->user()->hasRole('Nivel1') ? 'selected' : '' }}>Nivel 1</option>
+                                <option value="Nivel2" {{ ! auth()->user()->hasRole('Admin') && ! auth()->user()->hasRole('Nivel1') ? 'selected' : '' }}>Nivel 2</option>
+                            </select>
                         </div>
                     </div>
 
@@ -181,10 +173,14 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="admin" class="col-md-4 col-form-label text-md-right">Admin</label>
+                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Admin</label>
 
                         <div class="col-md-6">
-                            <input id="admin" type="checkbox" name="admin">
+                            <select class="form-control" name="nivel" id="nivel">
+                                <option value="Admin">Admin</option>
+                                <option value="Nivel1">Nivel 1</option>
+                                <option value="Nivel2">Nivel 2</option>
+                            </select>
                         </div>
                     </div>
 
@@ -234,9 +230,9 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="admin" class="col-md-4 col-form-label text-md-right">Admin</label>
+                    <label for="view_nivel" class="col-md-4 col-form-label text-md-right">Nivel</label>
 
-                    <div class="col-md-6" id="view_admin"></div>
+                    <div class="col-md-6" id="view_nivel"></div>
                 </div>
 
                 <div class="form-group row">
@@ -278,7 +274,7 @@
 
                     {data: 'email', name: 'email'},
 
-                    {data: 'admin', name: 'admin'},
+                    {data: 'nivel', name: 'nivel'},
 
                     {data: 'sedes', name: 'sedes'},
 
@@ -290,6 +286,8 @@
 
                     url: "{{ asset('js/datatables.spanish.json') }}"
                 },
+
+                responsive: true,
 
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);
@@ -344,7 +342,7 @@
                 // Fill modal
                 $("#form_update_user #name").val($(e.relatedTarget).attr('data-name'));
                 $("#form_update_user #email").val($(e.relatedTarget).attr('data-email'));
-                $("#form_update_user #admin").prop("checked", $(e.relatedTarget).attr('data-admin'));
+                $("#form_update_user #nivel").val($(e.relatedTarget).attr('data-nivel'));
                 $("#form_update_user #sedes").val( $(e.relatedTarget).attr('data-sedes').split(',') );
             });
 
@@ -359,7 +357,7 @@
                         api_token: '{{ auth()->user()->api_token }}',
                         name: $('#update_user_modal #name').val(),
                         email: $('#update_user_modal #email').val(),
-                        admin: $('#update_user_modal #admin').prop('checked') ? 1 : 0,
+                        nivel: $('#update_user_modal #nivel').val(),
                         sedes: $('#update_user_modal #sedes').val(),
                     },
                 })
@@ -380,22 +378,6 @@
                 });
             });
 
-            $('#view_user_modal').on('show.bs.modal', function (e) {
-
-                // Fill modal
-                $("#view_name").html($(e.relatedTarget).attr('data-name'));
-                $("#view_email").html($(e.relatedTarget).attr('data-email'));
-                $("#view_admin").html($(e.relatedTarget).attr('data-admin') ? 'Si' : 'No');
-
-                var sedes = '';
-                var sedes_array = $(e.relatedTarget).attr('data-sedes').split(',');
-                for ( let key in sedes_array )
-                {
-                    sedes += sedes_array[key] + '<br>';
-                }
-                $("#view_sedes").html(sedes);
-            });
-
             $('#create_user_modal').on('click', '#confirm_create_user_btn', function(e) {
                 e.preventDefault();
 
@@ -407,7 +389,7 @@
                         api_token: '{{ auth()->user()->api_token }}',
                         name: $('#create_user_modal #name').val(),
                         email: $('#create_user_modal #email').val(),
-                        admin: $('#create_user_modal #admin').prop('checked') ? 1 : 0,
+                        nivel: $('#create_user_modal #nivel').val(),
                         sedes: $('#create_user_modal #sedes').val(),
                     },
                 })
@@ -430,7 +412,7 @@
                 // Fill modal
                 $("#view_name").html($(e.relatedTarget).attr('data-name'));
                 $("#view_email").html($(e.relatedTarget).attr('data-email'));
-                $("#view_admin").html($(e.relatedTarget).attr('data-admin') ? 'Si' : 'No');
+                $("#view_nivel").html($(e.relatedTarget).attr('data-nivel'));
 
                 var sedes = '';
                 var sedes_array = $(e.relatedTarget).attr('data-sedes').split(',');
