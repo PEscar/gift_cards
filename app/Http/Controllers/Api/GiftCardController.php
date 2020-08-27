@@ -23,7 +23,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('id', function($row){
 
-                    return $row->id;
+                    return $row->venta->id;
                 })
 
                 ->rawColumns(['id'])
@@ -51,7 +51,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_vencimiento', function($row){
 
-                    return strtoupper(date('d/M/Y', strtotime($row->venta->fecha_vencimiento)));
+                    return strtoupper(date('d/M/Y', strtotime($row->fecha_vencimiento)));
                 })
 
                 ->rawColumns(['fecha_vencimiento'])

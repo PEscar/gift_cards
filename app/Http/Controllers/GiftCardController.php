@@ -15,7 +15,12 @@ class GiftCardController extends Controller
      */
     public function index()
     {
-        return view('giftcards');
+        if ( auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Nivel1') )
+        {
+            return view('giftcards');
+        }
+
+        return redirect()->route('home');
     }
 
     /**
@@ -99,11 +104,23 @@ class GiftCardController extends Controller
         //
     }
 
-    public function entregar($codigo)
+    public function consumir($codigo)
     {
         $gc = VentaProducto::where('codigo_gift_card', $codigo)->firstOrFail();
-        $gc->fecha_canje = \Illuminate\Support\Carbon::now();
-        $gc->entrega_id = Auth::id();
+        $gc->fecha_consumicion = \Illuminate\Support\Carbon::now();
+        $gc->consumicion_id = Auth::id();
+        $gc->save();
+
+        return redirect()->route('giftcards.show', ['codigo' => $gc->codigo_gift_card]);
+    }
+
+    public function asignar(Request $request, $codigo)
+    {
+        $gc = VentaProducto::where('codigo_gift_card', $codigo)->firstOrFail();
+        $gc->fecha_asignacion = \Illuminate\Support\Carbon::now();
+        $gc->asignacion_id = Auth::id();
+        $gc->sede_id = $request->sede;
+        $gc->nro_mesa = $request->nro_mesa;
         $gc->save();
 
         return redirect()->route('giftcards.show', ['codigo' => $gc->codigo_gift_card]);

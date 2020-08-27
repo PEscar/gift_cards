@@ -89,6 +89,13 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
+        if ( ! auth()->user()->hasRole('Admin') )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "user" => ['Tenes que ser admin para poder actualizar usuarios.'],
+            ]);
+        }
+
         $user = User::where('email', $request->email)->where('id', '!=', $id)->first();
 
         if ( $user )
@@ -130,7 +137,7 @@ class UserController extends Controller
         if ( ! auth()->user()->hasRole('Admin') )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "user" => ['Tenes que ser admin para poder borra usuarios.'],
+                "user" => ['Tenes que ser admin para poder borrar usuarios.'],
             ]);
         }
 
@@ -156,6 +163,13 @@ class UserController extends Controller
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
                 "email" => ['Email en uso.'],
+            ]);
+        }
+
+        if ( ! auth()->user()->hasRole('Admin') )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "user" => ['Tenes que ser admin para poder crear usuarios.'],
             ]);
         }
 

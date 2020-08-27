@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class GiftCardMailNotification extends Notification
+class GiftCardMailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

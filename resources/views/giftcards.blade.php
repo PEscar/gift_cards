@@ -9,7 +9,8 @@
             <div class="card">
                 <div class="card-header">
                     Administrar Gift Cards
-                    <div class="float-right"><button data-toggle="modal" data-target="#create_user_modal" class="btn btn-success">Nueva Venta Mayorista</button></div>
+                    <div class="float-right"><button class="btn btn-success">Nueva Venta</button></div>
+                    <!-- data-toggle="modal" data-target="#create_venta_modal" -->
                 </div>
 
                 <div class="card-body">
@@ -36,37 +37,76 @@
     </div>
 </div>
 
-<!-- set up the modal to start hidden and fade in and out -->
-<div id="delete_user_modal" class="modal fade">
+<div id="create_venta_modal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
-                Eliminar Usuario
+                Nueva Venta
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <!-- dialog body -->
             <div class="modal-body">
-                ¿ Estás seguro de boorar este usuario ?
+                <form class="form-horizontal" method="POST" id="form_create_venta">
+                    <div class="form-group row">
+                        <label for="client_email" class="col-md-4 col-form-label text-md-right">{{ __('Email') }}</label>
 
-                <form id="form_confirm_delete_user">
-
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                    <div class="form-group row mb-0">
-                        <div class="col-md-6 offset-md-4">
-                            <input type="hidden" id="delete_user_id">
-                            <input type="submit" id="confirm_delete_user_btn" class="btn btn-danger" value="Si">
+                        <div class="col-md-6">
+                            <input id="client_email" type="email" class="form-control" name="client_email" value="" required autocomplete="name" autofocus>
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label for="sku" class="col-md-4 col-form-label text-md-right">Gift Card</label>
+
+                        <div class="col-md-5">
+                            <select class="form-control" name="sku" id="sku">
+                                <option value="11247">11247</option>
+                                <option value="11248">11248</option>
+                                <option value="11249">11249</option>
+                                <option value="11250">11250</option>
+                                <option value="11251">11251</option>
+                            </select>
+                        </div>
+                    </div>
+
+                     <div class="form-group row">
+                        <label for="cantidad" class="col-md-4 col-form-label text-md-right">Cantidad</label>
+
+                        <div class="col-md-5">
+                            <input type="number" min="1" value="1" name="cantidad" class="form-control" id="cantidad">
+                        </div>
+                    </div>
+
+                   <div class="form-group row">
+                        <label for="pagada" class="col-md-4 col-form-label text-md-right">Pagada</label>
+
+                        <div class="col-md-6">
+                            <input id="pagada" type="checkbox" name="pagada" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="comentario" class="col-md-4 col-form-label text-md-right">Comentario</label>
+
+                        <div class="col-md-6">
+                            <textarea class="form-control" rows="2" id="comentario"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-0">
+                        <div class="col-md-6 offset-md-4">
+                            <button id="confirm_create_venta_btn" type="submit" class="btn btn-success">
+                                Crear
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 @endsection
 
 @section('scripts')
@@ -116,124 +156,30 @@
 
             });
 
-            $('#delete_user_modal').on('show.bs.modal', function (e)
-            {
-                // Populate url & id
-               $("#form_confirm_delete_user").attr('action', $(e.relatedTarget).attr('data-url'));
-               $("#delete_user_id").val($(e.relatedTarget).attr('data-id'));
-            });
-
-            $('#delete_user_modal').on('click', '#confirm_delete_user_btn', function(e) {
+            $('#create_venta_modal').on('click', '#confirm_create_venta_btn', function(e) {
                 e.preventDefault();
 
                 $.ajax({
-                    url: $('#form_confirm_delete_user').attr('action'),
-                    type: 'DELETE',
-                    dataType: 'json',
-                    data: {
-                        'api_token': '{{ auth()->user()->api_token }}'
-                    },
-                    headers: {
-                        'accept': 'application/json',
-                    }
-                })
-                .done(function() {
-
-                    // Hide modal
-                    $('#delete_user_modal').modal('hide');
-
-                    table.draw();
-
-                    // Show message
-                    showSnackbar('Usuario #' + $('#delete_user_id').val() + ' borrado.');
-                })
-                .fail(function(data) {
-
-                    showSnackBarFromErrors(data);
-                    $('#delete_user_modal').modal('hide');
-                });
-            });
-
-            $('#update_user_modal').on('show.bs.modal', function (e) {
-
-                // Populate url & id
-                $("#form_update_user").attr('action', $(e.relatedTarget).attr('data-url'));
-                $("#update_user_id").val($(e.relatedTarget).attr('data-id'));
-
-                // Fill modal
-                $("#form_update_user #name").val($(e.relatedTarget).attr('data-name'));
-                $("#form_update_user #email").val($(e.relatedTarget).attr('data-email'));
-                $("#form_update_user #admin").prop("checked", $(e.relatedTarget).attr('data-admin'));
-                $("#form_update_user #sedes").val( $(e.relatedTarget).attr('data-sedes').split(',') );
-            });
-
-            $('#update_user_modal').on('click', '#confirm_update_user_btn', function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    url: $('#form_update_user').attr('action'),
-                    type: 'PUT',
-                    dataType: 'json',
-                    data: {
-                        api_token: '{{ auth()->user()->api_token }}',
-                        name: $('#update_user_modal #name').val(),
-                        email: $('#update_user_modal #email').val(),
-                        admin: $('#update_user_modal #admin').prop('checked') ? 1 : 0,
-                        sedes: $('#update_user_modal #sedes').val(),
-                    },
-                })
-                .done(function() {
-                    table.draw();
-                    $('#update_user_modal').modal('hide');
-
-                    // Update name in nav bar
-                    $("#navbarDropdown").html($('#update_user_modal #name').val());
-
-                    // Show message
-                    showSnackbar('Usuario #' + $('#update_user_id').val() + ' actualizado.');
-                })
-                .fail(function(data) {
-                    showSnackBarFromErrors(data);
-                });
-            });
-
-            $('#view_user_modal').on('show.bs.modal', function (e) {
-
-                // Fill modal
-                $("#view_name").html($(e.relatedTarget).attr('data-name'));
-                $("#view_email").html($(e.relatedTarget).attr('data-email'));
-                $("#view_admin").html($(e.relatedTarget).attr('data-admin') ? 'Si' : 'No');
-
-                var sedes = '';
-                var sedes_array = $(e.relatedTarget).attr('data-sedes').split(',');
-                for ( let key in sedes_array )
-                {
-                    sedes += sedes_array[key] + '<br>';
-                }
-                $("#view_sedes").html(sedes);
-            });
-
-            $('#create_user_modal').on('click', '#confirm_create_user_btn', function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    url: $('#form_create_user').attr('action'),
+                    url: "{{ route('api.ventas.create') }}",
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         api_token: '{{ auth()->user()->api_token }}',
-                        name: $('#create_user_modal #name').val(),
-                        email: $('#create_user_modal #email').val(),
-                        admin: $('#create_user_modal #admin').prop('checked') ? 1 : 0,
-                        sedes: $('#create_user_modal #sedes').val(),
+                        client_email: $('#create_venta_modal #client_email').val(),
+                        pagada: $('#create_venta_modal #pagada').prop('checked') ? 1 : 0,
+                        sku: $('#create_venta_modal #sku').val(),
+                        cantidad: $('#create_venta_modal #cantidad').val(),
+                        comentario: $('#create_venta_modal #comentario').val(),
                     },
                 })
                 .done(function() {
                     table.draw();
-                    $('#create_user_modal').modal('hide');
+                    $('#create_venta_modal').modal('hide');
 
                     // Show message
-                    showSnackbar('Usuario creado.');
+                    showSnackbar('Venta guardada.');
+
+                    $('#form_create_venta').trigger('reset');
                 })
                 .fail(function(data) {
                     showSnackBarFromErrors(data);

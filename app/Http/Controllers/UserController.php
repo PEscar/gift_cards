@@ -14,7 +14,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return view('usuarios', ['sedes' => Sede::all()]);
+        if ( auth()->user()->hasRole('Admin') )
+        {
+            return view('usuarios', ['sedes' => Sede::all()]);
+        }
+
+        return redirect()->route('home');
     }
 
     /**
@@ -66,5 +71,10 @@ class UserController extends Controller
     public function showUpdatePasswordView()
     {
         return view('auth.passwords.password_change');
+    }
+
+    public function showConfiguracionView()
+    {
+        return view('configuracion');
     }
 }

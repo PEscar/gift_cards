@@ -21,16 +21,17 @@ class DatabaseSeeder extends Seeder
 
         // Role Admin & Assign Role
         Role::create(['name' => 'Admin']);
+        Role::create(['name' => 'Nivel1']);
         $user->assignRole('Admin');
 
         // Venta de TEST.
         $venta = factory(Venta::class)->create(['comentario' => 'Venta TEST creada desde seeder.']);
         $venta->venta_productos()->save(factory(VentaProducto::class)->make());
 
-        Sede::create(['nombre' => 'Madero1']);
-        Sede::create(['nombre' => 'Madero2']);
-        Sede::create(['nombre' => 'Madero3']);
-        Sede::create(['nombre' => 'Madero5']);
+        Sede::create(['nombre' => 'Madero 1']);
+        Sede::create(['nombre' => 'Madero 2']);
+        Sede::create(['nombre' => 'Madero 3']);
+        Sede::create(['nombre' => 'Madero 5']);
         Sede::create(['nombre' => 'Libertador']);
         Sede::create(['nombre' => 'Dolce']);
         Sede::create(['nombre' => 'Riobamba']);

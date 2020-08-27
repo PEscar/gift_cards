@@ -30,10 +30,12 @@ Route::middleware('auth:web')->group(function () {
 	Route::get('/giftcards/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
 	Route::get('/giftcards/administrar', 'GiftCardController@index')->name('giftcards.index');
 	Route::get('/giftcards/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
-	Route::post('/giftcards/{codigo}', 'GiftCardController@entregar')->name('giftcards.entregar');
+	Route::post('/giftcards/asignar/{codigo}', 'GiftCardController@asignar')->name('giftcards.asignar');
+	Route::post('/giftcards/consumir/{codigo}', 'GiftCardController@consumir')->name('giftcards.consumir');
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
 	Route::get('/password', 'UserController@showUpdatePasswordView')->name('password.update.show');
+	Route::get('/configuracion', 'UserController@showConfiguracionView')->name('configuracion.update.show');
 });
 
 Route::any('/orders/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
