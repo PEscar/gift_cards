@@ -26,3 +26,36 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_actualizar_validez').on('click', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "{{ route('config.update') }}",
+                    type: 'PUT',
+                    dataType: 'json',
+                    data: {
+                        api_token: '{{ auth()->user()->api_token }}',
+                        key: 'VENCIMIENTO_GIFT_CARDS',
+                        value: $('#dias_validez').val(),
+                    },
+                })
+                .done(function() {
+
+                    // Show message
+                    showSnackbar('Dias de validez actualizados.');
+                })
+                .fail(function(data) {
+                    showSnackBarFromErrors(data);
+                });
+            });
+
+        });
+
+    </script>
+@endsection
