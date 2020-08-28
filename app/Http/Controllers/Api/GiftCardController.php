@@ -97,7 +97,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('estado', function($row){
 
-                    return $row->valida ? 'Valida' : ( $row->consumida ? 'Consumida' : ( $row->vencida ? 'Vencida' : 'No se' ) );
+                    return $row->valida ? 'Valida' : ( $row->consumida ? 'Consumida' : ( $row->vencida ? 'Vencida' : 'Asignada' ) );
                 })
 
                 ->rawColumns(['estado'])
