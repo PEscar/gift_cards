@@ -45,7 +45,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_venta', function($row){
 
-                    return strtoupper(date('d/M/Y H:i', strtotime($row->venta->created_at)));
+                    return strtoupper(date('d/m/Y H:i', strtotime($row->venta->created_at)));
                 })
 
                 ->rawColumns(['fecha_venta'])
@@ -62,28 +62,28 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_pago', function($row){
 
-                    return $row->venta->fecha_pago ? strtoupper(date('d/M/Y H:i', strtotime($row->venta->fecha_pago))) : null;
+                    return $row->venta->fecha_pago ? strtoupper(date('d/m/Y H:i', strtotime($row->venta->fecha_pago))) : null;
                 })
 
                 ->rawColumns(['fecha_pago'])
 
                 ->addColumn('fecha_vencimiento', function($row){
 
-                    return strtoupper(date('d/M/Y', strtotime($row->fecha_vencimiento)));
+                    return strtoupper(date('d/m/Y', strtotime($row->fecha_vencimiento)));
                 })
 
                 ->rawColumns(['fecha_vencimiento'])
 
                 ->addColumn('fecha_asignacion', function($row){
 
-                    return $row->fecha_asignacion ? strtoupper(date('d/M/Y H:i', strtotime($row->fecha_asignacion))) : null;
+                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y H:i', strtotime($row->fecha_asignacion))) : null;
                 })
 
                 ->rawColumns(['fecha_asignacion'])
 
                 ->addColumn('fecha_consumicion', function($row){
 
-                    return $row->fecha_consumicion ? strtoupper(date('d/M/Y H:i', strtotime($row->fecha_consumicion))) : null;
+                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y H:i', strtotime($row->fecha_consumicion))) : null;
                 })
 
                 ->rawColumns(['fecha_consumicion'])
@@ -102,12 +102,12 @@ class GiftCardController extends Controller
 
                 ->rawColumns(['estado'])
 
-                ->addColumn('action', function($row){
+                ->addColumn('sede_mesa', function($row){
 
-                       return null;
+                    return $row->asignada ? $row->sede->nombre . ' Mesa: ' . $row->nro_mesa : null;
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['sede_mesa'])
 
                 ->make(true);
     }

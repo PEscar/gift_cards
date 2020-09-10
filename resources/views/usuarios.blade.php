@@ -96,13 +96,13 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Admin</label>
+                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Permiso</label>
 
                         <div class="col-md-6">
                             <select class="form-control" name="nivel" id="nivel">
-                                <option value="Admin" {{ auth()->user()->hasRole('Admin') ? 'selected=selected' : '' }}>Admin</option>
-                                <option value="Nivel1" {{ auth()->user()->hasRole('Nivel1') ? 'selected' : '' }}>Nivel 1</option>
-                                <option value="Nivel2" {{ ! auth()->user()->hasRole('Admin') && ! auth()->user()->hasRole('Nivel1') ? 'selected' : '' }}>Nivel 2</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Nivel1">Nivel 1</option>
+                                <option value="Nivel2">Nivel 2</option>
                             </select>
                         </div>
                     </div>
@@ -173,7 +173,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Admin</label>
+                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Permiso</label>
 
                         <div class="col-md-6">
                             <select class="form-control" name="nivel" id="nivel">

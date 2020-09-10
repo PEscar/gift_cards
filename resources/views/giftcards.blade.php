@@ -28,7 +28,7 @@
                                 <th>Fecha Asig.</th>
                                 <th>Fecha Cons.</th>
                                 <th>Usuario</th>
-                                <th>Acciones</th>
+                                <th>Sede / Mesa</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -150,8 +150,7 @@
 
                     {data: 'usuario_asignacion', name: 'usuario_asignacion'},
 
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-
+                    {data: 'sede_mesa', name: 'sede_mesa'},
                 ],
 
                 language: {

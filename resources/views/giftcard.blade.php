@@ -84,6 +84,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-control" name="sede" required>
+                                        <option selected disabled>Seleccione Sede</option>
                                         @foreach( auth()->user()->sedes as $sede )
                                         <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
                                         @endforeach
