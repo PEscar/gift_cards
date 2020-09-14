@@ -27,8 +27,8 @@
                                 <th>Fecha Venc.</th>
                                 <th>Fecha Asig.</th>
                                 <th>Fecha Cons.</th>
-                                <th>Usuario</th>
                                 <th>Sede / Mesa</th>
+                                <th>Usuario</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,9 +148,9 @@
 
                     {data: 'fecha_consumicion', name: 'fecha_consumicion'},
 
-                    {data: 'usuario_asignacion', name: 'usuario_asignacion'},
-
                     {data: 'sede_mesa', name: 'sede_mesa'},
+
+                    {data: 'usuario_asignacion', name: 'usuario_asignacion'},
                 ],
 
                 language: {

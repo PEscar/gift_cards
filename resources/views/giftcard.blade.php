@@ -53,17 +53,6 @@
                         FECHA ASIGNACION: <strong>{{strtoupper(date('d/M/Y H:i', strtotime($gc->fecha_asignacion)))}}</strong><br>
                         NRO MESA: <strong>{{ $gc->nro_mesa }}</strong><br>
                         SEDE: <strong>{{ $gc->sede->nombre }}</strong>
-                        <!-- <form method="POST" action="{{ route('giftcards.consumir', ['codigo' => $gc->codigo_gift_card]) }}">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-4">
-                                    &nbsp;
-                                </div>
-                                <div class="col-md-4">
-                                    <button style="" class="btn btn-success">Consumir</button>
-                                </div>
-                            </div>
-                        </form> -->
                     </div>
                     @elseif ( $gc->vencida )
                     <div class="alert alert-danger" role="alert">
@@ -84,7 +73,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-control" name="sede" required>
-                                        <option selected disabled>Seleccione Sede</option>
+                                        <option value="" selected disabled>Seleccione Sede</option>
                                         @foreach( auth()->user()->sedes as $sede )
                                         <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
                                         @endforeach
