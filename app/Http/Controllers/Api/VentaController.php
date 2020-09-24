@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\VentaMayoristaRequest;
 use App\Models\Venta;
+use App\Models\VentaProducto;
 use App\Notifications\GiftCardMailNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Response;
-
-
-use BaconQrCode\Renderer\Image\SvgImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
-use Barryvdh\DomPDF\Facade as PDF;
 
 class VentaController extends Controller
 {
@@ -72,9 +68,44 @@ class VentaController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(VentaMayoristaRequest $request)
     {
-        //
+        $venta = new Venta;
+        $venta->date = Carbon::now();
+        $venta->source_id = 1; // Intranet
+        $venta->pagada = $request->pagada ? 1 : 0;
+        $venta->fecha_pago = $venta->pagada ? Carbon::now() : null;
+        $venta->vendedor_id = auth()->id();
+        $venta->client_email = $request->client_email;
+        $venta->comentario = $request->comentario;
+
+        $venta->save();
+
+        for ($i=1; $i <= $request->cantidad ; $i++) {
+
+            $ventaProducto = factory(VentaProducto::class)->make();
+            $ventaProducto->descripcion = null;
+            $ventaProducto->sku = $request->sku;
+            $ventaProducto->tipo_producto = 1; //gift cards
+            $ventaProducto->cantidad = 1;
+            $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
+
+            $venta->venta_productos()->save($ventaProducto);
+        }
+
+        if ( $venta->pagada )
+        {
+            $venta->pagada = true;
+
+            if ( $venta->tieneGiftcards() )
+            {
+                $venta->notify(new GiftCardMailNotification);
+            }
+
+            $venta->save();
+        }
+
+        return Response::json(null, 201);
     }
 
     public function importOrderFromTiendaNube(Request $request, $order_id = null)
@@ -161,23 +192,5 @@ class VentaController extends Controller
         {
             \Log::error('Mensaje update no validado: ' . $data);
         }
-    }
-
-    public function test_pdf_download()
-    {
-        $renderer = new ImageRenderer(
-            new RendererStyle(140, 0, null),
-            new SvgImageBackEnd()
-        );
-
-        $writer = new Writer($renderer);
-
-        $qr_code = new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => 'ASDSAD'])));
-
-        $notifiable = Venta::latest()->first();
-
-        $pdf = PDF::loadView('emails.giftcard_pdf', ['qr_code' => $qr_code, 'notifiable' => $notifiable, 'item' => $notifiable->venta_productos()->first()]);
-
-        return $pdf->download('asas.pdf');
     }
 }

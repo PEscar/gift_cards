@@ -20,15 +20,24 @@ class CreateVentaProductoTable extends Migration
             $table->string('descripcion')->nullable()->comment('descripción del producto');
             $table->smallInteger('tipo_producto')->comment('0: prod. normal. 1: gift card');
             $table->date('fecha_vencimiento')->nullable()->comment('!= null para gift cards');
-            $table->dateTime('fecha_canje')->nullable()->comment('!= null para gift cards canjeadas');
-            $table->foreignId('entrega_id')->nullable()->comment('id de usuario que realizo la entrega');
+
+            $table->dateTime('fecha_asignacion')->nullable()->comment('!= null para gift cards asignadas');
+            $table->foreignId('asignacion_id')->nullable()->comment('id user que asigno la gc');
+
+            $table->dateTime('fecha_consumicion')->nullable()->comment('!= null para gift cards consumidas');
+            $table->foreignId('consumicion_id')->nullable()->comment('id user que consumio la gc');
+
             $table->smallInteger('cantidad');
             $table->string('codigo_gift_card')->nullable();
+            $table->string('nro_mesa')->nullable()->comment('nro de mesa donde se sirve');
+            $table->foreignId('sede_id')->nullable()->comment('id de sede donde se entrego la gc');
 
             $table->timestamps();
 
             $table->foreign('venta_id')->references('id')->on('ventas');
-            $table->foreign('entrega_id')->references('id')->on('users');
+            $table->foreign('asignacion_id')->references('id')->on('users');
+            $table->foreign('consumicion_id')->references('id')->on('users');
+            $table->foreign('sede_id')->references('id')->on('sedes');
         });
     }
 

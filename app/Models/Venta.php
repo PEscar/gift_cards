@@ -9,6 +9,11 @@ class Venta extends Model
 {
 	use Notifiable;
 
+    const SOURCE_TIENDA_NUBE = 0;
+    const SOURCE_CANJE = 1;
+    const SOURCE_INVITACION = 2;
+    const SOURCE_MAYORISTA = 3;
+
     /**
      * Route notifications for the mail channel.
      *
@@ -86,31 +91,39 @@ class Venta extends Model
         $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
         $venta->client_email = $order->body->customer->email;
         $venta->comentario = $order->body->note;
+        $venta->fecha_pago = $venta->pagada ? date('Y-m-d H:i:s', strtotime($order->body->paid_at)) : null;
         $venta->save();
 
         // Save products
         foreach ($order->body->products as $key => $orderProduct) {
-            
-            // Para generar el codigo formato isbn10 unico con faker
-            $ventaProducto = factory(VentaProducto::class)->make();
-            $ventaProducto->sku = $orderProduct->sku;
-            $ventaProducto->descripcion = $orderProduct->name;
-            $ventaProducto->cantidad = $orderProduct->quantity;
 
-            // Si es git card
-            if ( in_array($ventaProducto->sku, $skus_gift_cards) )
+            // Si el producto es tipo giftcard, creo un ventaProduct por cada unidad de este producto, para
+            // generarle a cada gift card su código
+            if ( in_array($orderProduct->sku, $skus_gift_cards) )
             {
-                $ventaProducto->tipo_producto = 1; // Gift Card
-                $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
+                for ($i=1; $i <= $orderProduct->quantity ; $i++)
+                {
+                    // Para generar el codigo formato isbn10 unico con faker
+                    $ventaProduct = new VentaProducto;
+                    $ventaProduct->sku = $orderProduct->sku;
+                    $ventaProduct->descripcion = $orderProduct->name;
+                    $ventaProduct->cantidad = 1;
+                    $ventaProduct->tipo_producto = 1; // Gift Card
+                    $ventaProduct->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
+                    $ventaProduct->codigo_gift_card = VentaProducto::generateGiftCardCode();
+                    $venta->venta_productos()->save($ventaProduct);
+                }
             }
-            else {
-
-                $ventaProducto->tipo_producto = 0; //Producto común
-                $ventaProducto->fecha_vencimiento = null;
-                $ventaProducto->codigo_gift_card = null;
+            else
+            {
+                // Si es producto normal, guardamos sku nombre y cantidad.
+                $ventaProduct = new VentaProducto;
+                $ventaProduct->sku = $orderProduct->sku;
+                $ventaProduct->descripcion = $orderProduct->name;
+                $ventaProduct->cantidad = $orderProduct->quantity;
+                $ventaProduct->tipo_producto = 0; //Producto común
+                $venta->venta_productos()->save($ventaProduct);
             }
-
-            $venta->venta_productos()->save($ventaProducto);
         }
 
         return $venta;

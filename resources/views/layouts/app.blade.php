@@ -30,6 +30,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                @if ( auth()->user() )
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
@@ -40,13 +41,14 @@
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('giftcards.show') }}">Validar</a>
-                                @if ( auth()->user() && auth()->user()->hasRole('Admin'))
+                                @if ( auth()->user() && ( auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Nivel1') ))
                                 <a class="dropdown-item" href="{{ route('giftcards.index') }}">Administrar</a>
                                 @endif
                             </div>
                         </li>
-                        @if ( auth()->user() && auth()->user()->hasRole('Admin'))
+                        @if ( auth()->user()->hasRole('Admin'))
                         <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a></li>
+                        <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('configuracion.update.show') }}">Configuración</a></li>
                         @endif
                     </ul>
 
@@ -87,6 +89,7 @@
                         @endguest
                     </ul>
                 </div>
+                @endif
             </div>
         </nav>
 

@@ -32,12 +32,12 @@ class UserController extends Controller
 
                 ->rawColumns(['id'])
 
-                ->addColumn('admin', function($row){
+                ->addColumn('nivel', function($row){
 
-                    return $row->hasRole('Admin') ? 'Si' : 'No';
+                    return $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel 1' : 'Nivel 2' );
                 })
 
-                ->rawColumns(['admin'])
+                ->rawColumns(['nivel'])
 
                 ->addColumn('sedes', function($row){
 
@@ -48,7 +48,10 @@ class UserController extends Controller
 
                 ->addColumn('action', function($row){
 
-                       $btn = '<a href="#" class="edit btn btn-primary btn-sm btn_view_user" data-toggle="modal" data-target="#view_user_modal" data-id="' . $row->id . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-admin="' . $row->hasRole('Admin') . '" data-sedes="' . implode(',', $row->sedes->pluck('nombre')->toArray()) . '">View</a> <a href="#" class="edit btn btn-warning btn-sm btn_edit_user" data-url="' . route('api.users.update', ['id' => $row->id]) . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-admin="' . $row->hasRole('Admin') . '" data-sedes="' . implode(',', $row->sedes->pluck('id')->toArray()) . '" data-toggle="modal" data-target="#update_user_modal" data-id="' . $row->id . '">Edit</a> <a href="#" class="edit btn btn-danger btn-sm btn_del_user" data-url="' . route('api.users.destroy', ['id' => $row->id]) . '" data-id="' . $row->id . '" data-toggle="modal" data-target="#delete_user_modal">Delete</a>'; 
+                    $nivel = $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel 1' : 'Nivel 2' );
+                    $nivel2 = $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel1' : 'Nivel2' );
+
+                       $btn = '<a href="#" class="edit btn btn-primary btn-sm btn_view_user" data-toggle="modal" data-target="#view_user_modal" data-id="' . $row->id . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel . '" data-sedes="' . implode(',', $row->sedes->pluck('nombre')->toArray()) . '">View</a> <a href="#" class="edit btn btn-warning btn-sm btn_edit_user" data-url="' . route('api.users.update', ['id' => $row->id]) . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel2 . '" data-sedes="' . implode(',', $row->sedes->pluck('id')->toArray()) . '" data-toggle="modal" data-target="#update_user_modal" data-id="' . $row->id . '">Edit</a> <a href="#" class="edit btn btn-danger btn-sm btn_del_user" data-url="' . route('api.users.destroy', ['id' => $row->id]) . '" data-id="' . $row->id . '" data-toggle="modal" data-target="#delete_user_modal">Delete</a>'; 
 
                         return $btn;
                 })
@@ -89,6 +92,13 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
+        if ( ! auth()->user()->hasRole('Admin') )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "user" => ['Tenes que ser admin para poder actualizar usuarios.'],
+            ]);
+        }
+
         $user = User::where('email', $request->email)->where('id', '!=', $id)->first();
 
         if ( $user )
@@ -105,12 +115,19 @@ class UserController extends Controller
 
         $user->save();
 
-        if ( $request->admin )
+        if ( $request->nivel == 'Nivel2'  )
+        {
+            $user->removeRole('Admin');
+            $user->removeRole('Nivel1');
+
+        } elseif ( $request->nivel == 'Admin' )
         {
             $user->assignRole('Admin');
+            $user->removeRole('Nivel1');
         }
-        else 
+        else if ( $request->nivel == 'Nivel1' )
         {
+            $user->assignRole('Nivel1');
             $user->removeRole('Admin');
         }
 
@@ -130,7 +147,7 @@ class UserController extends Controller
         if ( ! auth()->user()->hasRole('Admin') )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "user" => ['Tenes que ser admin para poder borra usuarios.'],
+                "user" => ['Tenes que ser admin para poder borrar usuarios.'],
             ]);
         }
 
@@ -159,6 +176,13 @@ class UserController extends Controller
             ]);
         }
 
+        if ( ! auth()->user()->hasRole('Admin') )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "user" => ['Tenes que ser admin para poder crear usuarios.'],
+            ]);
+        }
+
         $user = new User;
         $user->email = $request->email;
         $user->name = $request->name;
@@ -167,9 +191,13 @@ class UserController extends Controller
         $user->api_token = Str::random(60);
         $user->save();
 
-        if ( $request->admin )
+        if ( $request->nivel == 'Admin' )
         {
             $user->assignRole('Admin');
+        }
+        else if ( $request->nivel == 'Nivel1' )
+        {
+            $user->assignRole('Nivel1');
         }
 
         $user->sedes()->sync($request->sedes);

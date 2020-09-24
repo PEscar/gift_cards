@@ -34,46 +34,58 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Gift Card: {{ $gc->codigo_gift_card }} <strong>{{ $gc->descripcion }}</strong> cant.: {{ $gc->cantidad }}</div>
+                <div class="card-header">Gift Card:
+                    <strong>{{ $gc->codigo_gift_card }}</strong>
+                </div>
 
                 <div class="card-body">
 
-                    @if ( $gc->valida )
-                    <div class="alert alert-success" role="alert">
-                        ESTADO: <strong>VÁLIDA</strong>!<br>
-                        CÓDIGO: <strong>{{ $gc->codigo_gift_card }}</strong>.<br>
-                        CANTIDAD: <strong>#{{ $gc->cantidad }}</strong>
-
-                        <form method="POST" action="{{ route('giftcards.entregar', ['codigo' => $gc->codigo_gift_card]) }}">
-                            @csrf
-                            <button style="margin-top: -2rem;" id="btn_entregar" class="btn btn-success float-right">Consumir</button>
-                        </form>
+                    @if ( $gc->consumida )
+                    <div class="alert alert-danger" role="alert">
+                        ESTADO: <strong>CONSUMIDA</strong>!<br>
+                        CONSUMIÓ: <strong>{{ $gc->consumidaPor ? $gc->consumidaPor->name : null }}</strong><br>
+                        FECHA CONSUMICION: <strong>{{strtoupper(date('d/M/Y H:i', strtotime($gc->fecha_consumicion)))}}</strong><br>
+                    </div>
+                    @elseif( $gc->asignada )
+                    <div class="alert alert-warning" role="alert">
+                        ESTADO: <strong>ASIGNADA</strong>!<br>
+                        ASIGNÓ: <strong>{{ $gc->asignadaPor->name }}</strong><br>
+                        FECHA ASIGNACION: <strong>{{strtoupper(date('d/M/Y H:i', strtotime($gc->fecha_asignacion)))}}</strong><br>
+                        NRO MESA: <strong>{{ $gc->nro_mesa }}</strong><br>
+                        SEDE: <strong>{{ $gc->sede->nombre }}</strong>
+                    </div>
+                    @elseif ( $gc->vencida )
+                    <div class="alert alert-danger" role="alert">
+                        ESTADO: <strong>VENCIDA</strong>!<br>
+                        FECHA VENCIMIENTO: <strong>{{strtoupper(date('d/M/Y', strtotime($gc->fecha_vencimiento)))}}</strong><br>
                     </div>
                     @else
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-success" role="alert">
+                        ESTADO: <strong>VÁLIDA</strong>!<br>
+                        CANTIDAD: <strong>#{{ $gc->cantidad }}</strong><br>
+                        PRODUCTO: <strong>{{ $gc->descripcion }}</strong><br><br>
 
-                        @if ($gc->tipo_producto != 1)
-                        TIPO: <strong>producto normal</strong>.<br>
-                        @endif
-
-                        @if ($gc->fecha_canje != null)
-                        ESTADO: <strong>CANJEADA</strong> el {{strtoupper(date('d/M/Y', strtotime($gc->fecha_canje)))}}<br>
-                        ENTREGÓ: <strong>{{ $gc->entregadoPor->name }}</strong>
-                        @endif
-
-                        @if ($gc->fecha_canje == null && $gc->fecha_vencimiento < date('Y-m-d'))
-                        ESTADO: <strong>VENCIDA</strong>. el {{strtoupper(date('d/M/Y', strtotime($gc->fecha_vencimiento)))}}<br>
-                        @endif
-
+                        <form method="POST" action="{{ route('giftcards.asignar', ['codigo' => $gc->codigo_gift_card]) }}">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" name="nro_mesa" placeholder="N° Mesa" required="">
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="sede" required>
+                                        <option value="" selected disabled>Seleccione Sede</option>
+                                        @foreach( auth()->user()->sedes as $sede )
+                                        <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button style="" class="btn btn-success">Asignar</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     @endif
-
-                    @if ( false )
-                        <div class="alert alert-success" role="alert">
-                            Es Admin !
-                        </div>
-                    @endif
-
                 </div>
             </div>
         </div>
