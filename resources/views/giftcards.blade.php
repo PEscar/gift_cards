@@ -120,6 +120,23 @@
             // Load table through ajax
             var table = $('#gcs_table').DataTable({
 
+                dom: 'Bfrtip',
+
+                buttons: [
+                    'copy',
+                    {
+                        extend: 'excel',
+                        pageSize: 'LEGAL',
+                        title: "{{ date('Y-m-d') }}" + ' - Gift Cards',
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        title: "{{ date('Y-m-d') }}" + ' - Gift Cards',
+                    }
+                ],
+
                 processing: true,
 
                 serverSide: true,
@@ -155,7 +172,15 @@
 
                 language: {
 
-                    url: "{{ asset('js/datatables.spanish.json') }}"
+                    url: "{{ asset('js/datatables.spanish.json') }}",
+
+                    buttons: {
+                        copyTitle: 'Copiado al portapapeles!',
+                        copySuccess: {
+                            _: '%d líneas copiadas',
+                            1: '1 linea copiada'
+                        }
+                    }
                 },
 
                 responsive: true,
