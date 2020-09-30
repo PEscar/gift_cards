@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\ConfigRequest;
 use Response;
 
 class ConfigController extends Controller
 {
-    public function update(Request $request)
+    public function update(ConfigRequest $request)
     {
         $this->changeEnv([$request->key => $request->value]);
         return Response::json(null, 200);

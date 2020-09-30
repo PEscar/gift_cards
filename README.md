@@ -18,6 +18,9 @@ Copiar .env de ejemplo y compĺetar:
 
 ```cp .env.example .env```
 
+Permisos para .env
+```sudo chown www-data:www-data .env```
+
 Permisos para storage
 ```sudo chown -R www-data:www-data storage/```
 
