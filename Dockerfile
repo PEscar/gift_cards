@@ -4,6 +4,9 @@ FROM php:7.4-fpm
 ARG user
 ARG uid
 
+# Set working directory
+WORKDIR /var/www
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -12,7 +15,9 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    nodejs \
+    npm
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -28,7 +33,6 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-# Set working directory
-WORKDIR /var/www
+RUN chown www-data:www-data /var/www
 
 USER $user
