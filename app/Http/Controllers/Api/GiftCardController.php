@@ -90,14 +90,14 @@ class GiftCardController extends Controller
 
                 ->addColumn('usuario_asignacion', function($row){
 
-                    return $row->asignadaPor ? $row->asignadaPor->name : null;
+                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? $row->asignadaPor->name : null;
                 })
 
                 ->rawColumns(['usuario_asignacion'])
 
                 ->addColumn('estado', function($row){
 
-                    return $row->valida ? 'Valida' : ( $row->consumida ? 'Consumida' : ( $row->vencida ? 'Vencida' : 'Asignada' ) );
+                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
                 })
 
                 ->rawColumns(['estado'])

@@ -14,6 +14,9 @@ class Venta extends Model
     const SOURCE_INVITACION = 2;
     const SOURCE_MAYORISTA = 3;
 
+    const PAGADA_NO = 0;
+    const PAGADA_SI = 1;
+
     /**
      * Route notifications for the mail channel.
      *
@@ -110,7 +113,7 @@ class Venta extends Model
                     $ventaProduct->cantidad = 1;
                     $ventaProduct->tipo_producto = 1; // Gift Card
                     $ventaProduct->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
-                    $ventaProduct->codigo_gift_card = VentaProducto::generateGiftCardCode();
+                    $ventaProduct->generateGiftCardCode();
                     $venta->venta_productos()->save($ventaProduct);
                 }
             }
@@ -121,7 +124,7 @@ class Venta extends Model
                 $ventaProduct->sku = $orderProduct->sku;
                 $ventaProduct->descripcion = $orderProduct->name;
                 $ventaProduct->cantidad = $orderProduct->quantity;
-                $ventaProduct->tipo_producto = 0; //Producto común
+                $ventaProduct->tipo_producto = 2; //Producto común
                 $venta->venta_productos()->save($ventaProduct);
             }
         }

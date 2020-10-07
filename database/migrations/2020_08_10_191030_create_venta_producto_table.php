@@ -18,7 +18,7 @@ class CreateVentaProductoTable extends Migration
             $table->foreignId('venta_id');
             $table->string('sku')->comment('codigo de producto');
             $table->string('descripcion')->nullable()->comment('descripción del producto');
-            $table->smallInteger('tipo_producto')->comment('0: prod. normal. 1: gift card');
+            $table->smallInteger('tipo_producto')->comment('1: gift card, 2: prod. normal.');
             $table->date('fecha_vencimiento')->nullable()->comment('!= null para gift cards');
 
             $table->dateTime('fecha_asignacion')->nullable()->comment('!= null para gift cards asignadas');

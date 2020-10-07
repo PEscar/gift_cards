@@ -4,11 +4,20 @@ namespace App\Models;
 
 use App\Models\Sede;
 use App\User;
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class VentaProducto extends Model
 {
 	protected $table = 'venta_producto';
+
+    const TIPO_GIFTCARD = 1;
+    const TIPO_NORMAL = 2;
+
+    const ESTADO_VALIDA = 1;
+    const ESTADO_CONSUMIDA = 2;
+    const ESTADO_ASIGNADA = 3;
+    const ESTADO_VENCIDA = 4;
 
     public static function findGiftCardByCodigo($codigo)
     {
@@ -26,24 +35,24 @@ class VentaProducto extends Model
 
     // ACCESORS
 
-    public function getValidaAttribute()
+    public function getEstadoAttribute()
     {
-        return $this->tipo_producto == 1 && $this->fecha_vencimiento >= date('Y-m-d') && $this->fecha_asignacion == null && $this->fecha_consumicion == null;
-    }
+        // Una GC puede tener 3 estados: asignada, vencida o valida.
 
-    public function getConsumidaAttribute()
-    {
-        return $this->fecha_consumicion != null;
-    }
+        if ( !is_null($this->fecha_asignacion) )
+        {
+            return self::ESTADO_ASIGNADA;
+        }
+        else if( $this->fecha_vencimiento < \Illuminate\Support\Carbon::now() )
+        {
+            return self::ESTADO_VENCIDA;
+        }
+        else if( $this->fecha_vencimiento >= \Illuminate\Support\Carbon::now() )
+        {
+            return self::ESTADO_VALIDA;
+        }
 
-    public function getAsignadaAttribute()
-    {
-        return $this->fecha_asignacion != null;
-    }
-
-    public function getVencidaAttribute()
-    {
-        return $this->fecha_vencimiento < date('Y-m-d');
+        return self::ESTADO_CONSUMIDA;
     }
 
     // END ACCESORS
@@ -72,18 +81,28 @@ class VentaProducto extends Model
 
     // END RELATIONS
 
-    public static function generateGiftCardCode()
+    // FUNCTIONS
+
+    public function generateGiftCardCode()
     {
         do
         {
-            $codigo_gift_card = \Str::random(8);
+            $this->codigo_gift_card = \Str::random(8);
 
-            $validator = \Validator::make(['codigo_gift_card' => $codigo_gift_card], [
+            $validator = \Validator::make(['codigo_gift_card' => $this->codigo_gift_card], [
                 'codigo_gift_card' => 'unique:venta_producto,codigo_gift_card',
             ]);
 
         } while ( $validator->fails() );
-
-        return $codigo_gift_card;
     }
+
+    public function asignar($sede, $nro_mesa, $user_id)
+    {
+        $this->fecha_asignacion = \Illuminate\Support\Carbon::now();
+        $this->asignacion_id = $user_id;
+        $this->sede_id = $sede;
+        $this->nro_mesa = $nro_mesa;
+    }
+
+    // END FUNCTIONS
 }

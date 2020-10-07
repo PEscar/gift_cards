@@ -39,14 +39,13 @@
                 </div>
 
                 <div class="card-body">
-
-                    @if ( $gc->consumida )
+                    @if ( $gc->estado == App\Models\VentaProducto::ESTADO_CONSUMIDA )
                     <div class="alert alert-danger" role="alert">
                         ESTADO: <strong>CONSUMIDA</strong>!<br>
                         CONSUMIÓ: <strong>{{ $gc->consumidaPor ? $gc->consumidaPor->name : null }}</strong><br>
                         FECHA CONSUMICION: <strong>{{strtoupper(date('d/M/Y H:i', strtotime($gc->fecha_consumicion)))}}</strong><br>
                     </div>
-                    @elseif( $gc->asignada )
+                    @elseif( $gc->estado == App\Models\VentaProducto::ESTADO_ASIGNADA )
                     <div class="alert alert-warning" role="alert">
                         ESTADO: <strong>ASIGNADA</strong>!<br>
                         ASIGNÓ: <strong>{{ $gc->asignadaPor->name }}</strong><br>
@@ -54,7 +53,7 @@
                         NRO MESA: <strong>{{ $gc->nro_mesa }}</strong><br>
                         SEDE: <strong>{{ $gc->sede->nombre }}</strong>
                     </div>
-                    @elseif ( $gc->vencida )
+                    @elseif ( $gc->estado == App\Models\VentaProducto::ESTADO_VENCIDA )
                     <div class="alert alert-danger" role="alert">
                         ESTADO: <strong>VENCIDA</strong>!<br>
                         FECHA VENCIMIENTO: <strong>{{strtoupper(date('d/M/Y', strtotime($gc->fecha_vencimiento)))}}</strong><br>
