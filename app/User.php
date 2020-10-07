@@ -48,4 +48,32 @@ class User extends Authenticatable
     }
 
     // END RELATIONS
+
+    // FUNCTIONS
+
+    public function setNivel($nivel)
+    {
+        if ( $nivel == 'Nivel2'  )
+        {
+            $this->removeRole('Admin');
+            $this->removeRole('Nivel1');
+
+        } elseif ( $nivel == 'Admin' )
+        {
+            $this->assignRole('Admin');
+            $this->removeRole('Nivel1');
+        }
+        else if ( $nivel == 'Nivel1' )
+        {
+            $this->assignRole('Nivel1');
+            $this->removeRole('Admin');
+        }
+    }
+
+    public function setSedes($sedes)
+    {
+        $this->sedes()->sync($sedes);
+    }
+
+    // END FUNCTIONS
 }

@@ -110,28 +110,10 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user->update(['name' => $request->name, 'email' => $request->email]);
 
-        $user->save();
-
-        if ( $request->nivel == 'Nivel2'  )
-        {
-            $user->removeRole('Admin');
-            $user->removeRole('Nivel1');
-
-        } elseif ( $request->nivel == 'Admin' )
-        {
-            $user->assignRole('Admin');
-            $user->removeRole('Nivel1');
-        }
-        else if ( $request->nivel == 'Nivel1' )
-        {
-            $user->assignRole('Nivel1');
-            $user->removeRole('Admin');
-        }
-
-        $user->sedes()->sync($request->sedes);
+        $user->setNivel($request->nivel);
+        $user->setSedes($request->sedes);
 
         return Response::json(null, 204);
     }
@@ -191,16 +173,8 @@ class UserController extends Controller
         $user->api_token = Str::random(60);
         $user->save();
 
-        if ( $request->nivel == 'Admin' )
-        {
-            $user->assignRole('Admin');
-        }
-        else if ( $request->nivel == 'Nivel1' )
-        {
-            $user->assignRole('Nivel1');
-        }
-
-        $user->sedes()->sync($request->sedes);
+        $user->setNivel($request->nivel);
+        $user->setSedes($request->sedes);
 
         return Response::json(null, 201);
     }
@@ -217,8 +191,7 @@ class UserController extends Controller
             ]);
         }
 
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $user->update(['password' => Hash::make($request->password)]);
 
         return Response::json(null, 200);
     }
