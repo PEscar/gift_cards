@@ -9,21 +9,10 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" ></script>
-    <script src="{{ asset('js/datatables.min.js') }}" ></script>
-    <script src="{{ asset('js/snackbar.js') }}" ></script>
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/buttons.dataTables.min.css') }}" rel="stylesheet">
-
-    <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('js/jszip.min.js') }}"></script>
-    <script src="{{ asset('js/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('js/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
 
 </head>
 <body>
@@ -106,6 +95,20 @@
             @yield('content')
         </main>
     </div>
+
+    <script>
+         window.Laravel = <?php echo json_encode(['api_token' => (Auth::user())->api_token]); ?>
+    </script>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" ></script>
+    <script src="{{ asset('js/datatables.min.js') }}" ></script>
+    <script src="{{ asset('js/snackbar.js') }}" ></script>
+    <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('js/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
 
     @yield('scripts')
 </body>

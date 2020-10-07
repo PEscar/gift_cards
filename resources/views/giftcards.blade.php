@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header">
                     Administrar Gift Cards
-                    <div class="float-right"><button class="btn btn-success">Nueva Venta</button></div>
+                    <div class="float-right"><button data-toggle="modal" data-target="#create_venta_modal" class="btn btn-success">Nueva Venta</button></div>
                     <!-- data-toggle="modal" data-target="#create_venta_modal" -->
                 </div>
 
@@ -34,6 +34,8 @@
                         <tbody>
                         </tbody>
                     </table>
+
+                    <v-app><gcs-table :ruta="{{ json_encode(route('api.giftcards.index')) }}"></gcs-table></v-app>
                 </div>
             </div>
         </div>
