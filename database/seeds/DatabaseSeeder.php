@@ -22,11 +22,11 @@ class DatabaseSeeder extends Seeder
         // Role Admin & Assign Role
         Role::create(['name' => 'Admin']);
         Role::create(['name' => 'Nivel1']);
-        $user->assignRole('Admin');
+        $user->setNivel('Admin');
 
         // Venta de TEST.
-        $venta = factory(Venta::class)->create(['comentario' => 'Venta TEST creada desde seeder.']);
-        $venta->venta_productos()->save(factory(VentaProducto::class)->make());
+        $venta = factory(Venta::class)->state('pagada')->create(['comentario' => 'Venta TEST creada desde seeder.']);
+        $venta->venta_productos()->save(factory(VentaProducto::class)->state('gift_card_valida')->make());
 
         Sede::create(['nombre' => 'Madero 1']);
         Sede::create(['nombre' => 'Madero 2']);
@@ -40,6 +40,6 @@ class DatabaseSeeder extends Seeder
         Sede::create(['nombre' => 'San Isidro']);
         Sede::create(['nombre' => 'Pilar']);
 
-        $user->sedes()->sync(Sede::all()->pluck('id')->toArray());
+        $user->setSedes(Sede::all()->pluck('id')->toArray());
     }
 }

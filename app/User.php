@@ -75,5 +75,10 @@ class User extends Authenticatable
         $this->sedes()->sync($sedes);
     }
 
+    public function getNivelAttribute()
+    {
+        return $this->hasRole('Admin') ? 'Admin' : ( $this->hasRole('Nivel1') ? 'Nivel1' : 'Nivel2' ) ;
+    }
+
     // END FUNCTIONS
 }
