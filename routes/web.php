@@ -30,7 +30,6 @@ Route::middleware('auth:web')->group(function () {
 	Route::get('/giftcards/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
 	Route::get('/giftcards/administrar', 'GiftCardController@index')->name('giftcards.index');
 	Route::get('/giftcards/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
-	Route::post('/giftcards/asignar/{codigo}', 'GiftCardController@asignar')->name('giftcards.asignar');
 	Route::post('/giftcards/consumir/{codigo}', 'GiftCardController@consumir')->name('giftcards.consumir');
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');

@@ -102,6 +102,18 @@ class VentaProducto extends Model
         $this->asignacion_id = $user_id;
         $this->sede_id = $sede;
         $this->nro_mesa = $nro_mesa;
+
+        return $this;
+    }
+
+    public function desasignar()
+    {
+        $this->fecha_asignacion = null;
+        $this->asignacion_id = null;
+        $this->sede_id = null;
+        $this->nro_mesa = null;
+
+        return $this;
     }
 
     // END FUNCTIONS

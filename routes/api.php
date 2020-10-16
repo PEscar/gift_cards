@@ -18,23 +18,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-// Route::middleware('auth:api')->get('/users', 'Api\UserController@index')->name('api.users.index');
-// Route::middleware('auth:api')->get('/users/{id}', 'Api\UserController@show')->name('api.users.show');
-// Route::middleware('auth:api')->delete('/users/{id}', 'Api\UserController@show')->name('api.users.show');
-
 Route::middleware('auth:api')->group(function () {
 
-    Route::get('/users', 'Api\UserController@index')->name('api.users.index');
-    Route::get('/users/{id}', 'Api\UserController@show')->name('api.users.show');
-    Route::delete('/users/{id}', 'Api\UserController@destroy')->name('api.users.destroy');
-    Route::put('/users/update/{id}', 'Api\UserController@update')->name('api.users.update');
-    Route::post('/users/create', 'Api\UserController@store')->name('api.users.create');
-
-    Route::get('/giftcards', 'Api\GiftCardController@index')->name('api.giftcards.index');
-
     Route::put('/password', 'Api\UserController@updatePassword')->name('password.change');
-
     Route::post('/ventas', 'Api\VentaController@store')->name('api.ventas.create');
+
     Route::put('/configuracion/update', 'Api\ConfigController@update')->name('config.update');
+
+    Route::prefix('users')->group(function () {
+        Route::get('/', 'Api\UserController@index')->name('api.users.index');
+        Route::get('/{id}', 'Api\UserController@show')->name('api.users.show');
+        Route::delete('/{id}', 'Api\UserController@destroy')->name('api.users.destroy');
+        Route::put('/update/{id}', 'Api\UserController@update')->name('api.users.update');
+        Route::post('/create', 'Api\UserController@store')->name('api.users.create');
+    });
+
+    Route::prefix('giftcards')->group(function () {
+        Route::get('/', 'Api\GiftCardController@index')->name('api.giftcards.index');
+        Route::post('/asignar/{codigo?}', 'Api\GiftCardController@asignar')->name('api.giftcards.asignar');
+        Route::get('/validar/{codigo?}', 'Api\GiftCardController@validar')->name('api.giftcards.validar');
+    });
 });

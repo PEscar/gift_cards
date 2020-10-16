@@ -52,9 +52,14 @@ class GiftCardController extends Controller
      */
     public function show($codigo = null)
     {
-        $gc = $codigo ? VentaProducto::where('codigo_gift_card', $codigo)->first() : null;
+        $estados = [
+            'valida' => VentaProducto::ESTADO_VALIDA,
+            'consumida' => VentaProducto::ESTADO_CONSUMIDA,
+            'asignada' => VentaProducto::ESTADO_ASIGNADA,
+            'vencida' => VentaProducto::ESTADO_VENCIDA
+        ];
 
-        return view('giftcard', ['gc' => $gc, 'codigo' => $codigo]);
+        return view('giftcard', ['codigo' => $codigo, 'estados' => $estados, 'sedes' => auth()->user()->sedes]);
     }
 
     /**
@@ -102,15 +107,5 @@ class GiftCardController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function asignar(Request $request, $codigo)
-    {
-        $gc = VentaProducto::where('codigo_gift_card', $codigo)->firstOrFail();
-        $gc->asignar($request->sede, $request->nro_mesa, Auth::id());
-
-        $gc->save();
-
-        return redirect()->route('giftcards.show', ['codigo' => $gc->codigo_gift_card]);
     }
 }

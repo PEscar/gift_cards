@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GiftCardResource;
 use App\Models\Venta;
 use App\Models\VentaProducto;
 use DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Response;
 
 class GiftCardController extends Controller
@@ -21,13 +23,6 @@ class GiftCardController extends Controller
         $data = VentaProducto::giftCards()->get();
 
         return Datatables::of($data)
-
-                // ->addColumn('id', function($row){
-
-                //     return $row->venta->id;
-                // })
-
-                // ->rawColumns(['id'])
 
                 ->addColumn('codigo', function($row){
 
@@ -112,59 +107,20 @@ class GiftCardController extends Controller
                 ->make(true);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $codigo
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function asignar(Request $request, $codigo)
     {
-        //
+        $gc = VentaProducto::where('codigo_gift_card', $codigo)->firstOrFail();
+        $gc->asignar($request->sede, $request->nro_mesa, Auth::id());
+
+        $gc->save();
+
+        return Response::json(new GiftCardResource($gc), 201);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function validar($codigo)
     {
-        //
-    }
+        $gc = VentaProducto::where('codigo_gift_card', $codigo)->first();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UserRequest $request, $id)
-    {
-        //
-
-        return Response::json(null, 204);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-
-        return Response::json(null, 204);
-    }
-
-    public function store(UserRequest $request)
-    {
-        //
-
-        return Response::json(null, 201);
+        return Response::json($gc ? new GiftCardResource($gc) : null, 201);
     }
 }

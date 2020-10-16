@@ -34,8 +34,6 @@
                         <tbody>
                         </tbody>
                     </table>
-
-                    <v-app><gcs-table :ruta="{{ json_encode(route('api.giftcards.index')) }}"></gcs-table></v-app>
                 </div>
             </div>
         </div>
