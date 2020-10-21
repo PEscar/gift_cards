@@ -80,7 +80,7 @@ class Venta extends Model
 
         foreach ($this->venta_productos as $key => $ventaProducto) {
             
-            if ( $ventaProducto->tipo_producto == 1 )
+            if ( $ventaProducto->tipo_producto == VentaProducto::TIPO_GIFTCARD )
             {
                 $tiene = true;
             }
@@ -114,7 +114,7 @@ class Venta extends Model
         foreach ($this->venta_productos as $key => $ventaProduct) {
 
             // Si es gift card
-            if ( $ventaProduct->tipo_producto == 1 )
+            if ( $ventaProduct->tipo_producto == VentaProducto::TIPO_GIFTCARD )
             {
                 $qr_code = new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card])));
 
@@ -160,7 +160,7 @@ class Venta extends Model
                     $ventaProduct->sku = $orderProduct->sku;
                     $ventaProduct->descripcion = $orderProduct->name;
                     $ventaProduct->cantidad = 1;
-                    $ventaProduct->tipo_producto = 1; // Gift Card
+                    $ventaProduct->tipo_producto = VentaProducto::TIPO_GIFTCARD; // Gift Card
                     $ventaProduct->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
                     $ventaProduct->generateGiftCardCode();
                     $venta->venta_productos()->save($ventaProduct);
@@ -173,7 +173,7 @@ class Venta extends Model
                 $ventaProduct->sku = $orderProduct->sku;
                 $ventaProduct->descripcion = $orderProduct->name;
                 $ventaProduct->cantidad = $orderProduct->quantity;
-                $ventaProduct->tipo_producto = 2; //Producto común
+                $ventaProduct->tipo_producto = VentaProducto::TIPO_NORMAL; //Producto común
                 $venta->venta_productos()->save($ventaProduct);
             }
         }
