@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class GiftCardMailNotification extends Notification implements ShouldQueue
+class GiftCardZipMailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -42,16 +42,11 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
     {
         $mail = (new MailMessage)->line('Aquí tienes tu Gift Card !');
 
-        $pdfs = $notifiable->generatePdfs();
+        $url = \URL::signedRoute('voucher.download', ['id' => $notifiable->id]);
 
-        foreach ($pdfs as $key => $elem) {
-
-            $mail->attachData($elem['pdf']->output(), $elem['pdf_filename']);
-        }
+        $mail->line('Link: ' . $url);
 
         $mail->line('Gracias por confiar en nosotros!');
-
-        $mail->bcc(['pedroscarselletta@gmail.com', 'tienda.copy@laparolaccia.com']);
 
         return $mail;
                     

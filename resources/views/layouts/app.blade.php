@@ -38,7 +38,8 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('giftcards.show') }}">Validar</a>
                                 @if ( auth()->user() && ( auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Nivel1') ))
-                                <a class="dropdown-item" href="{{ route('giftcards.index') }}">Administrar</a>
+                                <a class="dropdown-item" href="{{ route('giftcards.index.minoristas') }}">Minoristas</a>
+                                <a class="dropdown-item" href="{{ route('giftcards.index.mayoristas') }}">Mayoristas</a>
                                 @endif
                             </div>
                         </li>
@@ -97,7 +98,7 @@
     </div>
 
     <script>
-         window.Laravel = <?php echo json_encode(['api_token' => (Auth::user())->api_token]); ?>
+         window.Laravel = <?php echo json_encode(['api_token' => Auth::user() ? Auth::user()->api_token : null]); ?>
     </script>
 
     <!-- Scripts -->

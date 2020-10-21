@@ -34,7 +34,8 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::prefix('giftcards')->group(function () {
-        Route::get('/', 'Api\GiftCardController@index')->name('api.giftcards.index');
+        Route::get('/minoristas', 'Api\GiftCardController@indexMinoristas')->name('api.giftcards.minoristas.index');
+        Route::get('/mayoristas', 'Api\GiftCardController@indexMayoristas')->name('api.giftcards.mayoristas.index');
         Route::post('/asignar/{codigo?}', 'Api\GiftCardController@asignar')->name('api.giftcards.asignar');
         Route::get('/validar/{codigo?}', 'Api\GiftCardController@validar')->name('api.giftcards.validar');
     });

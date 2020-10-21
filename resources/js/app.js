@@ -6,10 +6,8 @@
 
 require('./bootstrap');
 
-import Vuetify from 'vuetify'
-
 window.Vue = require('vue');
-Vue.use(Vuetify);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -18,7 +16,8 @@ Vue.use(Vuetify);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component('gc-validation-item', require('./components/GiftCardValidationComponent.vue').default);
+Vue.component('gc-validation-item', require('./components/ValidarGiftcardComponent.vue').default);
+Vue.component('nueva-venta-item', require('./components/NuevaVentaComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -28,5 +27,4 @@ Vue.component('gc-validation-item', require('./components/GiftCardValidationComp
 
 const app = new Vue({
     el: '#app',
-    vuetify: new Vuetify({}),
 });

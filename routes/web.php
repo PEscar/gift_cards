@@ -27,16 +27,29 @@ Auth::routes();
 Route::middleware('auth:web')->group(function () {
 
 	Route::get('/home', 'HomeController@index')->name('home');
-	Route::get('/giftcards/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
-	Route::get('/giftcards/administrar', 'GiftCardController@index')->name('giftcards.index');
-	Route::get('/giftcards/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
-	Route::post('/giftcards/consumir/{codigo}', 'GiftCardController@consumir')->name('giftcards.consumir');
+
+	Route::prefix('giftcards')->group(function () {
+
+		Route::get('/show_random_qr', 'GiftCardController@show_random_qr')->name('giftcards.show_random_qr');
+		Route::get('/validar/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
+		Route::get('/minoristas', 'GiftCardController@indexMinoristas')->name('giftcards.index.minoristas');
+		Route::get('/mayoristas', 'GiftCardController@indexMayoristas')->name('giftcards.index.mayoristas');
+	});
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
 	Route::get('/password', 'UserController@showUpdatePasswordView')->name('password.update.show');
 	Route::get('/configuracion', 'UserController@showConfiguracionView')->name('configuracion.update.show');
 });
 
-Route::any('/orders/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
-Route::any('/orders/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
-// Route::get('/orders/test_pdf_download', 'Api\VentaController@test_pdf_download')->name('tiendanube.orders.test_pdf_download');
+Route::prefix('giftcards')->group(function () {
+
+	Route::any('/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
+	Route::any('/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
+	//Route::get('/test_pdf_download', 'Api\VentaController@test_pdf_download')->name('tiendanube.orders.test_pdf_download');
+});
+
+Route::prefix('vouchers')->group(function () {
+
+	Route::get('/download/{id}', 'VentaController@downloadVoucher')->name('voucher.download');
+
+});

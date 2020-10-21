@@ -8,16 +8,21 @@ use Illuminate\Support\Facades\Auth;
 
 class GiftCardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function indexMinoristas()
     {
         if ( auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Nivel1') )
         {
-            return view('giftcards');
+            return view('giftcards_minoristas');
+        }
+
+        return redirect()->route('home');
+    }
+
+    public function indexMayoristas()
+    {
+        if ( auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Nivel1') )
+        {
+            return view('giftcards_mayoristas');
         }
 
         return redirect()->route('home');

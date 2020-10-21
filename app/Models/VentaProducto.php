@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Sede;
 use App\User;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class VentaProducto extends Model
 {
@@ -28,7 +28,21 @@ class VentaProducto extends Model
 
     public function scopeGiftCards($query)
     {
-    	return $query->whereNotNull('codigo_gift_card');
+        return $query->whereNotNull('codigo_gift_card');
+    }
+
+    public function scopeMinoristas($query)
+    {
+        return $query->whereHas('venta', function (Builder $query) {
+            $query->where('source_id', '=', Venta::SOURCE_TIENDA_NUBE);
+        });
+    }
+
+    public function scopeMayoristas($query)
+    {
+        return $query->whereHas('venta', function (Builder $query) {
+            $query->where('source_id', '!=', Venta::SOURCE_TIENDA_NUBE);
+        });
     }
 
     // END SCOPES

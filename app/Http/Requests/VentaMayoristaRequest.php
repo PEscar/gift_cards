@@ -24,10 +24,16 @@ class VentaMayoristaRequest extends FormRequest
     public function rules()
     {
         return [
-            'cantidad' => 'required|gte:1',
-            'sku' => 'required',
             'client_email' => 'required|email',
-            'comentario' => '',
+            'sku' => 'required',
+            'concepto' => 'required|lte:3',
+            'cantidad' => 'required|gte:1',
+            'validez' => 'required|gte:1',
+            'pagada' => 'bool',
+            'fecha_pago' => 'required_if:pagada,true',
+            'comentario' => 'required',
+            'nro_factura' => '',
+            'tipo_notificacion' => '',
         ];
     }
 }

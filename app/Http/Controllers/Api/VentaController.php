@@ -6,89 +6,37 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\VentaMayoristaRequest;
 use App\Models\Venta;
 use App\Models\VentaProducto;
-use App\Notifications\GiftCardMailNotification;
 use Carbon\Carbon;
+use DataTables;
 use Illuminate\Http\Request;
 use Response;
 
 class VentaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $codigo
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function store(VentaMayoristaRequest $request)
     {
         $venta = new Venta;
         $venta->date = Carbon::now();
-        $venta->source_id = 1; // Intranet
+        $venta->source_id = $request->concepto;
         $venta->pagada = $request->pagada ? 1 : 0;
-        $venta->fecha_pago = $venta->pagada ? Carbon::now() : null;
+        $venta->fecha_pago = $venta->pagada ? $request->fecha_pago : null;
         $venta->vendedor_id = auth()->id();
         $venta->client_email = $request->client_email;
         $venta->comentario = $request->comentario;
+        $venta->nro_factura = $request->nro_factura;
+        $venta->tipo_notificacion = $request->tipo_notificacion;
 
         $venta->save();
 
         for ($i=1; $i <= $request->cantidad ; $i++) {
 
             $ventaProducto = factory(VentaProducto::class)->make();
-            $ventaProducto->descripcion = null;
+            $ventaProducto->descripcion = $request->sku;
             $ventaProducto->sku = $request->sku;
             $ventaProducto->tipo_producto = 1; //gift cards
             $ventaProducto->cantidad = 1;
-            $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
+            $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays($request->validez)->toDate();
+            $ventaProducto->generateGiftCardCode();
 
             $venta->venta_productos()->save($ventaProducto);
         }
@@ -99,7 +47,7 @@ class VentaController extends Controller
 
             if ( $venta->tieneGiftcards() )
             {
-                $venta->notify(new GiftCardMailNotification);
+                $venta->entregarGiftcards();
             }
 
             $venta->save();
@@ -136,7 +84,7 @@ class VentaController extends Controller
 
                 if ( $venta->tieneGiftcards() )
                 {
-                    $venta->notify(new GiftCardMailNotification);
+                    $venta->entregarGiftcards();
                 }
 
                 $venta->save();
@@ -182,7 +130,7 @@ class VentaController extends Controller
                 if ( $venta->tieneGiftcards() )
                 {
                     \Log::info('tiene gift cards !');
-                    $venta->notify(new GiftCardMailNotification);
+                    $venta->entregarGiftcards();
                 }
 
                 $venta->save();

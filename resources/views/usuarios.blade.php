@@ -66,7 +66,7 @@
 
 <!-- set up the modal to start hidden and fade in and out -->
 <div id="update_user_modal" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -80,25 +80,33 @@
                     <input type="hidden" id="update_user_id">
 
                     <div class="form-group row">
-                        <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
-                        <div class="col-md-6">
+                        <div class="col-3 text-md-right">
+                            <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                        </div>
+
+                        <div class="col-md-9">
                             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
 
-                        <div class="col-md-6">
+                        <div class="col-3 text-md-right">
+                            <label for="email" class="col-form-label text-md-right">Email</label>
+                        </div>
+                        <div class="col-md-9">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Permiso</label>
 
-                        <div class="col-md-6">
+                        <div class="col-3 text-md-right">
+                            <label for="nivel" class="col-form-label">Permiso</label>
+                        </div>
+
+                        <div class="col-md-9">
                             <select class="form-control" name="nivel" id="nivel">
                                 <option value="Admin">Admin</option>
                                 <option value="Nivel1">Nivel 1</option>
@@ -108,9 +116,12 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="sedes" class="col-md-4 col-form-label text-md-right">Sedes</label>
 
-                        <div class="col-md-6">
+                        <div class="col-3 text-md-right">
+                            <label for="sedes" class="col-form-label">Sedes</label>
+                        </div>
+
+                        <div class="col-md-9">
                             <select class="form-control" multiple="multiple" name="sedes[]" id="sedes">
                                 @foreach($sedes as $sede)
                                     <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
@@ -119,8 +130,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group row mb-0">
-                        <div class="col-md-6 offset-md-4">
+                    <div class="form-group row">
+                        <div class="col text-center">
                             <button id="confirm_update_user_btn" type="submit" class="btn btn-primary">
                                 Actualizar
                             </button>
@@ -133,7 +144,7 @@
 </div>
 
 <div id="create_user_modal" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -145,9 +156,12 @@
             <div class="modal-body">
                 <form class="form-horizontal" method="POST" id="form_create_user" action="{{ route('api.users.create') }}">
                     <div class="form-group row">
-                        <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
-                        <div class="col-md-6">
+                        <div class="col-md-3 text-md-right">
+                            <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                        </div>
+
+                        <div class="col-md-9">
                             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                             @error('name')
@@ -159,9 +173,12 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
-                        <div class="col-md-6">
+                        <div class="col-md-3 text-md-right">
+                            <label for="email" class="col-form-label">{{ __('E-Mail Address') }}</label>
+                        </div>
+
+                        <div class="col-md-9">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
 
                             @error('email')
@@ -173,7 +190,10 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="nivel" class="col-md-4 col-form-label text-md-right">Permiso</label>
+
+                        <div class="col-md-3 text-md-right">
+                            <label for="nivel" class="col-form-label">Permiso</label>
+                        </div>
 
                         <div class="col-md-6">
                             <select class="form-control" name="nivel" id="nivel">
@@ -185,9 +205,12 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="sedes" class="col-md-4 col-form-label text-md-right">Sedes</label>
 
-                        <div class="col-md-6">
+                        <div class="col-md-3 text-md-right">
+                            <label for="sedes" class="col-form-label">Sedes</label>
+                        </div>
+
+                        <div class="col-md-9">
                             <select class="form-control" multiple="multiple" name="sedes[]" id="sedes">
                                 @foreach($sedes as $sede)
                                     <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
@@ -196,8 +219,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group row mb-0">
-                        <div class="col-md-6 offset-md-4">
+                    <div class="form-group row">
+                        <div class="col text-center">
                             <button id="confirm_create_user_btn" type="submit" class="btn btn-success">
                                 Crear
                             </button>
@@ -211,34 +234,54 @@
 
 <!-- set up the modal to start hidden and fade in and out -->
 <div id="view_user_modal" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- dialog body -->
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                 <div class="form-group row">
-                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
-                    <div class="col-md-6" id="view_name"></div>
+                    <div class="col-md-3 text-md-right">
+                        <label for="name" class="col-form-label">{{ __('Name') }}</label>
+                    </div>
+
+                    <div class="col-md-9">
+                        <p id="view_name"></p>
+                    </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
 
-                    <div class="col-md-6" id="view_email"></div>
+                    <div class="col-md-3 text-md-right">
+                        <label for="email" class="col-form-label">Email</label>
+                    </div>
+
+                    <div class="col-md-9">
+                        <p id="view_email"></p>
+                    </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="view_nivel" class="col-md-4 col-form-label text-md-right">Nivel</label>
 
-                    <div class="col-md-6" id="view_nivel"></div>
+                    <div class="col-md-3 text-md-right">
+                        <label for="view_nivel" class="col-form-label">Nivel</label>
+                    </div>
+
+                    <div class="col-md-9">
+                        <p id="view_nivel"></p>
+                    </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="sedes" class="col-md-4 col-form-label text-md-right">Sedes</label>
 
-                    <div id="view_sedes" class="col-md-6"></div>
+                    <div class="col-md-3 text-md-right">
+                        <label for="sedes" class="col-form-label">Sedes</label>
+                    </div>
+
+                    <div class="col-md-9">
+                        <p id="view_sedes" ></p>
+                    </div>
                 </div>
 
                 <div class="form-group row mb-0">
