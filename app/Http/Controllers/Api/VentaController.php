@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VentaMayoristaRequest;
+use App\Jobs\SendGiftCardMailNotification;
 use App\Models\Venta;
 use App\Models\VentaProducto;
 use Carbon\Carbon;
@@ -47,7 +48,7 @@ class VentaController extends Controller
 
             if ( $venta->tieneGiftcards() )
             {
-                $venta->entregarGiftcards();
+                SendGiftCardMailNotification::dispatch($venta);
             }
 
             $venta->save();
@@ -84,7 +85,7 @@ class VentaController extends Controller
 
                 if ( $venta->tieneGiftcards() )
                 {
-                    $venta->entregarGiftcards();
+                    SendGiftCardMailNotification::dispatch($venta);
                 }
 
                 $venta->save();
@@ -130,7 +131,7 @@ class VentaController extends Controller
                 if ( $venta->tieneGiftcards() )
                 {
                     \Log::info('tiene gift cards !');
-                    $venta->entregarGiftcards();
+                    SendGiftCardMailNotification::dispatch($venta);
                 }
 
                 $venta->save();

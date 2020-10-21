@@ -181,9 +181,8 @@
 
                             this.resetFormNuevaVenta()
                             this.closeModal()
-                            this.reloadTable()
 
-                            showSnackbar('Venta registrada.');
+                            showSnackbar('Venta registrada. Enviando voucher...');
                         }).catch(err => {
                             console.log(err)
                     })
@@ -218,8 +217,6 @@
             },
 
             reloadTable: function() {
-
-                console.log('reloading table')
 
                 window.$('#gcs_table').DataTable().ajax.reload()
             },
