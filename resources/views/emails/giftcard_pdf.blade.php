@@ -1,8 +1,7 @@
-@extends('layouts.onlycss')
+@extends('layouts.giftcard')
 
 @section('content')
-<div class="thumbnail">
-  <img src="{{ asset('img/giftcard2.jpeg') }}">
+<div>
   <div class="caption caption-producto">
       <p>{{ $item->descripcion }}</p>
   </div>
