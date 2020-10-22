@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ url(mix('css/app.css')) }}" rel="stylesheet">
     <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/buttons.dataTables.min.css') }}" rel="stylesheet">
 
@@ -102,7 +102,7 @@
     </script>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" ></script>
+    <script src="{{ url(mix('js/app.js')) }}" ></script>
     <script src="{{ asset('js/datatables.min.js') }}" ></script>
     <script src="{{ asset('js/snackbar.js') }}" ></script>
     <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
