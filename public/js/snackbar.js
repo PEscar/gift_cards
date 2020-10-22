@@ -18,13 +18,22 @@ function showSnackBarFromErrors(data)
 
   for (let field in errors.errors)
   {
-      console.log(errors.errors[field]);
-
       for (let err_msg in errors.errors[field])
       {
         msg += errors.errors[field][err_msg] + '<br>';
-        // console.log(msg);
       }
+  }
+
+  showSnackbar(msg);
+}
+
+function showSnackBarFromAxiosErrors(response)
+{
+  var msg = '';
+
+  for (let field in response.response.data.errors)
+  {
+    msg += response.response.data.errors[field] + '<br>';
   }
 
   showSnackbar(msg);

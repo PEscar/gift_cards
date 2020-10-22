@@ -45,7 +45,7 @@
                                         <option selected value="null" disabled>Seleccionar Producto</option>
                                         <option value="1">Canje</option>
                                         <option value="2">Invitación</option>
-                                        <option value="3">Mayorista</option>
+                                        <option value="3">Venta</option>
                                     </select>
                                 </div>
                             </div>
@@ -177,7 +177,7 @@
 
                             showSnackbar('Venta registrada. Enviando voucher...');
                         }).catch(err => {
-                            console.log(err)
+                            showSnackBarFromAxiosErrors(err)
                     })
                 }
             },

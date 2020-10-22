@@ -18,6 +18,7 @@ window.Vue = require('vue');
 
 Vue.component('gc-validation-item', require('./components/ValidarGiftcardComponent.vue').default);
 Vue.component('nueva-venta-item', require('./components/NuevaVentaComponent.vue').default);
+Vue.component('nuevo-producto-item', require('./components/NuevoProductoComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

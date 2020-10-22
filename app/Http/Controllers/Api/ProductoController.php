@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Producto;
+use App\Models\VentaProducto;
 use DataTables;
 use Illuminate\Http\Request;
 use Response;
@@ -17,9 +18,9 @@ class ProductoController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::all();
+        $data = Producto::all();
 
-        return Producto::of($data)
+        return Datatables::of($data)
 
                 ->addColumn('id', function($row){
 
@@ -28,28 +29,32 @@ class ProductoController extends Controller
 
                 ->rawColumns(['id'])
 
-                ->addColumn('nivel', function($row){
+                ->addColumn('sku', function($row){
 
-                    return $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel 1' : 'Nivel 2' );
+                    return $row->sku;
                 })
 
-                ->rawColumns(['nivel'])
+                ->rawColumns(['sku'])
 
-                ->addColumn('sedes', function($row){
+                ->addColumn('nombre', function($row){
 
-                    return $row->sedes()->count();
+                    return $row->nombre;
                 })
 
-                ->rawColumns(['sedes'])
+                ->rawColumns(['nombre'])
+
+                ->addColumn('descripcion', function($row){
+
+                    return $row->descripcion;
+                })
+
+                ->rawColumns(['descripcion'])
 
                 ->addColumn('action', function($row){
 
-                    $nivel = $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel 1' : 'Nivel 2' );
-                    $nivel2 = $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel1' : 'Nivel2' );
+                    $btn = '<a href="#" class="edit btn btn-primary btn-sm btn_view_producto" data-toggle="modal" data-target="#view_producto_modal" data-sku="' . $row->sku . '" data-id="' . $row->id . '" data-nombre="' . $row->nombre . '" data-descripcion="' . $row->descripcion . '">View</a> <a href="#" data-sku="' . $row->sku . '" class="edit btn btn-warning btn-sm btn_edit_producto" data-url="' . route('api.productos.update', ['id' => $row->id]) . '" data-nombre="' . $row->nombre . '" data-descripcion="' . $row->descripcion . '" data-toggle="modal" data-target="#update_producto_modal" data-id="' . $row->id . '">Edit</a> <a href="#" class="edit btn btn-danger btn-sm btn_del_user" data-url="' . route('api.productos.destroy', ['id' => $row->id]) . '" data-id="' . $row->id . '" data-toggle="modal" data-target="#delete_producto_modal">Delete</a>' ;
 
-                       $btn = '<a href="#" class="edit btn btn-primary btn-sm btn_view_user" data-toggle="modal" data-target="#view_user_modal" data-id="' . $row->id . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel . '" data-sedes="' . implode(',', $row->sedes->pluck('nombre')->toArray()) . '">View</a> <a href="#" class="edit btn btn-warning btn-sm btn_edit_user" data-url="' . route('api.users.update', ['id' => $row->id]) . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel2 . '" data-sedes="' . implode(',', $row->sedes->pluck('id')->toArray()) . '" data-toggle="modal" data-target="#update_user_modal" data-id="' . $row->id . '">Edit</a> <a href="#" class="edit btn btn-danger btn-sm btn_del_user" data-url="' . route('api.users.destroy', ['id' => $row->id]) . '" data-id="' . $row->id . '" data-toggle="modal" data-target="#delete_user_modal">Delete</a>'; 
-
-                        return $btn;
+                    return $btn;
                 })
 
                 ->rawColumns(['action'])
@@ -64,30 +69,27 @@ class ProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
         if ( ! auth()->user()->hasRole('Admin') )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "user" => ['Tenes que ser admin para poder actualizar usuarios.'],
+                "user" => ['Tenes que ser admin para poder actualizar Productos.'],
             ]);
         }
 
-        $user = User::where('email', $request->email)->where('id', '!=', $id)->first();
+        $producto = Producto::where('sku', $request->sku)->where('id', '!=', $id)->first();
 
-        if ( $user )
+        if ( $producto )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "email" => ['Email en uso.'],
+                "sku" => ['Código en uso.'],
             ]);
         }
 
-        $user = User::findOrFail($id);
+        $producto = Producto::findOrFail($id);
 
-        $user->update(['name' => $request->name, 'email' => $request->email]);
-
-        $user->setNivel($request->nivel);
-        $user->setSedes($request->sedes);
+        $producto->update(['nombre' => $request->nombre, 'descripcion' => $request->descripcion, 'sku' => $request->sku]);
 
         return Response::json(null, 204);
     }
@@ -103,52 +105,41 @@ class ProductoController extends Controller
         if ( ! auth()->user()->hasRole('Admin') )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "user" => ['Tenes que ser admin para poder borrar usuarios.'],
+                "user" => ['Tenes que ser admin para poder borrar productos.'],
             ]);
         }
 
-        $user = User::findOrFail($id);
-        
-        if ( auth()->user()->hasRole('Admin') && $user->id == auth()->user()->id )
+        $producto = Producto::findOrFail($id);
+        $ventaProductos_cant = VentaProducto::where('producto_id', $producto->id)->count();
+
+        if ( $ventaProductos_cant > 0 )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "user" => ['No podés borrarte a vos mismo.'],
+                "producto" => ['No se puede eliminar un producto con ventas registradas.'],
             ]);
         }
 
-        $user->delete();
+        $producto->delete();
 
         return Response::json(null, 204);
     }
 
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $producto = Producto::where('sku', $request->sku)->first();
 
-        if ( $user )
+        if ( $producto )
         {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                "email" => ['Email en uso.'],
+                "sku" => ['Código en uso.'],
             ]);
         }
 
-        if ( ! auth()->user()->hasRole('Admin') )
-        {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                "user" => ['Tenes que ser admin para poder crear usuarios.'],
-            ]);
-        }
-
-        $user = new User;
-        $user->email = $request->email;
-        $user->name = $request->name;
-        $user->email_verified_at = date('Y-m-d H:i:s');
-        $user->password = Hash::make('123123');
-        $user->api_token = Str::random(60);
-        $user->save();
-
-        $user->setNivel($request->nivel);
-        $user->setSedes($request->sedes);
+        $producto = new Producto;
+        $producto->nombre = $request->nombre;
+        $producto->descripcion = $request->descripcion;
+        $producto->sku = $request->sku;
+        $producto->save();
 
         return Response::json(null, 201);
     }

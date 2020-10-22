@@ -35,7 +35,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_venta', function($row){
 
-                    return strtoupper(date('d/m/Y H:i', strtotime($row->venta->created_at)));
+                    return strtoupper(date('d/m/Y', strtotime($row->venta->created_at)));
                 })
 
                 ->rawColumns(['fecha_venta'])
@@ -52,7 +52,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_pago', function($row){
 
-                    return $row->venta->fecha_pago ? strtoupper(date('d/m/Y H:i', strtotime($row->venta->fecha_pago))) : null;
+                    return $row->venta->fecha_pago ? strtoupper(date('d/m/Y', strtotime($row->venta->fecha_pago))) : null;
                 })
 
                 ->rawColumns(['fecha_pago'])
@@ -66,14 +66,14 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_asignacion', function($row){
 
-                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y H:i', strtotime($row->fecha_asignacion))) : null;
+                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y', strtotime($row->fecha_asignacion))) : null;
                 })
 
                 ->rawColumns(['fecha_asignacion'])
 
                 ->addColumn('fecha_consumicion', function($row){
 
-                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y H:i', strtotime($row->fecha_consumicion))) : null;
+                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y', strtotime($row->fecha_consumicion))) : null;
                 })
 
                 ->rawColumns(['fecha_consumicion'])
@@ -131,7 +131,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_venta', function($row){
 
-                    return strtoupper(date('d/m/Y H:i', strtotime($row->venta->created_at)));
+                    return strtoupper(date('d/m/Y', strtotime($row->venta->created_at)));
                 })
 
                 ->rawColumns(['fecha_venta'])
@@ -162,14 +162,14 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_asignacion', function($row){
 
-                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y H:i', strtotime($row->fecha_asignacion))) : null;
+                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y', strtotime($row->fecha_asignacion))) : null;
                 })
 
                 ->rawColumns(['fecha_asignacion'])
 
                 ->addColumn('fecha_consumicion', function($row){
 
-                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y H:i', strtotime($row->fecha_consumicion))) : null;
+                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y', strtotime($row->fecha_consumicion))) : null;
                 })
 
                 ->rawColumns(['fecha_consumicion'])

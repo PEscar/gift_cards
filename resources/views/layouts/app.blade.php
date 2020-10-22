@@ -44,7 +44,18 @@
                             </div>
                         </li>
                         @if ( auth()->user()->hasRole('Admin'))
-                        <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a></li>
+
+                        <li class="nav-item dropdown navbar-brand">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                ABM <span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('productos.index') }}">Productos</a>
+                                <a class="dropdown-item" href="{{ route('usuarios.index') }}">Usuarios</a>
+                            </div>
+                        </li>
+
                         <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('configuracion.update.show') }}">Configuración</a></li>
                         @endif
                     </ul>

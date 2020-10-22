@@ -22,11 +22,11 @@
                                 <th>Producto</th>
                                 <th>Concepto</th>
                                 <th>Estado</th>
-                                <th>Fecha Venta</th>
-                                <th>Fecha Pago</th>
-                                <th>Fecha Venc.</th>
-                                <th>Fecha Asig.</th>
-                                <th>Fecha Cons.</th>
+                                <th>Venta</th>
+                                <th>Pago</th>
+                                <th>Vencimiento</th>
+                                <th>Asignación</th>
+                                <th>Consumo</th>
                                 <th>Sede / Mesa</th>
                                 <th>Usuario</th>
                                 <th>N° Factura</th>

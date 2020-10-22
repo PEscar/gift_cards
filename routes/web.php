@@ -39,6 +39,8 @@ Route::middleware('auth:web')->group(function () {
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
 	Route::get('/password', 'UserController@showUpdatePasswordView')->name('password.update.show');
 	Route::get('/configuracion', 'UserController@showConfiguracionView')->name('configuracion.update.show');
+
+	Route::get('/productos', 'ProductoController@index')->name('productos.index');
 });
 
 Route::prefix('giftcards')->group(function () {

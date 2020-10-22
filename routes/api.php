@@ -39,4 +39,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/asignar/{codigo?}', 'Api\GiftCardController@asignar')->name('api.giftcards.asignar');
         Route::get('/validar/{codigo?}', 'Api\GiftCardController@validar')->name('api.giftcards.validar');
     });
+
+    Route::prefix('productos')->group(function () {
+        Route::get('/', 'Api\ProductoController@index')->name('api.productos.index');
+        Route::put('/update/{id}', 'Api\ProductoController@update')->name('api.productos.update');
+        Route::delete('/{id}', 'Api\ProductoController@destroy')->name('api.productos.destroy');
+        Route::post('/create', 'Api\ProductoController@store')->name('api.productos.create');
+    });
 });
