@@ -4,9 +4,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require('./bootstrap')
 
-window.Vue = require('vue');
+window.Vue = require('vue')
 
 /**
  * The following block of code may be used to automatically register your
@@ -16,10 +16,10 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component('gc-validation-item', require('./components/ValidarGiftcardComponent.vue').default);
-Vue.component('nueva-venta-item', require('./components/NuevaVentaComponent.vue').default);
-Vue.component('nuevo-producto-item', require('./components/NuevoProductoComponent.vue').default);
-
+Vue.component('gc-validation-item', require('./components/ValidarGiftcardComponent.vue').default)
+Vue.component('nueva-venta-item', require('./components/NuevaVentaComponent.vue').default)
+Vue.component('nuevo-producto-item', require('./components/NuevoProductoComponent.vue').default)
+Vue.component('nueva-empresa-item', require('./components/NuevaEmpresaComponent.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

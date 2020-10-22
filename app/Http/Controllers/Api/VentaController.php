@@ -25,7 +25,7 @@ class VentaController extends Controller
         $venta->pagada = $request->pagada ? 1 : 0;
         $venta->fecha_pago = $venta->pagada ? $request->fecha_pago : null;
         $venta->vendedor_id = auth()->id();
-        $venta->client_email = $request->client_email;
+        $venta->empresa_id = $request->empresa;
         $venta->comentario = $request->comentario;
         $venta->nro_factura = $request->nro_factura;
         $venta->tipo_notificacion = $request->tipo_notificacion;

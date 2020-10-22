@@ -46,4 +46,11 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{id}', 'Api\ProductoController@destroy')->name('api.productos.destroy');
         Route::post('/create', 'Api\ProductoController@store')->name('api.productos.create');
     });
+
+    Route::prefix('empresas')->group(function () {
+        Route::get('/', 'Api\EmpresaController@index')->name('api.empresas.index');
+        Route::put('/update/{id}', 'Api\EmpresaController@update')->name('api.empresas.update');
+        Route::delete('/{id}', 'Api\EmpresaController@destroy')->name('api.empresas.destroy');
+        Route::post('/create', 'Api\EmpresaController@store')->name('api.empresas.create');
+    });
 });

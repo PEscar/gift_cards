@@ -44,7 +44,7 @@ class GiftCardController extends Controller
 
                     return $row->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' :
                         ( $row->venta->source_id == Venta::SOURCE_CANJE ? 'Canje' : (
-                            $row->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Mayorista'
+                            $row->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Venta'
                         ) );
                 })
 
@@ -140,7 +140,7 @@ class GiftCardController extends Controller
 
                     return $row->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' :
                         ( $row->venta->source_id == Venta::SOURCE_CANJE ? 'Canje' : (
-                            $row->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Mayorista'
+                            $row->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Venta'
                         ) );
                 })
 

@@ -34,7 +34,7 @@ class Venta extends Model
      */
     public function routeNotificationForMail()
     {
-        return $this->client_email;
+        return $this->source_id == self::SOURCE_TIENDA_NUBE ? $this->client_email : $this->empresa->email;
     }
 
 	// RELATIONS
@@ -43,6 +43,11 @@ class Venta extends Model
 	{
 		return $this->hasMany(VentaProducto::class);
 	}
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class);
+    }
 
 	// END RELATIONS
 

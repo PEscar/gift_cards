@@ -18,11 +18,14 @@
                             <div class="form-group row">
                                 
                                 <div class="col-2">
-                                    <label for="client_email" class="col-form-label" >Email</label>
+                                    <label for="empresa" class="col-form-label" >Empresa</label>
                                 </div>
 
                                 <div class="col-9">
-                                    <input type="email" id="client_email" class="form-control" v-model="client_email" v-bind:class="{ 'is-valid' : validateClientEmail, 'is-invalid': !validateClientEmail }" placeholder="ejemplo@email.com">
+                                    <select class="form-control" v-bind:class="{ 'is-valid': empresa, 'is-invalid': !empresa }" v-model="empresa" id="empresa">
+                                        <option selected value="null" disabled>Seleccionar Empresa</option>
+                                        <option v-for="empresa in empresas" :value="empresa.id">{{ empresa.nombre }}</option>
+                                    </select>
                                 </div>
 
                                 <div class="col-2">
@@ -137,9 +140,9 @@
 <script>
     export default {
         name: 'NuevaVentaComponent',
-        props: ['validez_default', 'rutaCrear', 'productos'],
+        props: ['validez_default', 'rutaCrear', 'productos', 'empresas'],
         data: () => ({
-            client_email: null,
+            empresa: null,
             sku: null,
             cantidad: 1,
             pagada: false,
@@ -158,7 +161,7 @@
 
                     axios.post(this.rutaCrear, {
                         api_token: window.Laravel.api_token,
-                        client_email: this.client_email,
+                        empresa: this.empresa,
                         sku: this.sku,
                         cantidad: this.cantidad,
                         pagada: this.pagada,
@@ -184,7 +187,7 @@
 
             resetFormNuevaVenta: function() {
 
-                this.client_email = null
+                this.empresa = null
                 this.sku = null
                 this.cantidad = 1
                 this.pagada = null
@@ -217,10 +220,6 @@
 
         computed: {
 
-            validateClientEmail: function() {
-                return this.client_email && this.reg.test(this.client_email)
-            },
-
             validateCantidad: function() {
                 return this.cantidad > 0
             },
@@ -234,7 +233,7 @@
             },
 
             validateNuevaVentaForm: function() {
-                return this.validateClientEmail && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.comentario && this.concepto && this.notificacion
+                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.comentario && this.concepto && this.notificacion
             },
         },
 

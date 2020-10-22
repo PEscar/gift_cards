@@ -24,7 +24,7 @@ class VentaMayoristaRequest extends FormRequest
     public function rules()
     {
         return [
-            'client_email' => 'required|email',
+            'empresa' => 'required',
             'sku' => 'required',
             'concepto' => 'required|lte:3',
             'cantidad' => 'required|gte:1',

@@ -112,82 +112,8 @@
 
                     <div class="form-group row">
                         <div class="col text-center">
-                            <button id="confirm_update_user_btn" type="submit" class="btn btn-primary">
+                            <button id="confirm_update_producto_btn" type="submit" class="btn btn-primary">
                                 Actualizar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="create_user_modal" class="modal fade">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                Nuevo Usuario
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- dialog body -->
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" id="form_create_user" action="{{ route('api.users.create') }}">
-                    <div class="form-group row">
-
-                        <div class="col-md-3 text-md-right">
-                            <label for="name" class="col-form-label">{{ __('Name') }}</label>
-                        </div>
-
-                        <div class="col-md-9">
-                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                            @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-
-                        <div class="col-md-3 text-md-right">
-                            <label for="email" class="col-form-label">{{ __('E-Mail Address') }}</label>
-                        </div>
-
-                        <div class="col-md-9">
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-
-                        <div class="col-md-3 text-md-right">
-                            <label for="nivel" class="col-form-label">Permiso</label>
-                        </div>
-
-                        <div class="col-md-6">
-                            <select class="form-control" name="nivel" id="nivel">
-                                <option value="Admin">Admin</option>
-                                <option value="Nivel1">Nivel 1</option>
-                                <option value="Nivel2">Nivel 2</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col text-center">
-                            <button id="confirm_create_user_btn" type="submit" class="btn btn-success">
-                                Crear
                             </button>
                         </div>
                     </div>
@@ -340,7 +266,7 @@
                 $("#form_update_producto #sku").val($(e.relatedTarget).attr('data-sku'));
             });
 
-            $('#update_producto_modal').on('click', '#confirm_update_user_btn', function(e) {
+            $('#update_producto_modal').on('click', '#confirm_update_producto_btn', function(e) {
                 e.preventDefault();
 
                 $.ajax({
@@ -365,35 +291,6 @@
                     showSnackbar('Producto #' + $('#update_producto_id').val() + ' actualizado.');
 
                     $('#form_update_producto').trigger("reset");
-                })
-                .fail(function(data) {
-                    showSnackBarFromErrors(data);
-                });
-            });
-
-            $('#create_user_modal').on('click', '#confirm_create_user_btn', function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    url: $('#form_create_user').attr('action'),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        api_token: '{{ auth()->user()->api_token }}',
-                        name: $('#create_user_modal #name').val(),
-                        email: $('#create_user_modal #email').val(),
-                        nivel: $('#create_user_modal #nivel').val(),
-                        sedes: $('#create_user_modal #sedes').val(),
-                    },
-                })
-                .done(function() {
-                    table.draw();
-                    $('#create_user_modal').modal('hide');
-
-                    // Show message
-                    showSnackbar('Usuario creado.');
-
-                    $('#form_create_user').trigger("reset");
                 })
                 .fail(function(data) {
                     showSnackBarFromErrors(data);
