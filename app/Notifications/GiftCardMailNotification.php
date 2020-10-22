@@ -40,9 +40,16 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $mail = (new MailMessage)->line('Aquí tienes tu Gift Card !');
-
         $pdfs = $notifiable->generatePdfs();
+
+        if ( count($pdfs) > 1 )
+        {
+            $mail = (new MailMessage)->line('Aquí tienes tus Gift Card !');
+        }
+        else
+        {
+            $mail = (new MailMessage)->line('Aquí tienes tu Gift Card !');
+        }
 
         foreach ($pdfs as $key => $elem) {
 

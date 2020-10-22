@@ -94,7 +94,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('sede_mesa', function($row){
 
-                    return $row->asignada ? $row->sede->nombre . ' Mesa: ' . $row->nro_mesa : null;
+                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? $row->sede->nombre . ' Mesa: ' . $row->nro_mesa : null;
                 })
 
                 ->rawColumns(['sede_mesa'])
@@ -190,7 +190,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('sede_mesa', function($row){
 
-                    return $row->asignada ? $row->sede->nombre . ' Mesa: ' . $row->nro_mesa : null;
+                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? $row->sede->nombre . ', Mesa: ' . $row->nro_mesa : null;
                 })
 
                 ->rawColumns(['sede_mesa'])

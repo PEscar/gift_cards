@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/mail.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/mail.css') }}" rel="stylesheet">
 
 </head>
 <body>

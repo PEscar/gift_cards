@@ -181,6 +181,7 @@
 
                             this.resetFormNuevaVenta()
                             this.closeModal()
+                            this.reloadTable()
 
                             showSnackbar('Venta registrada. Enviando voucher...');
                         }).catch(err => {
