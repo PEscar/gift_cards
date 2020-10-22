@@ -10,7 +10,7 @@
                 <div class="card-header">
                     Administrar Gift Cards Mayoristas
                     <div class="float-right">
-                        <nueva-venta-item :ruta-crear="{{ json_encode(route('api.ventas.create')) }}" :validez_default="{{ env('VENCIMIENTO_GIFT_CARDS') }}"></nueva-venta-item>
+                        <nueva-venta-item :ruta-crear="{{ json_encode(route('api.ventas.create')) }}" :validez_default="{{ env('VENCIMIENTO_GIFT_CARDS') }}" :productos="{{ json_encode($productos) }}"></nueva-venta-item>
                     </div>
                 </div>
 

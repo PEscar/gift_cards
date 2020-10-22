@@ -93,6 +93,11 @@ class VentaProducto extends Model
         return $this->belongsTo(Sede::class);
     }
 
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
+    }
+
     // END RELATIONS
 
     // FUNCTIONS

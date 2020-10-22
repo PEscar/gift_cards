@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VentaMayoristaRequest;
 use App\Jobs\SendGiftCardMailNotification;
+use App\Models\Producto;
 use App\Models\Venta;
 use App\Models\VentaProducto;
 use Carbon\Carbon;
@@ -16,6 +17,8 @@ class VentaController extends Controller
 {
     public function store(VentaMayoristaRequest $request)
     {
+        $producto = Producto::where('sku', $request->sku)->firstOrFail();
+
         $venta = new Venta;
         $venta->date = Carbon::now();
         $venta->source_id = $request->concepto;
@@ -32,9 +35,7 @@ class VentaController extends Controller
         for ($i=1; $i <= $request->cantidad ; $i++) {
 
             $ventaProducto = factory(VentaProducto::class)->make();
-            $ventaProducto->descripcion = $request->sku;
-            $ventaProducto->sku = $request->sku;
-            $ventaProducto->tipo_producto = 1; //gift cards
+            $ventaProducto->producto_id = $producto->id;
             $ventaProducto->cantidad = 1;
             $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays($request->validez)->toDate();
             $ventaProducto->generateGiftCardCode();

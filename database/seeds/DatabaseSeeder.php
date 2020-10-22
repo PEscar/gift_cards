@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Producto;
 use App\Models\Sede;
 use App\Models\Venta;
 use App\Models\VentaProducto;
@@ -24,9 +25,23 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'Nivel1']);
         $user->setNivel('Admin');
 
+        // Seed productos
+        factory(Producto::class)->createMany([
+            ['sku' => "11247", 'nombre' => 'Gift Card Coliseo x 1'],
+            ['sku' => "11255", 'nombre' => 'Gift Card Coliseo x 2'],
+            ['sku' => "11256", 'nombre' => 'Gift Card Coliseo x 3'],
+            ['sku' => "11257", 'nombre' => 'Gift Card Coliseo x 4'],
+            ['sku' => "11251", 'nombre' => 'Gift Card Menu Aniversario x 1'],
+            ['sku' => "11252", 'nombre' => 'Gift Card Menu Aniversario x 2'],
+            ['sku' => "11253", 'nombre' => 'Gift Card Menu Aniversario x 3'],
+            ['sku' => "11254", 'nombre' => 'Gift Card Menu Aniversario x 4']
+        ]);
+
+        $producto = Producto::all()->random();
+
         // Venta de TEST.
         $venta = factory(Venta::class)->state('pagada')->create(['comentario' => 'Venta TEST creada desde seeder.']);
-        $venta->venta_productos()->save(factory(VentaProducto::class)->state('gift_card_valida')->make());
+        $venta->venta_productos()->save(factory(VentaProducto::class)->state('gift_card_valida')->make(['producto_id' => $producto->id]));
 
         Sede::create(['nombre' => 'Madero 1']);
         Sede::create(['nombre' => 'Madero 2']);

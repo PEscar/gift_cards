@@ -32,15 +32,7 @@
                                 <div class="col-9">
                                     <select class="form-control" v-bind:class="{ 'is-valid': sku, 'is-invalid': !sku }" v-model="sku" id="sku">
                                         <option selected value="null" disabled>Seleccionar Producto</option>
-                                        <option value="11247">Gift Card Coliseo x 1</option>
-                                        <option value="11255">Gift Card Coliseo x 2</option>
-                                        <option value="11256">Gift Card Coliseo x 3</option>
-                                        <option value="11257">Gift Card Coliseo x 4</option>
-                                        <option value="11251">Gift Card Menu Aniversario x 1</option>
-                                        <option value="11252">Gift Card Menu Aniversario x 2</option>
-                                        <option value="11253">Gift Card Menu Aniversario x 3</option>
-                                        <option value="11254">Gift Card Menu Aniversario x 4</option>
-
+                                        <option v-for="producto in productos" :value="producto.sku">{{ producto.nombre }}</option>
                                     </select>
                                 </div>
 
@@ -145,7 +137,7 @@
 <script>
     export default {
         name: 'NuevaVentaComponent',
-        props: ['validez_default', 'rutaCrear'],
+        props: ['validez_default', 'rutaCrear', 'productos'],
         data: () => ({
             client_email: null,
             sku: null,

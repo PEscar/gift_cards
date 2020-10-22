@@ -28,7 +28,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('producto', function($row){
 
-                    return $row->descripcion;
+                    return $row->producto->nombre;
                 })
 
                 ->rawColumns(['producto'])
@@ -117,7 +117,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('producto', function($row){
 
-                    return $row->descripcion;
+                    return $row->producto->nombre;
                 })
 
                 ->rawColumns(['producto'])

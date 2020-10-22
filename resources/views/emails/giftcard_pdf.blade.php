@@ -3,7 +3,7 @@
 @section('content')
 <div>
   <div class="caption caption-producto">
-      <p>{{ $item->descripcion }}</p>
+      <p>{{ $item->producto->nombre }}</p>
   </div>
   <div class="caption caption-vencimiento">
       <p>{{ strtoupper(date('d/m/Y', strtotime( $item->fecha_vencimiento ))) }}</p>

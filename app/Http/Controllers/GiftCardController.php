@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Producto;
 use App\Models\VentaProducto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class GiftCardController extends Controller
     {
         if ( auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Nivel1') )
         {
-            return view('giftcards_mayoristas');
+            return view('giftcards_mayoristas', ['productos' => Producto::all(['sku', 'nombre'])]);
         }
 
         return redirect()->route('home');
