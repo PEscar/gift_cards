@@ -53,17 +53,24 @@
                         </div>
 
                         <div class="alert alert-danger" role="alert" v-if="gc.estado == estados.vencida">
-                          ESTADO: <strong>VENCIDA</strong>!<br>
-                          FECHA VENCIMIENTO: <strong>{{ gc.fecha_vencimiento }}</strong><br>
-                      </div>
+                            ESTADO: <strong>VENCIDA</strong>!<br>
+                            FECHA VENCIMIENTO: <strong>{{ gc.fecha_vencimiento }}</strong><br>
+                        </div>
 
-                      <div class="alert alert-warning" role="alert" v-if="gc.estado == estados.asignada">
-                          ESTADO: <strong>ASIGNADA</strong>!<br>
-                          ASIGNÓ: <strong>{{ gc.asigno }}</strong><br>
-                          FECHA ASIGNACION: <strong>{{ gc.fecha_asignacion }}</strong><br>
-                          NRO MESA: <strong>{{ gc.nro_mesa }}</strong><br>
-                          SEDE: <strong>{{ gc.sede }}</strong>
-                      </div>
+                        <div class="alert alert-warning" role="alert" v-if="gc.estado == estados.asignada">
+                            ESTADO: <strong>ASIGNADA</strong>!<br>
+                            ASIGNÓ: <strong>{{ gc.asigno }}</strong><br>
+                            FECHA ASIGNACION: <strong>{{ gc.fecha_asignacion }}</strong><br>
+                            NRO MESA: <strong>{{ gc.nro_mesa }}</strong><br>
+                            SEDE: <strong>{{ gc.sede }}</strong>
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" v-if="gc.estado == estados.cancelada">
+                            ESTADO: <strong>CANCELADA</strong>!<br>
+                            CANCELÓ: <strong>{{ gc.cancelo }}</strong><br>
+                            FECHA CANCELACIÓN: <strong>{{ gc.fecha_cancelacion }}</strong><br>
+                            MOTIVO: <strong>{{ gc.motivo_cancelacion }}</strong><br>
+                        </div>
                     </div>
                 </div>
 

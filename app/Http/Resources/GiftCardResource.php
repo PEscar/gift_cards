@@ -19,13 +19,16 @@ class GiftCardResource extends JsonResource
             'estado' => $this->estado,
             'consumio' => $this->consumidaPor ? $this->consumidaPor->name : null,
             'asigno' => $this->asignadaPor ? $this->asignadaPor->name : null,
-            'fecha_consumicion' => $this->consumidaPor ? strtoupper(date('d/M/Y H:i', strtotime($this->fecha_consumicion))) : null,
+            'fecha_consumicion' => $this->consumidaPor ? strtoupper(date('d/M/Y', strtotime($this->fecha_consumicion))) : null,
             'fecha_vencimiento' => strtoupper(date('d/M/Y', strtotime($this->fecha_vencimiento))),
-            'fecha_asignacion' => $this->asignadaPor ? strtoupper(date('d/M/Y H:i', strtotime($this->fecha_asignacion))) : null,
+            'fecha_asignacion' => $this->asignadaPor ? strtoupper(date('d/M/Y', strtotime($this->fecha_asignacion))) : null,
+            'fecha_cancelacion' => $this->canceladaPor ? strtoupper(date('d/M/Y', strtotime($this->fecha_cancelacion))) : null,
             'cantidad' => $this->cantidad,
-            'descripcion' => $this->descripcion,
+            'descripcion' => $this->producto->nombre,
             'nro_mesa' => $this->nro_mesa,
             'sede' => $this->sede ? $this->sede->nombre : null,
+            'cancelo' => $this->canceladaPor ? $this->canceladaPor->name : null,
+            'motivo_cancelacion' => $this->motivo_cancelacion,
         ];
     }
 }

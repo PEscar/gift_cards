@@ -42,7 +42,8 @@ class GiftCardController extends Controller
             'valida' => VentaProducto::ESTADO_VALIDA,
             'consumida' => VentaProducto::ESTADO_CONSUMIDA,
             'asignada' => VentaProducto::ESTADO_ASIGNADA,
-            'vencida' => VentaProducto::ESTADO_VENCIDA
+            'vencida' => VentaProducto::ESTADO_VENCIDA,
+            'cancelada' => VentaProducto::ESTADO_CANCELADA,
         ];
 
         return view('giftcard', ['codigo' => $codigo, 'estados' => $estados, 'sedes' => auth()->user()->sedes]);

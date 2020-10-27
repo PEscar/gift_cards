@@ -88,6 +88,11 @@ class VentaProducto extends Model
         return $this->belongsTo(User::class, 'consumicion_id', 'id');
     }
 
+    public function canceladaPor()
+    {
+        return $this->belongsTo(User::class, 'usuario_cancelacion', 'id');
+    }
+
     public function venta()
     {
         return $this->belongsTo(Venta::class);
