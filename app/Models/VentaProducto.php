@@ -18,6 +18,7 @@ class VentaProducto extends Model
     const ESTADO_CONSUMIDA = 2;
     const ESTADO_ASIGNADA = 3;
     const ESTADO_VENCIDA = 4;
+    const ESTADO_CANCELADA = 5;
 
     public static function findGiftCardByCodigo($codigo)
     {
@@ -53,7 +54,11 @@ class VentaProducto extends Model
     {
         // Una GC puede tener 3 estados: asignada, vencida o valida.
 
-        if ( !is_null($this->fecha_asignacion) )
+        if ( !is_null($this->motivo_cancelacion) )
+        {
+            return self::ESTADO_CANCELADA;
+        }
+        else if ( !is_null($this->fecha_asignacion) )
         {
             return self::ESTADO_ASIGNADA;
         }
@@ -131,6 +136,14 @@ class VentaProducto extends Model
         $this->asignacion_id = null;
         $this->sede_id = null;
         $this->nro_mesa = null;
+
+        return $this;
+    }
+
+    public function cancelar($motivo)
+    {
+        $this->motivo_cancelacion = $motivo;
+        $this->fecha_cancelacion = \Illuminate\Support\Carbon::now();
 
         return $this;
     }

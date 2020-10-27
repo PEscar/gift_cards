@@ -15,7 +15,7 @@
                     <table id="gcs_table" class="table table-bordered data-table">
                         <thead>
                             <tr>
-                                <!-- <th>ID VENTA</th> -->
+                                <th>ID TN</th>
                                 <th>Código</th>
                                 <th>Producto</th>
                                 <th>Estado</th>
@@ -71,7 +71,10 @@
 
                 columns: [
 
-                    // {data: 'id', name: 'id'},
+                    {data: 'id_tienda_nube', render : function(data, type, row) {
+
+                        return data ? '<a target="_blank" href="https://laparolaccia.mitiendanube.com/admin/orders/' + data + '">'+data+'</a>' : '';
+                    }},
 
                     {data: 'codigo', name: 'codigo'},
 

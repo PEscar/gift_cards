@@ -16,7 +16,7 @@
                     <div class="modal-body">
                         <form class="form-horizontal" id="form_nueva_venta" @submit.prevent="crearVentaMayorista()">
                             <div class="form-group row">
-                                
+
                                 <div class="col-2">
                                     <label for="empresa" class="col-form-label" >Empresa</label>
                                 </div>
@@ -26,6 +26,7 @@
                                         <option selected value="null" disabled>Seleccionar Empresa</option>
                                         <option v-for="empresa in empresas" :value="empresa.id">{{ empresa.nombre }}</option>
                                     </select>
+                                    <small v-if="empresa">{{ empresaEmail }}</small>
                                 </div>
 
                                 <div class="col-2">
@@ -234,6 +235,16 @@
 
             validateNuevaVentaForm: function() {
                 return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.comentario && this.concepto && this.notificacion
+            },
+
+            empresaEmail: function() {
+
+                var emp = this.empresas.filter(c => c.id == this.empresa);
+
+                if ( emp )
+                    return emp[0].email;
+                else
+                    return null;
             },
         },
 

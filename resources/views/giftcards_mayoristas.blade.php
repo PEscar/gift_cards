@@ -31,11 +31,48 @@
                                 <th>Usuario</th>
                                 <th>N° Factura</th>
                                 <th>Comentario</th>
+                                <th>Cancelación</th>
                             </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cancel_giftcard_modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    Cancelar Gift Card
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- dialog body -->
+                <div class="modal-body">
+                    ¿ Estás seguro de cancelar esta giftcard ?
+
+                    <form id="form_confirm_cancel_giftcard">
+
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                        <div class="form-group row">
+                            <div class="col text-center">
+                                <input type="text" class="form-control is-invalid" name="motivo" id="motivo" placeholder="Motivo" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col text-center">
+                                <input type="hidden" id="cancel_giftcard_id">
+                                <input type="submit" id="confirm_cancel_giftcard_btn" class="btn btn-danger" value="Si">
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
@@ -103,6 +140,8 @@
                     {data: 'nro_factura', name: 'nro_factura'},
 
                     {data: 'comentario', name: 'comentario'},
+
+                    {data: 'action', name: 'action'},
                 ],
 
                 language: {
@@ -124,6 +163,68 @@
                     $(row).attr('data-id', data.id);
                   },
             });
+
+            $('#cancel_giftcard_modal').on('show.bs.modal', function (e)
+            {
+                // Populate url & id
+               $("#form_confirm_cancel_giftcard").attr('action', $(e.relatedTarget).attr('data-url'));
+               $("#cancel_giftcard_id").val($(e.relatedTarget).attr('data-id'));
+            });
+
+            $('#motivo').keyup(function(event) {
+
+                var val = $('#motivo').val();
+
+                if ( val )
+                {
+                    $('#motivo').addClass('is-valid');
+                    $('#motivo').removeClass('is-invalid');
+                    $('#confirm_cancel_giftcard_btn').removeClass('disabled');
+                } else {
+                    $('#motivo').removeClass('is-valid');
+                    $('#motivo').addClass('is-invalid');
+                    $('#confirm_cancel_giftcard_btn').addClass('disabled');
+                }
+            });
+
+            $('#cancel_giftcard_modal').on('click', '#confirm_cancel_giftcard_btn', function(e) {
+
+                e.preventDefault();
+
+                $.ajax({
+                    url: $('#form_confirm_cancel_giftcard').attr('action'),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'api_token': '{{ auth()->user()->api_token }}',
+                        'motivo': $('#motivo').val(),
+                    },
+                    headers: {
+                        'accept': 'application/json',
+                    }
+                })
+                .done(function() {
+
+                    // Hide modal
+                    $('#cancel_giftcard_modal').modal('hide');
+
+                    table.draw();
+
+                    // Show message
+                    showSnackbar('Giftcard cancelada.');
+
+                    $('#motivo').addClass('is-invalid');
+                    $('#motivo').removeClass('is-valid');
+                    $('#motivo').val(null);
+                    $('#confirm_cancel_giftcard_btn').addClass('disabled');
+                })
+                .fail(function(data) {
+
+                    showSnackBarFromErrors(data);
+                    $('#cancel_giftcard_modal').modal('hide');
+                });
+            });
+
         });
 
     </script>

@@ -19,6 +19,13 @@ class GiftCardController extends Controller
 
         return Datatables::of($data)
 
+                ->addColumn('id_tienda_nube', function($row){
+
+                    return $row->venta->external_id;
+                })
+
+                ->rawColumns(['id_tienda_nube'])
+
                 ->addColumn('codigo', function($row){
 
                     return $row->codigo_gift_card;
@@ -183,7 +190,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('estado', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
+                    return $row->estado == VentaProducto::ESTADO_CANCELADA ? 'Cancelada' : ( $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) ) );
                 })
 
                 ->rawColumns(['estado'])
@@ -209,6 +216,13 @@ class GiftCardController extends Controller
 
                 ->rawColumns(['comentario'])
 
+                ->addColumn('action', function($row){
+
+                    return  $row->estado == VentaProducto::ESTADO_VALIDA ? '<a href="#" class="edit btn btn-danger btn-sm btn_cancel_giftcard" data-url="' . route('api.giftcards.cancel', ['codigo' => $row->codigo_gift_card]) . '" data-toggle="modal" data-target="#cancel_giftcard_modal">Cancelar</a>' : ( $row->estado == VentaProducto::ESTADO_CANCELADA ? $row->motivo_cancelacion : null );
+                })
+
+                ->rawColumns(['action'])
+
                 ->make(true);
     }
 
@@ -227,5 +241,23 @@ class GiftCardController extends Controller
         $gc = VentaProducto::where('codigo_gift_card', $codigo)->first();
 
         return Response::json($gc ? new GiftCardResource($gc) : null, 201);
+    }
+
+    public function cancelar(Request $request, $codigo)
+    {
+        $gc = VentaProducto::where('codigo_gift_card', $codigo)->first();
+
+        if ( $gc->estado != VentaProducto::ESTADO_VALIDA )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "giftcard" => ['Solo puedes cancelar giftcards válidas.'],
+            ]);
+        }
+
+        $gc->cancelar($request->motivo);
+        $gc->usuario_cancelacion = auth()->id();
+        $gc->save();
+
+        return Response::json(null, 201);
     }
 }
