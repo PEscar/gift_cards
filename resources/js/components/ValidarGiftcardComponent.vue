@@ -31,7 +31,8 @@
                         <div class="alert alert-success" role="alert" v-if="gc.estado == estados.valida">
                             ESTADO: <strong>VÁLIDA</strong>!<br>
                             CANTIDAD: <strong>#{{ gc.cantidad }}</strong><br>
-                            PRODUCTO: <strong>{{ gc.descripcion }}</strong><br><br>
+                            PRODUCTO: <strong>{{ gc.descripcion }}</strong><br>
+                            FECHA VENCIMIENTO: <strong>{{ gc.fecha_vencimiento }}</strong><br><br>
                             <form
                               @submit.prevent="asignarGiftcard()"
                             >
