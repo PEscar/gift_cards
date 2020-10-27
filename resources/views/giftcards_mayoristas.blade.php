@@ -85,6 +85,8 @@
 
         $(function () {
 
+            $('#confirm_cancel_giftcard_btn').addClass('disabled');
+
             // Load table through ajax
             var table = $('#gcs_table').DataTable({
 
@@ -191,38 +193,41 @@
 
                 e.preventDefault();
 
-                $.ajax({
-                    url: $('#form_confirm_cancel_giftcard').attr('action'),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        'api_token': '{{ auth()->user()->api_token }}',
-                        'motivo': $('#motivo').val(),
-                    },
-                    headers: {
-                        'accept': 'application/json',
-                    }
-                })
-                .done(function() {
+                if ( $('#motivo').val() )
+                {
+                    $.ajax({
+                        url: $('#form_confirm_cancel_giftcard').attr('action'),
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'api_token': '{{ auth()->user()->api_token }}',
+                            'motivo': $('#motivo').val(),
+                        },
+                        headers: {
+                            'accept': 'application/json',
+                        }
+                    })
+                    .done(function() {
 
-                    // Hide modal
-                    $('#cancel_giftcard_modal').modal('hide');
+                        // Hide modal
+                        $('#cancel_giftcard_modal').modal('hide');
 
-                    table.draw();
+                        table.draw();
 
-                    // Show message
-                    showSnackbar('Giftcard cancelada.');
+                        // Show message
+                        showSnackbar('Giftcard cancelada.');
 
-                    $('#motivo').addClass('is-invalid');
-                    $('#motivo').removeClass('is-valid');
-                    $('#motivo').val(null);
-                    $('#confirm_cancel_giftcard_btn').addClass('disabled');
-                })
-                .fail(function(data) {
+                        $('#motivo').addClass('is-invalid');
+                        $('#motivo').removeClass('is-valid');
+                        $('#motivo').val(null);
+                        $('#confirm_cancel_giftcard_btn').addClass('disabled');
+                    })
+                    .fail(function(data) {
 
-                    showSnackBarFromErrors(data);
-                    $('#cancel_giftcard_modal').modal('hide');
-                });
+                        showSnackBarFromErrors(data);
+                        $('#cancel_giftcard_modal').modal('hide');
+                    });
+                }
             });
 
         });
