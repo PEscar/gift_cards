@@ -29,7 +29,7 @@ class GenerateVoucher implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 0;
+    public $timeout = 480;
 
     /**
      * Create a new job instance.

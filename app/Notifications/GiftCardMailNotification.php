@@ -15,6 +15,11 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
 
     protected $venta;
 
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
     public $timeout = 480;
 
     /**

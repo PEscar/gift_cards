@@ -17,12 +17,12 @@ class StoreVentaMayorista implements ShouldQueue
     protected $venta;
     protected $ventaProductos;
 
-    /**
+/**
      * The number of seconds the job can run before timing out.
      *
      * @var int
      */
-    public $timeout = 0;
+    public $timeout = 480;
 
     /**
      * Create a new job instance.
