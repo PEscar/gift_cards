@@ -143,6 +143,13 @@ class GiftCardController extends Controller
 
                 ->rawColumns(['fecha_venta'])
 
+                ->addColumn('empresa', function($row){
+
+                    return $row->venta->empresa->nombre;
+                })
+
+                ->rawColumns(['empresa'])
+
                 ->addColumn('concepto', function($row){
 
                     return $row->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' :
@@ -218,7 +225,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('action', function($row){
 
-                    return  $row->estado == VentaProducto::ESTADO_VALIDA ? '<a href="#" class="edit btn btn-danger btn-sm btn_cancel_giftcard" data-url="' . route('api.giftcards.cancel', ['codigo' => $row->codigo_gift_card]) . '" data-toggle="modal" data-target="#cancel_giftcard_modal">Cancelar</a>' : ( $row->estado == VentaProducto::ESTADO_CANCELADA ? $row->motivo_cancelacion : null );
+                    return  $row->estado == VentaProducto::ESTADO_VALIDA ? '<a href="#" class="edit btn btn-danger btn-sm btn_cancel_giftcard" data-url="' . route('api.giftcards.cancel', ['codigo' => $row->codigo_gift_card]) . '" data-toggle="modal" data-target="#cancel_giftcard_modal">Cancelar</a>' : ( $row->estado == VentaProducto::ESTADO_CANCELADA ? $row->motivo_cancelacion . ' ( ' . $row->canceladaPor->name . ', ' . strtoupper(date('d/m/Y', strtotime($row->fecha_cancelacion))) . ' ) ' : null );
                 })
 
                 ->rawColumns(['action'])

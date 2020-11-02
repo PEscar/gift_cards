@@ -3,27 +3,27 @@
 namespace App\Notifications;
 
 use App\Models\Venta;
-use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\HtmlString;
 
-class GiftCardZipMailNotification extends Notification implements ShouldQueue
+class FailedGiftCardMailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $venta;
+    protected $exception;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Venta $venta)
+    public function __construct(Venta $venta, \Exception $exception)
     {
         $this->venta = $venta;
+        $this->exception = $exception;
     }
 
     /**
@@ -45,24 +45,12 @@ class GiftCardZipMailNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $mail = (new MailMessage)->line('Aquí tienes tu Gift Card !');
+        $mail = (new MailMessage)->line('Envío de GC fallido');
 
-        $url = \URL::signedRoute('voucher.download', ['id' => $notifiable->id]);
-
-        $mail->line(new HtmlString('Pincha <a href="' . $url . '">acá</a> para descargar tu voucher.'));
-
-        $mail->line('O copia y pega la siguiente dirección en tu navegador:');
-
-        $mail->line($url);
-
-        $mail->line('Gracias por confiar en nosotros!');
+        $mail->line('El envío de GC de la venta: ' . $this->venta->id . ' ha fallado.');
+        $mail->line('Error:');
+        $mail->line($this->exception->getMessage());
 
         return $mail;
-    }
-
-    public function failed(\Exception $e)
-    {
-        \Log::info('failed GiftCardZipMailNotification: ' . $this->venta->id);
-        User::find(1)->notify(new FailedGiftCardMailNotification($this->venta, $e));
     }
 }

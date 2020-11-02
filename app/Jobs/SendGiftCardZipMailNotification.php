@@ -3,13 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Venta;
+use App\Notifications\GiftCardZipMailNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SendGiftCardMailNotification implements ShouldQueue
+class SendGiftCardZipMailNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,6 +33,6 @@ class SendGiftCardMailNotification implements ShouldQueue
      */
     public function handle()
     {
-        return $this->venta->entregarGiftcards();
+        return $this->venta->notify(new GiftCardZipMailNotification($this->venta));
     }
 }

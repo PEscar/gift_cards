@@ -107,7 +107,7 @@
                                 </div>
 
                                 <div class="col-9">
-                                    <textarea class="form-control" v-model="comentario" rows="2" v-bind:class="{ 'is-valid': comentario, 'is-invalid': !comentario }"></textarea>
+                                    <textarea class="form-control" v-model="comentario" rows="2"></textarea>
                                 </div>
                             </div>
 
@@ -160,7 +160,7 @@
 
                 if ( this.validateNuevaVentaForm ) {
 
-                    axios.post(this.rutaCrear, {
+                    var data = {
                         api_token: window.Laravel.api_token,
                         empresa: this.empresa,
                         sku: this.sku,
@@ -172,14 +172,17 @@
                         concepto: this.concepto,
                         comentario: this.comentario,
                         tipo_notificacion: this.notificacion
-                    })
+                    }
+
+                    this.resetFormNuevaVenta()
+
+                    axios.post(this.rutaCrear, data)
                         .then(res => {
 
-                            this.resetFormNuevaVenta()
                             this.closeModal()
                             this.reloadTable()
 
-                            showSnackbar('Venta registrada. Enviando voucher...');
+                            showSnackbar('Venta registrada. Enviando voucher...')
                         }).catch(err => {
                             showSnackBarFromAxiosErrors(err)
                     })
@@ -210,7 +213,7 @@
 
             closeModal: function() {
 
-                window.$('#create_venta_modal').modal('hide');
+                window.$('#create_venta_modal').modal('hide')
             },
 
             reloadTable: function() {
@@ -234,17 +237,17 @@
             },
 
             validateNuevaVentaForm: function() {
-                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.comentario && this.concepto && this.notificacion
+                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.concepto && this.notificacion
             },
 
             empresaEmail: function() {
 
-                var emp = this.empresas.filter(c => c.id == this.empresa);
+                var emp = this.empresas.filter(c => c.id == this.empresa)
 
                 if ( emp )
-                    return emp[0].email;
+                    return emp[0].email
                 else
-                    return null;
+                    return null
             },
         },
 

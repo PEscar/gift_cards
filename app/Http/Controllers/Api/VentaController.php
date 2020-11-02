@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VentaMayoristaRequest;
 use App\Jobs\SendGiftCardMailNotification;
+use App\Jobs\StoreVentaMayorista;
 use App\Models\Producto;
 use App\Models\Venta;
 use App\Models\VentaProducto;
@@ -30,30 +31,9 @@ class VentaController extends Controller
         $venta->nro_factura = $request->nro_factura;
         $venta->tipo_notificacion = $request->tipo_notificacion;
 
-        $venta->save();
+        $ventaProductos = factory(VentaProducto::class, (int) $request->cantidad)->make(['producto_id' => $producto->id, 'cantidad' => 1, 'fecha_vencimiento' => \Illuminate\Support\Carbon::now()->addDays($request->validez)->toDate()]);
 
-        for ($i=1; $i <= $request->cantidad ; $i++) {
-
-            $ventaProducto = factory(VentaProducto::class)->make();
-            $ventaProducto->producto_id = $producto->id;
-            $ventaProducto->cantidad = 1;
-            $ventaProducto->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays($request->validez)->toDate();
-            $ventaProducto->generateGiftCardCode();
-
-            $venta->venta_productos()->save($ventaProducto);
-        }
-
-        if ( $venta->pagada )
-        {
-            $venta->pagada = true;
-
-            if ( $venta->tieneGiftcards() )
-            {
-                SendGiftCardMailNotification::dispatch($venta);
-            }
-
-            $venta->save();
-        }
+        StoreVentaMayorista::dispatch($venta, $ventaProductos);
 
         return Response::json(null, 201);
     }
@@ -86,7 +66,7 @@ class VentaController extends Controller
 
                 if ( $venta->tieneGiftcards() )
                 {
-                    SendGiftCardMailNotification::dispatch($venta);
+                    $this->venta->entregarGiftcards();
                 }
 
                 $venta->save();
@@ -132,7 +112,7 @@ class VentaController extends Controller
                 if ( $venta->tieneGiftcards() )
                 {
                     \Log::info('tiene gift cards !');
-                    SendGiftCardMailNotification::dispatch($venta);
+                    $this->venta->entregarGiftcards();
                 }
 
                 $venta->save();

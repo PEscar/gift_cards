@@ -37,7 +37,7 @@
                               @submit.prevent="asignarGiftcard()"
                             >
                                 <div class="form-row">
-                                    <div class="col-4">
+                                    <div class="col-md-4">
                                         <input type="text" class="form-control" v-model="nro_mesa" placeholder="Mesa" v-bind:class="{ 'is-valid': nro_mesa, 'is-invalid': !nro_mesa }">
                                     </div>
                                     <div class="col-md-4">
@@ -46,7 +46,10 @@
                                             <option v-for="sede in sedes" :value="sede.id">{{ sede.nombre }}</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col text-center">
                                         <button @click="asignarGiftcard()" class="btn btn-primary" v-bind:class="{'disabled': !sede || !nro_mesa }">Asignar</button>
                                     </div>
                                 </div>

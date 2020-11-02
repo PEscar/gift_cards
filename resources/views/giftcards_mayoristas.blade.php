@@ -23,6 +23,7 @@
                                 <th>Concepto</th>
                                 <th>Estado</th>
                                 <th>Venta</th>
+                                <th>Empresa</th>
                                 <th>Pago</th>
                                 <th>Vencimiento</th>
                                 <th>Asignación</th>
@@ -109,7 +110,7 @@
 
                 processing: true,
 
-                serverSide: true,
+                serverSide: false,
 
                 ajax: "{{ route('api.giftcards.mayoristas.index') }}?api_token={{ auth()->user()->api_token }}",
 
@@ -126,6 +127,8 @@
                     {data: 'estado', name: 'estado'},
 
                     {data: 'fecha_venta', name: 'fecha_venta'},
+
+                    {data: 'empresa', name: 'empresa'},
 
                     {data: 'fecha_pago', name: 'fecha_pago'},
 
@@ -160,6 +163,12 @@
                 },
 
                 responsive: true,
+
+                search: {
+
+                     regex: false,
+                     smart: false
+                },
 
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);

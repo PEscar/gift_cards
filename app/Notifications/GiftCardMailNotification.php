@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\User;
+use App\Models\Venta;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,14 +13,18 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    protected $venta;
+
+    public $timeout = 480;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Venta $venta)
     {
-        //
+        $this->venta = $venta;
     }
 
     /**
@@ -62,5 +68,11 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
 
         return $mail;
                     
+    }
+
+    public function failed(\Exception $e)
+    {
+        \Log::info('failed GiftCardMailNotification: ' . $this->venta->id);
+        User::find(1)->notify(new FailedGiftCardMailNotification($this->venta, $e));
     }
 }

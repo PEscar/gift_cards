@@ -65,7 +65,7 @@
 
                 processing: true,
 
-                serverSide: true,
+                serverSide: false,
 
                 ajax: "{{ route('api.giftcards.minoristas.index') }}?api_token={{ auth()->user()->api_token }}",
 
@@ -111,6 +111,12 @@
                 },
 
                 responsive: true,
+
+                search: {
+
+                     regex: false,
+                     smart: false
+                },
 
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Jobs\GenerateVoucher;
+use App\Jobs\SendGiftCardZipMailNotification;
 use App\Notifications\GiftCardMailNotification;
-use App\Notifications\GiftCardZipMailNotification;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -26,6 +27,8 @@ class Venta extends Model
 
     const TIPO_NOTIFICACION_PDF_ATTACH = 1;
     const TIPO_NOTIFICACION_ZIP_LINK = 2;
+
+    protected $fillable = ['update'];
 
     /**
      * Route notifications for the mail channel.
@@ -98,10 +101,12 @@ class Venta extends Model
     {
         if ( $this->tipo_notificacion == self::TIPO_NOTIFICACION_PDF_ATTACH )
         {
-            $this->notify(new GiftCardMailNotification);
+            $this->notify(new GiftCardMailNotification($this));
         } else
         {
-            $this->notify(new GiftCardZipMailNotification);
+            GenerateVoucher::withChain([
+                new SendGiftCardZipMailNotification($this)
+            ])->dispatch($this);
         }
     }
 
