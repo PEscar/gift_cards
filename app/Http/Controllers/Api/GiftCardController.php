@@ -129,13 +129,6 @@ class GiftCardController extends Controller
 
                 ->rawColumns(['producto'])
 
-                ->addColumn('concepto', function($row){
-
-                    return $row->concepto;
-                })
-
-                ->rawColumns(['concepto'])
-
                 ->addColumn('fecha_venta', function($row){
 
                     return strtoupper(date('d/m/Y', strtotime($row->venta->created_at)));

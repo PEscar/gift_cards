@@ -1,0 +1,213 @@
+@extends('layouts.app')
+
+@section('content')
+
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Administrar Ventas
+                    <div class="float-right">
+                        <nueva-venta-item :ruta-crear="{{ json_encode(route('api.ventas.create')) }}" :validez_default="{{ env('VENCIMIENTO_GIFT_CARDS') }}" :productos="{{ json_encode($productos) }}" :empresas="{{ json_encode($empresas) }}"></nueva-venta-item>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table id="ventas_table" class="table table-bordered data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Concepto</th>
+                                <th>Venta</th>
+                                <th>Empresa</th>
+                                <th>Pago</th>
+                                <th>Vencimiento</th>
+                                <th>Factura</th>
+                                <th>Comentario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- set up the modal to start hidden and fade in and out -->
+    <div id="update_venta_modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    Editar Venta
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- dialog body -->
+                <div class="modal-body">
+                    <form class="form-horizontal" method="POST" id="form_update_venta">
+                        <input type="hidden" id="update_venta_id">
+
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <label for="nro_factura" class="col-form-label">N° Factura</label>
+                            </div>
+
+                            <div class="col-9">
+                                <input type="text" class="form-control" id="nro_factura" placeholder="0001-0000001">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <label for="comentario" class="col-form-label">Comentario</label>
+                            </div>
+
+                            <div class="col-9">
+                                <textarea id="comentario" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col text-center">
+                                <button id="confirm_update_venta_btn" type="submit" class="btn btn-primary">
+                                    Actualizar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+
+        $(function () {
+
+            // Load table through ajax
+            var table = $('#ventas_table').DataTable({
+
+                dom: 'Bfrtip',
+
+                buttons: [
+                    'copy',
+                    {
+                        extend: 'excel',
+                        pageSize: 'LEGAL',
+                        title: "{{ date('Y-m-d') }}" + ' - Gift Cards',
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        title: "{{ date('Y-m-d') }}" + ' - Gift Cards',
+                    }
+                ],
+
+                processing: true,
+
+                serverSide: false,
+
+                ajax: "{{ route('api.ventas.index') }}?api_token={{ auth()->user()->api_token }}",
+
+                columns: [
+
+                    {data: 'id', name: 'id'},
+
+                    {data: 'producto', name: 'producto'},
+
+                    {data: 'concepto', name: 'concepto'},
+
+                    {data: 'fecha_venta', name: 'fecha_venta'},
+
+                    {data: 'empresa', name: 'empresa'},
+
+                    {data: 'fecha_pago', name: 'fecha_pago'},
+
+                    {data: 'fecha_vencimiento', name: 'fecha_vencimiento'},
+
+                    {data: 'nro_factura', name: 'nro_factura'},
+
+                    {data: 'comentario', name: 'comentario', searchable: false},
+
+                    {data: 'action', name: 'action'},
+                ],
+
+                language: {
+
+                    url: "{{ asset('js/datatables.spanish.json') }}",
+
+                    buttons: {
+                        copyTitle: 'Copiado al portapapeles!',
+                        copySuccess: {
+                            _: '%d líneas copiadas',
+                            1: '1 linea copiada'
+                        }
+                    }
+                },
+
+                responsive: true,
+
+                search: {
+
+                     regex: false,
+                     smart: false
+                },
+
+                createdRow: function( row, data, dataIndex ) {
+                    $(row).attr('data-id', data.id);
+                  },
+            });
+
+            $('#update_venta_modal').on('show.bs.modal', function (e) {
+
+                // Populate url & id
+                $("#form_update_venta").attr('action', $(e.relatedTarget).attr('data-url'));
+                $("#update_venta_id").val($(e.relatedTarget).attr('data-id'));
+
+                // Fill modal
+                $("#form_update_venta #nro_factura").val($(e.relatedTarget).attr('data-nro_factura'));
+                $("#form_update_venta #comentario").val($(e.relatedTarget).attr('data-comentario'));
+            });
+
+            $('#update_venta_modal').on('click', '#confirm_update_venta_btn', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $('#form_update_venta').attr('action'),
+                    type: 'PUT',
+                    dataType: 'json',
+                    data: {
+                        api_token: '{{ auth()->user()->api_token }}',
+                        nro_factura: $('#update_venta_modal #nro_factura').val(),
+                        comentario: $('#update_venta_modal #comentario').val(),
+                    },
+                })
+                .done(function() {
+                    table.ajax.reload();
+                    $('#update_venta_modal').modal('hide');
+
+                    // Show message
+                    showSnackbar('Venta #' + $('#update_venta_id').val() + ' actualizada.');
+
+                    $('#form_update_venta').trigger("reset");
+                })
+                .fail(function(data) {
+                    showSnackBarFromErrors(data);
+                });
+            });
+
+        });
+
+    </script>
+@endsection

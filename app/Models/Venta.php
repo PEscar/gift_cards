@@ -68,6 +68,17 @@ class Venta extends Model
     }
 
     /**
+     * Ventas Mayoristas
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMayoristas($query)
+    {
+        return $query->where('source_id','!=', 0);
+    }
+
+    /**
      * Ventas pagadas 
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query

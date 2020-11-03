@@ -42,6 +42,7 @@ Route::middleware('auth:web')->group(function () {
 
 	Route::get('/productos', 'ProductoController@index')->name('productos.index');
 	Route::get('/empresas', 'EmpresaController@index')->name('empresas.index');
+	Route::get('/ventas', 'VentaController@index')->name('ventas.index');
 });
 
 Route::prefix('giftcards')->group(function () {

@@ -31,7 +31,7 @@ class VentaMayoristaRequest extends FormRequest
             'validez' => 'required|gte:1',
             'pagada' => 'bool',
             'fecha_pago' => 'required_if:pagada,true',
-            'comentario' => 'required',
+            'comentario' => '',
             'nro_factura' => '',
             'tipo_notificacion' => '',
         ];

@@ -9,9 +9,6 @@
             <div class="card">
                 <div class="card-header">
                     Administrar Gift Cards Mayoristas
-                    <div class="float-right">
-                        <nueva-venta-item :ruta-crear="{{ json_encode(route('api.ventas.create')) }}" :validez_default="{{ env('VENCIMIENTO_GIFT_CARDS') }}" :productos="{{ json_encode($productos) }}" :empresas="{{ json_encode($empresas) }}"></nueva-venta-item>
-                    </div>
                 </div>
 
                 <div class="card-body">
@@ -30,7 +27,7 @@
                                 <th>Consumo</th>
                                 <th>Sede / Mesa</th>
                                 <th>Usuario</th>
-                                <th>N° Factura</th>
+                                <th>Factura</th>
                                 <th>Comentario</th>
                                 <th>Cancelación</th>
                             </tr>
@@ -144,7 +141,7 @@
 
                     {data: 'nro_factura', name: 'nro_factura'},
 
-                    {data: 'comentario', name: 'comentario'},
+                    {data: 'comentario', name: 'comentario', searchable: false},
 
                     {data: 'action', name: 'action'},
                 ],

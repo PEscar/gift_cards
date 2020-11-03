@@ -175,11 +175,13 @@
                     }
 
                     this.resetFormNuevaVenta()
+                    this.closeModal()
+
+                    showSnackbar('Registrando venta ...')
 
                     axios.post(this.rutaCrear, data)
                         .then(res => {
 
-                            this.closeModal()
                             this.reloadTable()
 
                             showSnackbar('Venta registrada. Enviando voucher...')
@@ -218,7 +220,7 @@
 
             reloadTable: function() {
 
-                window.$('#gcs_table').DataTable().ajax.reload()
+                window.$('#ventas_table').DataTable().ajax.reload()
             },
         },
 

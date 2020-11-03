@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VentaMayoristaRequest;
-use App\Jobs\SendGiftCardMailNotification;
-use App\Jobs\StoreVentaMayorista;
 use App\Models\Producto;
 use App\Models\Venta;
 use App\Models\VentaProducto;
@@ -18,6 +16,13 @@ class VentaController extends Controller
 {
     public function store(VentaMayoristaRequest $request)
     {
+        if ( ! auth()->user()->hasRole('Admin') )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "user" => ['Tenes que ser admin para poder crear ventas.'],
+            ]);
+        }
+
         $producto = Producto::where('sku', $request->sku)->firstOrFail();
 
         $venta = new Venta;
@@ -33,7 +38,23 @@ class VentaController extends Controller
 
         $ventaProductos = factory(VentaProducto::class, (int) $request->cantidad)->make(['producto_id' => $producto->id, 'cantidad' => 1, 'fecha_vencimiento' => \Illuminate\Support\Carbon::now()->addDays($request->validez)->toDate()]);
 
-        StoreVentaMayorista::dispatch($venta, $ventaProductos);
+        $venta->save();
+
+        foreach ($ventaProductos as $key => $ventaProducto) {
+
+            $ventaProducto->generateGiftCardCode();
+            $venta->venta_productos()->save($ventaProducto);
+        }
+
+        if ( $venta->pagada )
+        {
+            $venta->update(['pagada' => true]);
+
+            if ( $venta->tieneGiftcards() )
+            {
+                $venta->entregarGiftcards();
+            }
+        }
 
         return Response::json(null, 201);
     }
@@ -122,5 +143,106 @@ class VentaController extends Controller
         {
             \Log::error('Mensaje update no validado: ' . $data);
         }
+    }
+
+    public function index(Request $request)
+    {
+        $data = Venta::mayoristas()->get();
+
+        return Datatables::of($data)
+
+                ->addColumn('id', function($row){
+
+                    return $row->id;
+                })
+
+                ->rawColumns(['id'])
+
+                ->addColumn('producto', function($row){
+
+                    return $row->venta_productos->first()->producto->nombre;
+                })
+
+                ->rawColumns(['producto'])
+
+                ->addColumn('fecha_venta', function($row){
+
+                    return strtoupper(date('d/m/Y', strtotime($row->created_at)));
+                })
+
+                ->rawColumns(['fecha_venta'])
+
+                ->addColumn('empresa', function($row){
+
+                    return $row->empresa->nombre;
+                })
+
+                ->rawColumns(['empresa'])
+
+                ->addColumn('concepto', function($row){
+
+                    return $row->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' :
+                        ( $row->source_id == Venta::SOURCE_CANJE ? 'Canje' : (
+                            $row->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Venta'
+                        ) );
+                })
+
+                ->rawColumns(['concepto'])
+
+                ->addColumn('fecha_pago', function($row){
+
+                    return $row->fecha_pago ? strtoupper(date('d/m/Y', strtotime($row->fecha_pago))) : null;
+                })
+
+                ->rawColumns(['fecha_pago'])
+
+                ->addColumn('fecha_vencimiento', function($row){
+
+                    return strtoupper(date('d/m/Y', strtotime($row->venta_productos->first()->fecha_vencimiento)));
+                })
+
+                ->rawColumns(['fecha_vencimiento'])
+
+                ->addColumn('nro_factura', function($row){
+
+                    return $row->nro_factura;
+                })
+
+                ->rawColumns(['nro_factura'])
+
+                ->addColumn('comentario', function($row){
+
+                    return $row->comentario;
+                })
+
+                ->rawColumns(['comentario'])
+
+                ->addColumn('action', function($row){
+
+                    return  '<a href="#" data-nro_factura="' . $row->nro_factura . '" class="edit btn btn-warning btn-sm btn_edit_venta" data-url="' . route('api.ventas.update', ['id' => $row->id]) . '" data-comentario="' . $row->comentario . '" data-toggle="modal" data-target="#update_venta_modal" data-id="' . $row->id . '">Edit</a>';
+                })
+
+                ->rawColumns(['action'])
+
+                ->make(true);
+    }
+
+    public function update(Request $request, $id)
+    {
+        if ( ! auth()->user()->hasRole('Admin') )
+        {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "user" => ['Tenes que ser admin para poder actualizar ventas.'],
+            ]);
+        }
+
+        $venta = Venta::findOrFail($id);
+
+        $venta->nro_factura = $request->nro_factura;
+        $venta->comentario = $request->comentario;
+
+        $venta->save();
+
+        return Response::json(null, 204);
     }
 }

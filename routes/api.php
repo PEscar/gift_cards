@@ -21,7 +21,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->group(function () {
 
     Route::put('/password', 'Api\UserController@updatePassword')->name('password.change');
-    Route::post('/ventas', 'Api\VentaController@store')->name('api.ventas.create');
 
     Route::put('/configuracion/update', 'Api\ConfigController@update')->name('config.update');
 
@@ -53,5 +52,11 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/update/{id}', 'Api\EmpresaController@update')->name('api.empresas.update');
         Route::delete('/{id}', 'Api\EmpresaController@destroy')->name('api.empresas.destroy');
         Route::post('/create', 'Api\EmpresaController@store')->name('api.empresas.create');
+    });
+
+    Route::prefix('ventas')->group(function () {
+        Route::get('/', 'Api\VentaController@index')->name('api.ventas.index');
+        Route::post('/', 'Api\VentaController@store')->name('api.ventas.create');
+        Route::put('/{id}', 'Api\VentaController@update')->name('api.ventas.update');
     });
 });
