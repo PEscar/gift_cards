@@ -225,7 +225,7 @@ class VentaController extends Controller
                     $user = $row->usuario_edicion_id ? $row->usuario_edicion->name : null;
                     $fecha = $row->fecha_ultima_edicion ? date('d/m/Y', strtotime($row->fecha_ultima_edicion)) : null;
 
-                    return  '<a href="#" data-nro_factura="' . $row->nro_factura . '" class="edit btn btn-warning btn-sm btn_edit_venta" data-url="' . route('api.ventas.update', ['id' => $row->id]) . '" data-pagada="' . $row->pagada . '" data-fecha_pago="' . ($row->fecha_pago ? date('d/m/Y', strtotime($row->fecha_pago)) : '') . '" data-comentario="' . $row->comentario . '" data-toggle="modal" data-target="#update_venta_modal" data-id="' . $row->id . '">Edit</a> ' . $user . ', <b>' . $fecha . '</b>';
+                    return  '<a href="#" data-nro_factura="' . $row->nro_factura . '" class="edit btn btn-warning btn-sm btn_edit_venta" data-url="' . route('api.ventas.update', ['id' => $row->id]) . '" data-pagada="' . $row->pagada . '" data-fecha_pago="' . ($row->fecha_pago ? date('Y-m-d', strtotime($row->fecha_pago)) : '') . '" data-comentario="' . $row->comentario . '" data-toggle="modal" data-target="#update_venta_modal" data-id="' . $row->id . '">Edit</a> ' . $user . ', <b>' . $fecha . '</b>';
                 })
 
                 ->rawColumns(['action'])
