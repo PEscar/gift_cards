@@ -7,6 +7,7 @@ use App\Http\Resources\GiftCardResource;
 use App\Models\Venta;
 use App\Models\VentaProducto;
 use DataTables;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Response;
@@ -15,7 +16,7 @@ class GiftCardController extends Controller
 {
     public function indexMinoristas(Request $request)
     {
-        $data = VentaProducto::giftCards()->minoristas()->get();
+        $data = VentaProducto::giftCards()->pagas()->minoristas()->get();
 
         return Datatables::of($data)
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateVentaMayoristaRequest;
 use App\Http\Requests\VentaMayoristaRequest;
 use App\Models\Producto;
 use App\Models\Venta;
@@ -46,14 +47,9 @@ class VentaController extends Controller
             $venta->venta_productos()->save($ventaProducto);
         }
 
-        if ( $venta->pagada )
+        if ( $venta->tieneGiftcards() )
         {
-            $venta->update(['pagada' => true]);
-
-            if ( $venta->tieneGiftcards() )
-            {
-                $venta->entregarGiftcards();
-            }
+            $venta->entregarGiftcards();
         }
 
         return Response::json(null, 201);
@@ -217,9 +213,19 @@ class VentaController extends Controller
 
                 ->rawColumns(['comentario'])
 
+                ->addColumn('codigos', function($row){
+
+                    return  implode(',', $row->giftcards->pluck(['codigo_gift_card'])->toArray());
+                })
+
+                ->rawColumns(['codigos'])
+
                 ->addColumn('action', function($row){
 
-                    return  '<a href="#" data-nro_factura="' . $row->nro_factura . '" class="edit btn btn-warning btn-sm btn_edit_venta" data-url="' . route('api.ventas.update', ['id' => $row->id]) . '" data-comentario="' . $row->comentario . '" data-toggle="modal" data-target="#update_venta_modal" data-id="' . $row->id . '">Edit</a>';
+                    $user = $row->usuario_edicion_id ? $row->usuario_edicion->name : null;
+                    $fecha = $row->fecha_ultima_edicion ? date('d/m/Y', strtotime($row->fecha_ultima_edicion)) : null;
+
+                    return  '<a href="#" data-nro_factura="' . $row->nro_factura . '" class="edit btn btn-warning btn-sm btn_edit_venta" data-url="' . route('api.ventas.update', ['id' => $row->id]) . '" data-pagada="' . $row->pagada . '" data-fecha_pago="' . ($row->fecha_pago ? date('d/m/Y', strtotime($row->fecha_pago)) : '') . '" data-comentario="' . $row->comentario . '" data-toggle="modal" data-target="#update_venta_modal" data-id="' . $row->id . '">Edit</a> ' . $user . ', <b>' . $fecha . '</b>';
                 })
 
                 ->rawColumns(['action'])
@@ -227,7 +233,7 @@ class VentaController extends Controller
                 ->make(true);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateVentaMayoristaRequest $request, $id)
     {
         if ( ! auth()->user()->hasRole('Admin') )
         {
@@ -240,6 +246,10 @@ class VentaController extends Controller
 
         $venta->nro_factura = $request->nro_factura;
         $venta->comentario = $request->comentario;
+        $venta->usuario_edicion_id = auth()->id();
+        $venta->fecha_ultima_edicion = \Illuminate\Support\Carbon::now()->toDate();
+        $venta->pagada = $request->pagada != 'false'; //Jquery lo envía como string !!!
+        $venta->fecha_pago = $request->fecha_pago;
 
         $venta->save();
 

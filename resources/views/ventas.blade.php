@@ -8,7 +8,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    Administrar Ventas
+                    Ventas Mayoristas
                     <div class="float-right">
                         <nueva-venta-item :ruta-crear="{{ json_encode(route('api.ventas.create')) }}" :validez_default="{{ env('VENCIMIENTO_GIFT_CARDS') }}" :productos="{{ json_encode($productos) }}" :empresas="{{ json_encode($empresas) }}"></nueva-venta-item>
                     </div>
@@ -18,6 +18,7 @@
                     <table id="ventas_table" class="table table-bordered data-table">
                         <thead>
                             <tr>
+                                <th>codigos</th>
                                 <th>ID</th>
                                 <th>Producto</th>
                                 <th>Concepto</th>
@@ -54,7 +55,7 @@
                         <input type="hidden" id="update_venta_id">
 
                         <div class="form-group row">
-                            <div class="col-2">
+                            <div class="col-2 text-md-right">
                                 <label for="nro_factura" class="col-form-label">N° Factura</label>
                             </div>
 
@@ -64,12 +65,31 @@
                         </div>
 
                         <div class="form-group row">
-                            <div class="col-2">
+                            <div class="col-2 text-md-right">
                                 <label for="comentario" class="col-form-label">Comentario</label>
                             </div>
 
                             <div class="col-9">
                                 <textarea id="comentario" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-2 text-md-right">
+                                <label for="pagada" class="col-form-label">Pagada</label>
+                            </div>
+
+                            <div class="col-1">
+                                <input id="pagada" type="checkbox" value="">
+                            </div>
+
+                            <div class="col-3 text-md-right" id="fecha_pago_container">
+                                <label for="fecha_pago" class="col-form-label">Fecha Pago</label>
+                            </div>
+
+                            <div class="col-5">
+                                <input type="date" class="form-control" id="fecha_pago">
                             </div>
                         </div>
 
@@ -122,6 +142,8 @@
 
                 columns: [
 
+                    {data: 'codigos', name: 'codigos'},
+
                     {data: 'id', name: 'id'},
 
                     {data: 'producto', name: 'producto'},
@@ -164,6 +186,10 @@
                      smart: false
                 },
 
+                columnDefs: [
+                    { targets: [0], visible: false},
+                ],
+
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);
                   },
@@ -178,6 +204,10 @@
                 // Fill modal
                 $("#form_update_venta #nro_factura").val($(e.relatedTarget).attr('data-nro_factura'));
                 $("#form_update_venta #comentario").val($(e.relatedTarget).attr('data-comentario'));
+                $("#form_update_venta #pagada").prop('checked', $(e.relatedTarget).attr('data-pagada') == 1);
+                $("#form_update_venta #fecha_pago").val($(e.relatedTarget).attr('data-fecha_pago'));
+
+                showOrHideFechaPago();
             });
 
             $('#update_venta_modal').on('click', '#confirm_update_venta_btn', function(e) {
@@ -191,6 +221,8 @@
                         api_token: '{{ auth()->user()->api_token }}',
                         nro_factura: $('#update_venta_modal #nro_factura').val(),
                         comentario: $('#update_venta_modal #comentario').val(),
+                        pagada: $('#update_venta_modal #pagada').prop('checked'),
+                        fecha_pago: $('#update_venta_modal #fecha_pago').val(),
                     },
                 })
                 .done(function() {
@@ -205,6 +237,27 @@
                 .fail(function(data) {
                     showSnackBarFromErrors(data);
                 });
+            });
+
+            function showOrHideFechaPago()
+            {
+                if ( !$("#update_venta_modal #pagada").prop('checked') )
+                {
+                    $("#update_venta_modal #fecha_pago_container").hide();
+                    $("#update_venta_modal #fecha_pago").hide();
+                    $("#update_venta_modal #fecha_pago").val(null);
+                }
+                else
+                {
+                    $("#update_venta_modal #fecha_pago_container").show();
+                    $("#update_venta_modal #fecha_pago").show();
+                }
+            }
+
+            $("#update_venta_modal #pagada").click(function(event) {
+
+                showOrHideFechaPago();
+
             });
 
         });

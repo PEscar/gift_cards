@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Jobs\GenerateVoucher;
 use App\Jobs\SendGiftCardZipMailNotification;
 use App\Notifications\GiftCardMailNotification;
+use App\User;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -50,6 +51,16 @@ class Venta extends Model
     public function empresa()
     {
         return $this->belongsTo(Empresa::class);
+    }
+
+    public function usuario_edicion()
+    {
+        return $this->belongsTo(User::class, 'usuario_edicion_id', 'id');
+    }
+
+    public function giftcards()
+    {
+        return $this->hasMany(VentaProducto::class)->whereNotNull('codigo_gift_card');
     }
 
 	// END RELATIONS

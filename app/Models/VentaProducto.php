@@ -46,6 +46,13 @@ class VentaProducto extends Model
         });
     }
 
+    public function scopePagas($query)
+    {
+        return $query->whereHas('venta', function (Builder $query) {
+            $query->where('pagada', true);
+        });
+    }
+
     // END SCOPES
 
     // ACCESORS
@@ -53,6 +60,7 @@ class VentaProducto extends Model
     public function getEstadoAttribute()
     {
         // Una GC puede tener 3 estados: asignada, vencida o valida.
+        $hoy = \Illuminate\Support\Carbon::now()->toDateString();
 
         if ( !is_null($this->motivo_cancelacion) )
         {
@@ -62,11 +70,11 @@ class VentaProducto extends Model
         {
             return self::ESTADO_ASIGNADA;
         }
-        else if( $this->fecha_vencimiento < \Illuminate\Support\Carbon::now() )
+        else if( $this->fecha_vencimiento < $hoy )
         {
             return self::ESTADO_VENCIDA;
         }
-        else if( $this->fecha_vencimiento >= \Illuminate\Support\Carbon::now() )
+        else if( $this->fecha_vencimiento >= $hoy )
         {
             return self::ESTADO_VALIDA;
         }
