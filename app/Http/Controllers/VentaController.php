@@ -25,7 +25,7 @@ class VentaController extends Controller
 	        return('zzz');
 	    }
 
-	    $venta = Venta::pagadas()->findOrFail($id);
+	    $venta = Venta::findOrFail($id);
 
         $fileName = 'voucher' . $venta->id . '.zip';
 
