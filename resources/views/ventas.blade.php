@@ -120,17 +120,28 @@
                 dom: 'Bfrtip',
 
                 buttons: [
-                    'copy',
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
                     {
                         extend: 'excel',
                         pageSize: 'LEGAL',
                         title: "{{ date('Y-m-d') }}" + ' - Gift Cards',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
                     },
                     {
                         extend: 'pdfHtml5',
                         orientation: 'landscape',
                         pageSize: 'LEGAL',
                         title: "{{ date('Y-m-d') }}" + ' - Gift Cards',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
                     }
                 ],
 
