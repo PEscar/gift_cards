@@ -58,20 +58,17 @@ class VentaController extends Controller
     public function importOrderFromTiendaNube(Request $request, $order_id = null)
     {
         \Log::error('llego algo para crear');
-        \Log::error('agent ' . $request->server('HTTP_USER_AGENT'));
         $hmac_header = $request->server('HTTP_X_LINKEDSTORE_HMAC_SHA256');
-
-        \Log::error('hmac header: ' . $hmac_header);
-
         $data = file_get_contents('php://input');
 
         // Validacion temporal
         if ( $hmac_header == hash_hmac('sha256', $data, env('TIENDA_NUBE_CLIENT_SECRET', 'falta')) )
         // if ( $request->server('HTTP_USER_AGENT') == 'LinkedStore Webhook (itmaster@tiendanube.com)' )
         {
-            \Log::error('create order validado ok ok');
             // Obtener id de la venta
             $order_id = json_decode($data, true)['id'];
+
+            \Log::error('create order validado ok ok: ' . $order_id);
 
             $venta = Venta::where('external_id', $order_id)->first();
 
@@ -126,23 +123,32 @@ class VentaController extends Controller
             $data_decoded = json_decode($data, true);
             \Log::error('data id: ' . $data_decoded['id']);
 
-            $venta = Venta::tiendanube()->where('external_id', $data_decoded['id'])->firstOrFail();
+            $venta = Venta::tiendanube()->where('external_id', $data_decoded['id'])->first();
 
-            \Log::error('venta id: ' . $venta->id);
-
-            // Si la notificacion es de orden pagada
-            if ( $data_decoded['event'] == 'order/paid' )
+            if ( $venta === null )
             {
-                $venta->pagada = true;
+                \Log::error('no hay venta con ref id: ' . $data_decoded['id']);
+            }
+            else
+            {
 
-                // Si la venta tiene productos que sean gigt cards
-                if ( $venta->tieneGiftcards() )
+                \Log::error('venta id: ' . $venta->id);
+
+                // Si la notificacion es de orden pagada
+                if ( $data_decoded['event'] == 'order/paid' && !$venta->pagada )
                 {
-                    \Log::info('tiene gift cards !');
-                    $venta->entregarGiftcards();
+                    $venta->pagada = true;
+
+                    // Si la venta tiene productos que sean gigt cards
+                    if ( $venta->tieneGiftcards() )
+                    {
+                        \Log::info('tiene gift cards !');
+                        $venta->entregarGiftcards();
+                    }
+
+                    $venta->save();
                 }
 
-                $venta->save();
             }
         }
         else
