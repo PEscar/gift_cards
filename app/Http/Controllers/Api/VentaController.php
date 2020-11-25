@@ -72,7 +72,7 @@ class VentaController extends Controller
 
             $venta = Venta::where('external_id', $order_id)->first();
 
-            if ( $venta === null )
+            if ( $venta !== null )
             {
                 \Log::error('venta ya registrada, no hacemos nada: ' . $order_id);
             }
