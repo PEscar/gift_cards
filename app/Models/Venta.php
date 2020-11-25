@@ -175,6 +175,7 @@ class Venta extends Model
         $venta->comentario = $order->body->note;
         $venta->fecha_pago = $venta->pagada ? date('Y-m-d H:i:s', strtotime($order->body->paid_at)) : null;
         $venta->save();
+        $venta->refresh();
 
         // Save products
         foreach ($order->body->products as $key => $orderProduct) {
