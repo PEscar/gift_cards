@@ -72,21 +72,31 @@ class VentaController extends Controller
             \Log::error('create order validado ok ok');
             // Obtener id de la venta
             $order_id = json_decode($data, true)['id'];
-            $venta = Venta::importOrderFromTiendaNubeById($order_id);
 
-            \Log::error('pagada: ' . $venta->pagada);
-            \Log::error('tiene gcs' . $venta->tieneGiftcards());
+            $venta = Venta::where('external_id', $order_id)->first();
 
-            if ( $venta->pagada )
+            if ( $venta === null )
             {
-                $venta->pagada = true;
+                \Log::error('venta ya registrada, no hacemos nada: ' . $order_id);
+            }
+            else
+            {
+                $venta = Venta::importOrderFromTiendaNubeById($order_id);
 
-                if ( $venta->tieneGiftcards() )
+                \Log::error('pagada: ' . $venta->pagada);
+                \Log::error('tiene gcs' . $venta->tieneGiftcards());
+
+                if ( $venta->pagada )
                 {
-                    $this->venta->entregarGiftcards();
-                }
+                    $venta->pagada = true;
 
-                $venta->save();
+                    if ( $venta->tieneGiftcards() )
+                    {
+                        $venta->entregarGiftcards();
+                    }
+
+                    $venta->save();
+                }
             }
         }
         else
@@ -129,7 +139,7 @@ class VentaController extends Controller
                 if ( $venta->tieneGiftcards() )
                 {
                     \Log::info('tiene gift cards !');
-                    $this->venta->entregarGiftcards();
+                    $venta->entregarGiftcards();
                 }
 
                 $venta->save();
