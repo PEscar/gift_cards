@@ -45,7 +45,7 @@ Route::middleware('auth:web')->group(function () {
 	Route::get('/ventas', 'VentaController@index')->name('ventas.index');
 });
 
-Route::prefix('giftcards')->group(function () {
+Route::prefix('orders')->group(function () {
 
 	Route::any('/create', 'Api\VentaController@importOrderFromTiendaNube')->name('tiendanube.orders.create');
 	Route::any('/update', 'Api\VentaController@updateOrderFromTiendaNube')->name('tiendanube.orders.update');
