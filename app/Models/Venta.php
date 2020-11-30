@@ -201,6 +201,8 @@ class Venta extends Model
                 }
                 else
                 {
+                    $ventaProduct = new VentaProducto;
+                    $ventaProduct->producto_id = $producto->id;
                     $ventaProduct->cantidad = $orderProduct->quantity;
                     $venta->venta_productos()->save($ventaProduct);
                 }
