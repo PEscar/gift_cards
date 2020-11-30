@@ -187,13 +187,12 @@ class Venta extends Model
 
             if ( $producto )
             {
-                $ventaProduct = new VentaProducto;
-                $ventaProduct->producto_id = $producto->id;
-
                 if ( $producto->tipo_producto == Producto::TIPO_GIFTCARD )
                 {
                     for ($i=1; $i <= $orderProduct->quantity ; $i++)
                     {
+                        $ventaProduct = new VentaProducto;
+                        $ventaProduct->producto_id = $producto->id;
                         $ventaProduct->cantidad = 1;
                         $ventaProduct->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
                         $ventaProduct->generateGiftCardCode();
