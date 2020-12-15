@@ -21,6 +21,7 @@
                                 <th>Email</th>
                                 <th>Nivel</th>
                                 <th>Sedes</th>
+                                <th>Habilitado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -118,6 +119,16 @@
                     <div class="form-group row">
 
                         <div class="col-3 text-md-right">
+                            <label for="habilitado" class="col-form-label text-md-right">Habilitado</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input id="habilitado" type="checkbox" class="@error('habilitado') is-invalid @enderror" name="habilitado" value="{{ old('habilitado') }}" required >
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-3 text-md-right">
                             <label for="sedes" class="col-form-label">Sedes</label>
                         </div>
 
@@ -207,6 +218,17 @@
                     <div class="form-group row">
 
                         <div class="col-md-3 text-md-right">
+                            <label for="habilitado" class="col-form-label">Habilitado</label>
+                        </div>
+
+                        <div class="col-md-9">
+                            <input type="checkbox" name="habilitado" id="habilitado">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-md-3 text-md-right">
                             <label for="sedes" class="col-form-label">Sedes</label>
                         </div>
 
@@ -276,6 +298,17 @@
                 <div class="form-group row">
 
                     <div class="col-md-3 text-md-right">
+                        <label for="view_habilitado" class="col-form-label">Habilitado</label>
+                    </div>
+
+                    <div class="col-md-9">
+                        <p id="view_habilitado"></p>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+
+                    <div class="col-md-3 text-md-right">
                         <label for="sedes" class="col-form-label">Sedes</label>
                     </div>
 
@@ -320,6 +353,8 @@
                     {data: 'nivel', name: 'nivel'},
 
                     {data: 'sedes', name: 'sedes'},
+
+                    {data: 'habilitado', name: 'habilitado'},
 
                     {data: 'action', name: 'action', orderable: false, searchable: false},
 
@@ -382,11 +417,17 @@
                 $("#form_update_user").attr('action', $(e.relatedTarget).attr('data-url'));
                 $("#update_user_id").val($(e.relatedTarget).attr('data-id'));
 
+                console.log('data-habilitado: ' + $(e.relatedTarget).attr('data-habilitado'));
+                let check = $(e.relatedTarget).attr('data-habilitado') == 1 ? true : false;
+
+                console.log('check: ' + check);
+
                 // Fill modal
                 $("#form_update_user #name").val($(e.relatedTarget).attr('data-name'));
                 $("#form_update_user #email").val($(e.relatedTarget).attr('data-email'));
                 $("#form_update_user #nivel").val($(e.relatedTarget).attr('data-nivel'));
                 $("#form_update_user #sedes").val( $(e.relatedTarget).attr('data-sedes').split(',') );
+                $("#form_update_user #habilitado").prop('checked', check);
             });
 
             $('#update_user_modal').on('click', '#confirm_update_user_btn', function(e) {
@@ -402,6 +443,7 @@
                         email: $('#update_user_modal #email').val(),
                         nivel: $('#update_user_modal #nivel').val(),
                         sedes: $('#update_user_modal #sedes').val(),
+                        habilitado: $('#update_user_modal #habilitado').prop('checked'),
                     },
                 })
                 .done(function() {
@@ -434,6 +476,7 @@
                         email: $('#create_user_modal #email').val(),
                         nivel: $('#create_user_modal #nivel').val(),
                         sedes: $('#create_user_modal #sedes').val(),
+                        habilitado: $('#update_user_modal #habilitado').prop('checked'),
                     },
                 })
                 .done(function() {
@@ -456,6 +499,7 @@
                 $("#view_name").html($(e.relatedTarget).attr('data-name'));
                 $("#view_email").html($(e.relatedTarget).attr('data-email'));
                 $("#view_nivel").html($(e.relatedTarget).attr('data-nivel'));
+                $('#view_habilitado').html($(e.relatedTarget).attr('data-habilitado') ? 'Si' : 'No');
 
                 var sedes = '';
                 var sedes_array = $(e.relatedTarget).attr('data-sedes').split(',');
