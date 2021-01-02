@@ -57,6 +57,8 @@ class GiftCardZipMailNotification extends Notification implements ShouldQueue
 
         $mail->line('Gracias por confiar en nosotros!');
 
+        $mail->bcc(['pedroscarselletta@gmail.com', 'tienda.copy@laparolaccia.com']);
+
         return $mail;
     }
 
