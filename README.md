@@ -53,4 +53,4 @@ Build for prod
 - **[Docker Compose.](https://docs.docker.com/compose/)**
 
 
-- [ ] probando
+- [x] probando
