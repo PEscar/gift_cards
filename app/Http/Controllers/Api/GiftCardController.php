@@ -43,7 +43,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_venta', function($row){
 
-                    return strtoupper(date('d/m/Y', strtotime($row->venta->created_at)));
+                    return strtoupper(date('Y-m-d', strtotime($row->venta->created_at)));
                 })
 
                 ->rawColumns(['fecha_venta'])
@@ -60,28 +60,28 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_pago', function($row){
 
-                    return $row->venta->fecha_pago ? strtoupper(date('d/m/Y', strtotime($row->venta->fecha_pago))) : null;
+                    return $row->venta->fecha_pago ? strtoupper(date('Y-m-d', strtotime($row->venta->fecha_pago))) : null;
                 })
 
                 ->rawColumns(['fecha_pago'])
 
                 ->addColumn('fecha_vencimiento', function($row){
 
-                    return strtoupper(date('d/m/Y', strtotime($row->fecha_vencimiento)));
+                    return strtoupper(date('Y-m-d', strtotime($row->fecha_vencimiento)));
                 })
 
                 ->rawColumns(['fecha_vencimiento'])
 
                 ->addColumn('fecha_asignacion', function($row){
 
-                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y', strtotime($row->fecha_asignacion))) : null;
+                    return $row->fecha_asignacion ? strtoupper(date('Y-m-d', strtotime($row->fecha_asignacion))) : null;
                 })
 
                 ->rawColumns(['fecha_asignacion'])
 
                 ->addColumn('fecha_consumicion', function($row){
 
-                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y', strtotime($row->fecha_consumicion))) : null;
+                    return $row->fecha_consumicion ? strtoupper(date('Y-m-d', strtotime($row->fecha_consumicion))) : null;
                 })
 
                 ->rawColumns(['fecha_consumicion'])
@@ -132,7 +132,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_venta', function($row){
 
-                    return strtoupper(date('d/m/Y', strtotime($row->venta->created_at)));
+                    return date('Y-m-d', strtotime($row->venta->created_at));
                 })
 
                 ->rawColumns(['fecha_venta'])
@@ -156,28 +156,28 @@ class GiftCardController extends Controller
 
                 ->addColumn('fecha_pago', function($row){
 
-                    return $row->venta->fecha_pago ? strtoupper(date('d/m/Y', strtotime($row->venta->fecha_pago))) : null;
+                    return $row->venta->fecha_pago ? strtoupper(date('Y-m-d', strtotime($row->venta->fecha_pago))) : null;
                 })
 
                 ->rawColumns(['fecha_pago'])
 
                 ->addColumn('fecha_vencimiento', function($row){
 
-                    return strtoupper(date('d/m/Y', strtotime($row->fecha_vencimiento)));
+                    return strtoupper(date('Y-m-d', strtotime($row->fecha_vencimiento)));
                 })
 
                 ->rawColumns(['fecha_vencimiento'])
 
                 ->addColumn('fecha_asignacion', function($row){
 
-                    return $row->fecha_asignacion ? strtoupper(date('d/m/Y', strtotime($row->fecha_asignacion))) : null;
+                    return $row->fecha_asignacion ? strtoupper(date('Y-m-d', strtotime($row->fecha_asignacion))) : null;
                 })
 
                 ->rawColumns(['fecha_asignacion'])
 
                 ->addColumn('fecha_consumicion', function($row){
 
-                    return $row->fecha_consumicion ? strtoupper(date('d/m/Y', strtotime($row->fecha_consumicion))) : null;
+                    return $row->fecha_consumicion ? strtoupper(date('Y-m-d', strtotime($row->fecha_consumicion))) : null;
                 })
 
                 ->rawColumns(['fecha_consumicion'])
@@ -260,5 +260,25 @@ class GiftCardController extends Controller
         $gc->save();
 
         return Response::json(null, 201);
+    }
+
+    public function index(Request $request)
+    {
+        extract($request->only(['query', 'limit', 'page', 'sort', 'direction']));
+
+        $data = VentaProducto::whereNotNull('codigo_gift_card');
+        $count = $data->count();
+
+        $data->limit($limit)
+            ->skip($limit * ($page - 1));
+
+        $data->orderBy($sort, $direction);
+
+        $results = $data->get();
+
+        return [
+            'data' => GiftCardResource::collection($results),
+            'count' => $count,
+        ];
     }
 }

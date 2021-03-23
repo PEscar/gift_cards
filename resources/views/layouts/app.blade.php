@@ -59,6 +59,8 @@
                         </li>
 
                         <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('configuracion.update.show') }}">Configuración</a></li>
+
+                        <!-- <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('informes.index') }}">Informes</a></li> -->
                         @endif
                     </ul>
 
@@ -123,6 +125,8 @@
     <script src="{{ asset('js/pdfmake.min.js') }}"></script>
     <script src="{{ asset('js/vfs_fonts.js') }}"></script>
     <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
+
+    <script src="{{ asset('js/todo.js') }}"></script>
 
     @yield('scripts')
 </body>

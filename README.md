@@ -51,3 +51,8 @@ Build for prod
 ## Requerimentos
 
 - **[Docker Compose.](https://docs.docker.com/compose/)**
+
+
+- [x] probando
+
+- [ ] asas

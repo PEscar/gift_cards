@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Venta;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GiftCardResource extends JsonResource
@@ -29,6 +30,7 @@ class GiftCardResource extends JsonResource
             'sede' => $this->sede ? $this->sede->nombre : null,
             'cancelo' => $this->canceladaPor ? $this->canceladaPor->name : null,
             'motivo_cancelacion' => $this->motivo_cancelacion,
+            'concepto' => $this->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' : ( $this->venta->source_id == Venta::SOURCE_CANJE ? 'Canje' : ( $this->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Venta' ))
         ];
     }
 }
