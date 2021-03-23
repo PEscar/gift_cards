@@ -46,12 +46,19 @@ class UserController extends Controller
 
                 ->rawColumns(['sedes'])
 
+                ->addColumn('habilitado', function($row){
+
+                    return $row->habilitado ? 'Si' : 'No';
+                })
+
+                ->rawColumns(['habilitado'])
+
                 ->addColumn('action', function($row){
 
                     $nivel = $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel 1' : 'Nivel 2' );
                     $nivel2 = $row->hasRole('Admin') ? 'Admin' : ( $row->hasRole('Nivel1') ? 'Nivel1' : 'Nivel2' );
 
-                       $btn = '<a href="#" class="edit btn btn-primary btn-sm btn_view_user" data-toggle="modal" data-target="#view_user_modal" data-id="' . $row->id . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel . '" data-sedes="' . implode(',', $row->sedes->pluck('nombre')->toArray()) . '">View</a> <a href="#" class="edit btn btn-warning btn-sm btn_edit_user" data-url="' . route('api.users.update', ['id' => $row->id]) . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel2 . '" data-sedes="' . implode(',', $row->sedes->pluck('id')->toArray()) . '" data-toggle="modal" data-target="#update_user_modal" data-id="' . $row->id . '">Edit</a> <a href="#" class="edit btn btn-danger btn-sm btn_del_user" data-url="' . route('api.users.destroy', ['id' => $row->id]) . '" data-id="' . $row->id . '" data-toggle="modal" data-target="#delete_user_modal">Delete</a>'; 
+                       $btn = '<a href="#" class="edit btn btn-primary btn-sm btn_view_user" data-toggle="modal" data-target="#view_user_modal" data-id="' . $row->id . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel . '" data-sedes="' . implode(',', $row->sedes->pluck('nombre')->toArray()) . '" data-habilitado="' . $row->habilitado . '">View</a> <a href="#" class="edit btn btn-warning btn-sm btn_edit_user" data-url="' . route('api.users.update', ['id' => $row->id]) . '" data-name="' . $row->name . '" data-email="' . $row->email . '" data-nivel="' . $nivel2 . '" data-sedes="' . implode(',', $row->sedes->pluck('id')->toArray()) . '" data-toggle="modal" data-target="#update_user_modal" data-id="' . $row->id . '" data-habilitado="' . $row->habilitado . '">Edit</a> <a href="#" class="edit btn btn-danger btn-sm btn_del_user" data-url="' . route('api.users.destroy', ['id' => $row->id]) . '" data-id="' . $row->id . '" data-toggle="modal" data-target="#delete_user_modal">Delete</a>';
 
                         return $btn;
                 })
@@ -88,7 +95,7 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        $user->update(['name' => $request->name, 'email' => $request->email]);
+        $user->update(['name' => $request->name, 'email' => $request->email, 'habilitado' => ( $request->habilitado == 'true' ? 1 : 0 )]);
 
         $user->setNivel($request->nivel);
         $user->setSedes($request->sedes);
@@ -149,6 +156,7 @@ class UserController extends Controller
         $user->email_verified_at = date('Y-m-d H:i:s');
         $user->password = Hash::make('123123');
         $user->api_token = Str::random(60);
+        $user->habilitado = $request->habilitado == 'true' ? 1 : 0;
         $user->save();
 
         $user->setNivel($request->nivel);

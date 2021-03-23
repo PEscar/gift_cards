@@ -28,6 +28,7 @@ class UserRequest extends FormRequest
             'email' => 'required|email',
             'admin' => 'boolean',
             'sedes.*' => 'numeric',
+            'habilitado' => 'required',
         ];
     }
 }
