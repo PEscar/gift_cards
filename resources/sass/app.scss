@@ -1,4 +1,5 @@
 @import '~vuetify/dist/vuetify.min.css';
+@import '~@fortawesome/fontawesome-free/css/all.css';
 
 // Variables
 @import 'variables';
@@ -7,7 +8,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 label {
-	font-weight: bold;
+  font-weight: bold;
 }
 
  /* The snackbar - position it at the bottom and in the middle of the screen */
@@ -56,7 +57,7 @@ label {
   to {bottom: 0; opacity: 0;}
 }
 
-#view_name, #view_email, #view_admin, #view_sedes, #view_nivel, #view_nombre, #view_descripcion, #view_sku {
+#view_name, #view_email, #view_admin, #view_sedes, #view_nivel, #view_nombre, #view_descripcion, #view_sku, #view_habilitado {
   padding-top: calc(0.375rem + 1px);
   padding-bottom: calc(0.375rem + 1px);
 }

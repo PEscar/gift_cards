@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/asignar/{codigo?}', 'Api\GiftCardController@asignar')->name('api.giftcards.asignar');
         Route::get('/validar/{codigo?}', 'Api\GiftCardController@validar')->name('api.giftcards.validar');
         Route::post('/cancelar/{codigo?}', 'Api\GiftCardController@cancelar')->name('api.giftcards.cancel');
+        Route::get('/', 'Api\GiftCardController@index')->name('api.giftcards.index');
     });
 
     Route::prefix('productos')->group(function () {

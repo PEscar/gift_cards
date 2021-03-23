@@ -8,6 +8,8 @@ require('./bootstrap')
 
 window.Vue = require('vue')
 
+import {ServerTable, Event} from 'vue-tables-2';
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -16,10 +18,13 @@ window.Vue = require('vue')
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
+Vue.use(ServerTable)
+
 Vue.component('gc-validation-item', require('./components/ValidarGiftcardComponent.vue').default)
 Vue.component('nueva-venta-item', require('./components/NuevaVentaComponent.vue').default)
 Vue.component('nuevo-producto-item', require('./components/NuevoProductoComponent.vue').default)
 Vue.component('nueva-empresa-item', require('./components/NuevaEmpresaComponent.vue').default)
+Vue.component('informe-ventas-component', require('./components/InformeVentaComponent.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

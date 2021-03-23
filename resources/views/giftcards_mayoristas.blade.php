@@ -88,6 +88,15 @@
             // Load table through ajax
             var table = $('#gcs_table').DataTable({
 
+                columnDefs: [{ //createdCell wasnt working on its own so i had to define it as a default
+                    targets: [4, 6, 7, 8],
+                    createdCell: function (td, cellData, rowData, row, col) {
+
+                        let data = cellData ? moment(cellData).format('DD/MM/YYYY') : '';
+                        $(td).html(data);
+                    }
+                }],
+
                 dom: 'Bfrtip',
 
                 buttons: [
