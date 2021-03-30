@@ -61,4 +61,11 @@ class GiftCardController extends Controller
 
         return view('giftcard_qr', ['gc' => $gc]);
     }
+
+    public function download(Request $request)
+    {
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML('<h1>Test</h1>');
+        return $pdf->stream();
+    }
 }

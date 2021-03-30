@@ -13,7 +13,9 @@ class AddPrecioOnVentaProductoTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('venta_producto', function($table) {
+            $table->double('precio', 8, 2)->nullable();
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ class AddPrecioOnVentaProductoTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('venta_producto', function($table) {
+            $table->dropColumn('precio');
+        });
     }
 }
