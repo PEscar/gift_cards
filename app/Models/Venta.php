@@ -187,7 +187,6 @@ class Venta extends Model
 
             if ( $producto )
             {
-                echo 'data: ' . json_encode($orderProduct);
                 if ( $producto->tipo_producto == Producto::TIPO_GIFTCARD )
                 {
                     for ($i=1; $i <= $orderProduct->quantity ; $i++)

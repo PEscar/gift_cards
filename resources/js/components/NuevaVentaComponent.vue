@@ -59,15 +59,15 @@
                                     <label for="cantidad" class="col-form-label">Cantidad</label>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-3">
                                     <input type="number" min="1" v-bind:class="{ 'is-valid': validateCantidad, 'is-invalid': !validateCantidad }" v-model="cantidad" class="form-control" id="cantidad">
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-2 offset-1">
                                     <label for="Validez" class="col-form-label">Validez</label>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-3">
                                     <input type="number" min="1" v-bind:class="{ 'is-valid': validateValidez, 'is-invalid': !validateValidez }" v-model="validez" class="form-control" id="validez">
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                 </div>
 
                                 <div class="col-4">
-                                    <input type="precio" min="1" v-bind:class="{ 'is-valid': precio, 'is-invalid': !precio }" v-model="precio" class="form-control" id="precio">
+                                    <input type="number" min="0" v-bind:class="{ 'is-valid': precio, 'is-invalid': !precio }" v-model="precio" class="form-control" id="precio">
                                 </div>
                             </div>
 
