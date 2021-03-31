@@ -268,6 +268,7 @@ class GiftCardController extends Controller
 
         $data = VentaProducto::whereNotNull('codigo_gift_card');
 
+        // Filtro de estados
         if ( $request->get('estados') )
         {
             $estados = explode(',', $request->get('estados'));
@@ -316,6 +317,7 @@ class GiftCardController extends Controller
             }
         }
 
+        // Filtro de conceptos
         if ( $request->get('conceptos') != '' )
         {
             $conceptos = explode(',', $request->get('conceptos'));
@@ -328,6 +330,7 @@ class GiftCardController extends Controller
             }
         }
 
+        // Filtro de sedes
         if ( $request->get('sedes') != '' )
         {
             $sedes = explode(',', $request->get('sedes'));
@@ -336,6 +339,29 @@ class GiftCardController extends Controller
             {
                 $data->whereIn('sede_id', $sedes);
             }
+        }
+
+        // Filtro de productos
+        if ( $request->get('productos') != '' )
+        {
+            $productos = explode(',', $request->get('productos'));
+
+            if ( count($productos) > 0 )
+            {
+                $data->whereIn('producto_id', $productos);
+            }
+        }
+
+        // Filtro de fecha de asignación
+        if ( $request->get('asig_start') && $request->get('asig_end') )
+        {
+            $data->whereBetween('fecha_asignacion', [$request->get('asig_start'), $request->get('asig_end')]);
+        }
+
+        // Filtro de fecha de vencimiento
+        if ( $request->get('venci_start') && $request->get('venci_end') )
+        {
+            $data->whereBetween('fecha_vencimiento', [$request->get('venci_start'), $request->get('venci_end')]);
         }
 
         $count = $data->count();

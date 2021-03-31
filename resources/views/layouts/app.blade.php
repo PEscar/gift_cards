@@ -60,7 +60,7 @@
 
                         <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('configuracion.update.show') }}">Configuración</a></li>
 
-                        <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('informes.index') }}">Informes</a></li>
+                        <!-- <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('informes.index') }}">Informes</a></li> -->
                         @endif
                     </ul>
 

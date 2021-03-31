@@ -66,6 +66,12 @@ class GiftCardController extends Controller
     {
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML('<h1>Test</h1>');
-        return $pdf->stream();
+        return $pdf->download();
+
+        // header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        // header("Content-Disposition: attachment; filename=\"results.xlsx\"");
+        // header("Cache-Control: max-age=0");
+        // echo 'a';
+        // echo 'b';
     }
 }

@@ -34,6 +34,7 @@ class VentaMayoristaRequest extends FormRequest
             'comentario' => '',
             'nro_factura' => '',
             'tipo_notificacion' => '',
+            'precio' => 'required',
         ];
     }
 }
