@@ -34,6 +34,8 @@ Route::middleware('auth:web')->group(function () {
 		Route::get('/validar/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
 		Route::get('/minoristas', 'GiftCardController@indexMinoristas')->name('giftcards.index.minoristas');
 		Route::get('/mayoristas', 'GiftCardController@indexMayoristas')->name('giftcards.index.mayoristas');
+
+		Route::get('/download', 'GiftCardController@download')->name('giftcards.download');
 	});
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');

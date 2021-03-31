@@ -196,6 +196,7 @@ class Venta extends Model
                         $ventaProduct->cantidad = 1;
                         $ventaProduct->fecha_vencimiento = \Illuminate\Support\Carbon::now()->addDays(env('VENCIMIENTO_GIFT_CARDS', 30))->toDate();
                         $ventaProduct->generateGiftCardCode();
+                        $ventaProduct->precio = $orderProduct->price;
                         $venta->venta_productos()->save($ventaProduct);
                     }
                 }
@@ -204,6 +205,7 @@ class Venta extends Model
                     $ventaProduct = new VentaProducto;
                     $ventaProduct->producto_id = $producto->id;
                     $ventaProduct->cantidad = $orderProduct->quantity;
+                    $ventaProduct->precio = $orderProduct->price;
                     $venta->venta_productos()->save($ventaProduct);
                 }
             }

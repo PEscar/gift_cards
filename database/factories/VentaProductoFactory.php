@@ -15,6 +15,7 @@ $factory->define(VentaProducto::class, function (Faker $faker) {
 		'fecha_consumicion' => null,
 		'cantidad' => 1,
 		'codigo_gift_card' => null,
+		'precio' => 0,
     ];
 });
 

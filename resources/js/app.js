@@ -9,7 +9,8 @@ require('./bootstrap')
 window.Vue = require('vue')
 
 import {ServerTable, Event} from 'vue-tables-2';
-
+import DateRangePicker from 'vue2-daterange-picker';
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -19,6 +20,7 @@ import {ServerTable, Event} from 'vue-tables-2';
  */
 
 Vue.use(ServerTable)
+Vue.component('date-range-picker', DateRangePicker)
 
 Vue.component('gc-validation-item', require('./components/ValidarGiftcardComponent.vue').default)
 Vue.component('nueva-venta-item', require('./components/NuevaVentaComponent.vue').default)

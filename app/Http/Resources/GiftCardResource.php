@@ -30,7 +30,8 @@ class GiftCardResource extends JsonResource
             'sede' => $this->sede ? $this->sede->nombre : null,
             'cancelo' => $this->canceladaPor ? $this->canceladaPor->name : null,
             'motivo_cancelacion' => $this->motivo_cancelacion,
-            'concepto' => $this->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' : ( $this->venta->source_id == Venta::SOURCE_CANJE ? 'Canje' : ( $this->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Venta' ))
+            'concepto' => $this->venta->source_id == Venta::SOURCE_TIENDA_NUBE ? 'Tienda Nube' : ( $this->venta->source_id == Venta::SOURCE_CANJE ? 'Canje' : ( $this->venta->source_id == Venta::SOURCE_INVITACION ? 'Invitación' : 'Venta' )),
+            'precio' => $this->precio, // ? number_format($this->precio, 2, ',', '.') : '-'
         ];
     }
 }

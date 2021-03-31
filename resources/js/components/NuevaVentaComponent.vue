@@ -73,6 +73,16 @@
                             </div>
 
                             <div class="form-group row">
+                                <div class="col-2">
+                                    <label for="Precio" class="col-form-label">Precio</label>
+                                </div>
+
+                                <div class="col-4">
+                                    <input type="number" min="0" v-bind:class="{ 'is-valid': precio, 'is-invalid': !precio }" v-model="precio" class="form-control" id="precio">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
 
                                 <div class="col-2">
                                     <label for="pagada" class="col-form-label">Pagada</label>
@@ -154,6 +164,7 @@
             fecha_pago: null,
             concepto: null,
             notificacion: null,
+            precio: null,
         }),
         methods: {
             crearVentaMayorista: function() {
@@ -171,7 +182,8 @@
                         fecha_pago: this.fecha_pago,
                         concepto: this.concepto,
                         comentario: this.comentario,
-                        tipo_notificacion: this.notificacion
+                        tipo_notificacion: this.notificacion,
+                        precio: this.precio
                     }
 
                     this.resetFormNuevaVenta()
@@ -203,6 +215,7 @@
                 this.fecha_pago = null
                 this.concepto = null
                 this.notificacion = null
+                this.precio = null
             },
 
             resetFechaPago: function() {
@@ -239,7 +252,7 @@
             },
 
             validateNuevaVentaForm: function() {
-                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.concepto && this.notificacion
+                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.concepto && this.notificacion && this.precio
             },
 
             empresaEmail: function() {

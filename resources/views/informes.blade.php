@@ -8,7 +8,7 @@
                 <div class="card-header">INFORMES</div>
 
                 <div class="card-body">
-                    <informe-ventas-component url="{{ route('api.giftcards.index') }}?api_token={{ auth()->user()->api_token }}"></informe-ventas-component>
+                    <informe-ventas-component v-bind:productos="<?= htmlentities(json_encode($productos)) ?>" url-base="{{ route('api.giftcards.index') }}?api_token={{ auth()->user()->api_token }}"></informe-ventas-component>
                 </div>
             </div>
         </div>
