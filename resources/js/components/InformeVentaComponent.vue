@@ -51,9 +51,9 @@
             <div class="col-xl-3">
                 <button @click="refresh" class="btn btn-primary">Buscar</button>
 
-                <button @click="toExcel" class="btn btn-success">Excel</button>
+                <button disabled class="btn btn-success">Excel</button>
 
-                <button @click="toPDF" class="btn btn-danger">PDF</button>
+                <a target="_blank" :href="urlPdf + '?sort=fecha_vencimiento&direction=desc&estados=' + this.estados + '&conceptos=' + this.conceptos + '&sedes=' + this.sedes + '&asig_start=' + this.formatDate(this.asignacion.startDate) + '&asig_end=' + this.formatDate(this.asignacion.endDate) + '&venci_start=' + this.formatDate(this.vencimiento.startDate) + '&venci_end=' + this.formatDate(this.vencimiento.endDate)  + '&cance_start=' + this.formatDate(this.cancelacion.startDate) + '&cance_end=' + this.formatDate(this.cancelacion.endDate) + '&productos=' + this.selectedProductos" class="btn btn-danger">PDF</a>
             </div>
         </div>
 
@@ -62,7 +62,11 @@
             <div class="col-xl-4">
                 <label>Asignación</label><br>
                 <date-range-picker
+                    opens="right"
                     v-model="asignacion"
+                    :localeData="localeData"
+                    v-bind:ranges="ranges"
+                    v-bind:autoApply="true"
                     >
                 </date-range-picker>
             </div>
@@ -70,7 +74,11 @@
             <div class="col-xl-4">
                 <label>Vencimiento</label><br>
                 <date-range-picker
+                    opens="center"
                     v-model="vencimiento"
+                    :localeData="localeData"
+                    v-bind:ranges="ranges"
+                    v-bind:autoApply="true"
                     >
                 </date-range-picker>
             </div>
@@ -78,7 +86,11 @@
             <div class="col-xl-4">
                 <label>Cancelación</label><br>
                 <date-range-picker
+                    opens="left"
                     v-model="cancelacion"
+                    :localeData="localeData"
+                    v-bind:ranges="ranges"
+                    v-bind:autoApply="true"
                     >
                 </date-range-picker>
             </div>
@@ -113,9 +125,19 @@
 <script>
   export default {
     name: 'InformeVentaComponent',
-    props: ['urlBase', 'productos'],
+    props: ['urlBase', 'productos', 'urlPdf'],
     data() {
         return {
+            ranges: false,
+            localeData: {
+                direction: 'ltr',
+                separator: ' - ',
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Cancelar',
+                weekLabel: 'W',
+                daysOfWeek: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'],
+                monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            },
             total: 0,
             cancelacion: {
                 startDate: null,
@@ -187,16 +209,6 @@
               return prev + cur.precio;
             }, 0)
         },
-
-        toExcel: function()
-        {
-            console.log('exportando a excel, pendiente')
-        },
-
-        toPDF: function()
-        {
-            console.log('exportando a PDF, pendiente')
-        }
     },
 
     computed:

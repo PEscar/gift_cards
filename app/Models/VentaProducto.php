@@ -82,6 +82,31 @@ class VentaProducto extends Model
         return self::ESTADO_CONSUMIDA;
     }
 
+    public function getEstadoLabelAttribute()
+    {
+        // Una GC puede tener 3 estados: asignada, vencida o valida.
+        $hoy = \Illuminate\Support\Carbon::now()->toDateString();
+
+        if ( !is_null($this->motivo_cancelacion) )
+        {
+            return 'Cancelada';
+        }
+        else if ( !is_null($this->fecha_asignacion) )
+        {
+            return 'Asignada';
+        }
+        else if( $this->fecha_vencimiento < $hoy )
+        {
+            return 'Vencida';
+        }
+        else if( $this->fecha_vencimiento >= $hoy )
+        {
+            return 'Válida';
+        }
+
+        return 'Consumida';
+    }
+
     // END ACCESORS
 
     // RELATIONS
