@@ -27,7 +27,14 @@ class InformeController extends Controller
      */
     public function index()
     {
-        return view('informes', ['productos' => Producto::all(['id', 'nombre'])]);
+        if ( auth()->user()->hasRole('Admin') )
+        {
+            return view('informes', ['productos' => Producto::all(['id', 'nombre'])]);
+        }
+        else
+        {
+            return redirect()->route('home');
+        }
     }
 
     public function download(Request $request)
