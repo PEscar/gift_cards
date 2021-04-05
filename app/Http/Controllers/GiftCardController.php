@@ -61,17 +61,4 @@ class GiftCardController extends Controller
 
         return view('giftcard_qr', ['gc' => $gc]);
     }
-
-    public function download(Request $request)
-    {
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML('<h1>Test</h1>');
-        return $pdf->download();
-
-        // header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        // header("Content-Disposition: attachment; filename=\"results.xlsx\"");
-        // header("Cache-Control: max-age=0");
-        // echo 'a';
-        // echo 'b';
-    }
 }

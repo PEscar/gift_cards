@@ -179,7 +179,7 @@ class VentaController extends Controller
 
                 ->addColumn('fecha_venta', function($row){
 
-                    return strtoupper(date('d/m/Y', strtotime($row->created_at)));
+                    return strtoupper(date('Y-m-d', strtotime($row->created_at)));
                 })
 
                 ->rawColumns(['fecha_venta'])
@@ -203,14 +203,14 @@ class VentaController extends Controller
 
                 ->addColumn('fecha_pago', function($row){
 
-                    return $row->fecha_pago ? strtoupper(date('d/m/Y', strtotime($row->fecha_pago))) : null;
+                    return $row->fecha_pago ? strtoupper(date('Y-m-d', strtotime($row->fecha_pago))) : null;
                 })
 
                 ->rawColumns(['fecha_pago'])
 
                 ->addColumn('fecha_vencimiento', function($row){
 
-                    return strtoupper(date('d/m/Y', strtotime($row->venta_productos->first()->fecha_vencimiento)));
+                    return strtoupper(date('Y-m-d', strtotime($row->venta_productos->first()->fecha_vencimiento)));
                 })
 
                 ->rawColumns(['fecha_vencimiento'])

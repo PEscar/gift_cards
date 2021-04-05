@@ -117,6 +117,15 @@
             // Load table through ajax
             var table = $('#ventas_table').DataTable({
 
+                columnDefs: [{ //createdCell wasnt working on its own so i had to define it as a default
+                    targets: [4, 6, 7],
+                    createdCell: function (td, cellData, rowData, row, col) {
+
+                        let data = cellData ? moment(cellData).format('DD/MM/YYYY') : '';
+                        $(td).html(data);
+                    }
+                }, { targets: [0], visible: false}],
+
                 dom: 'Bfrtip',
 
                 buttons: [
@@ -196,10 +205,6 @@
                      regex: false,
                      smart: false
                 },
-
-                columnDefs: [
-                    { targets: [0], visible: false},
-                ],
 
                 createdRow: function( row, data, dataIndex ) {
                     $(row).attr('data-id', data.id);
