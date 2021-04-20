@@ -39,6 +39,8 @@ class InformeController extends Controller
 
     public function download(Request $request)
     {
+        \Log::channel('informes')->info('informe generado! ' . json_encode($request->all()));
+
         $pdf = \App::make('dompdf.wrapper');
 
         $data = VentaProducto::whereNotNull('codigo_gift_card');
