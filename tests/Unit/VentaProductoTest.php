@@ -29,7 +29,7 @@ class VentaProductoTest extends TestCase
      */
     public function testEstadoDebeDevolverVencida()
     {
-        $gc = factory(VentaProducto::class)->state('gift_card_valida')->make(['fecha_vencimiento' => \Illuminate\Support\Carbon::now()->subDays(1)->toDate()]);
+        $gc = factory(VentaProducto::class)->state('gift_card_valida')->make(['fecha_vencimiento' => \Illuminate\Support\Carbon::now()->subDays(1)->toDateString()]);
 
         $this->assertEquals($gc->estado, VentaProducto::ESTADO_VENCIDA);
     }
@@ -41,7 +41,7 @@ class VentaProductoTest extends TestCase
      */
     public function testEstadoDebeDevolverAsignada()
     {
-        $gc = factory(VentaProducto::class)->state('gift_card_valida')->make(['fecha_asignacion' => \Illuminate\Support\Carbon::now()->addDays(1)->toDate(), 'asignacion_id' => 1, 'nro_mesa' => 123123, 'sede_id' => 1]);
+        $gc = factory(VentaProducto::class)->state('gift_card_valida')->make(['fecha_asignacion' => \Illuminate\Support\Carbon::now()->addDays(1)->toDateString(), 'asignacion_id' => 1, 'nro_mesa' => 123123, 'sede_id' => 1]);
 
         $this->assertEquals($gc->estado, VentaProducto::ESTADO_ASIGNADA);
     }
