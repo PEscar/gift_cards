@@ -186,5 +186,17 @@ class VentaProducto extends Model
         return $this;
     }
 
+    public function updatePrecioFromTiendaNube()
+    {
+        $api = new \TiendaNube\API(1222005, env('TIENDA_NUBE_ACCESS_TOKEN', null), 'La Parolaccia (comercial@fscarg.com)');
+        $order = $api->get("orders/" . $this->venta->external_id);
+
+        // Save products
+        foreach ($order->body->products as $key => $orderProduct) {
+
+            echo json_encode($orderProduct) . '<br>';
+        }
+    }
+
     // END FUNCTIONS
 }

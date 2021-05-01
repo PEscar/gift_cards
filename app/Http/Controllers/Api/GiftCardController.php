@@ -337,7 +337,18 @@ class GiftCardController extends Controller
 
             if ( count($sedes) > 0 )
             {
-                $data->whereIn('sede_id', $sedes);
+                // La opción con valor 0, es "Sin Sede"
+                if ( in_array('0', $sedes) )
+                {
+                    $data->where(function ($query) use ($sedes) {
+                        $query->whereIn('sede_id', $sedes)
+                            ->orWhereNull('sede_id');
+                   });
+                }
+                else
+                {
+                    $data->whereIn('sede_id', $sedes);
+                }
             }
         }
 
@@ -364,16 +375,36 @@ class GiftCardController extends Controller
             $data->whereBetween('fecha_vencimiento', [$request->get('venci_start'), $request->get('venci_end')]);
         }
 
+        // Filtro de fecha de cancelación
+        if ( $request->get('cance_start') && $request->get('cance_end') )
+        {
+            $data->whereBetween('fecha_cancelacion', [$request->get('cance_start'), $request->get('cance_end')]);
+        }
+
+        // Filtro de fecha de venta
+        if ( $request->get('venta_start') && $request->get('venta_end') )
+        {
+            $venta_start = $request->get('venta_start');
+            $venta_end = $request->get('venta_end');
+
+            $data->whereHas('venta', function (Builder $query) use ($venta_start, $venta_end) {
+                $query->whereBetween('date', [$venta_start, $venta_end]);
+            });
+        }
+
+        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
+
         $count = $data->count();
         $data->limit($limit)
             ->skip($limit * ($page - 1));
 
-        $data->orderBy($sort, $direction);
+        $data->orderBy('ventas.date', $direction);
 
-        $results = $data->get();
+        $results = GiftCardResource::collection($data->get());
 
         return [
-            'data' => GiftCardResource::collection($results),
+            'direciton' => $direction,
+            'data' => $results,
             'count' => $count,
         ];
     }

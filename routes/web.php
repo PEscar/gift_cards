@@ -34,6 +34,7 @@ Route::middleware('auth:web')->group(function () {
 		Route::get('/validar/{codigo?}', 'GiftCardController@show')->name('giftcards.show');
 		Route::get('/minoristas', 'GiftCardController@indexMinoristas')->name('giftcards.index.minoristas');
 		Route::get('/mayoristas', 'GiftCardController@indexMayoristas')->name('giftcards.index.mayoristas');
+		Route::get('/script', 'GiftCardController@script')->name('giftcards.script');
 	});
 
 	Route::get('/usuarios', 'UserController@index')->name('usuarios.index');
@@ -46,7 +47,8 @@ Route::middleware('auth:web')->group(function () {
 
 	Route::prefix('informes')->group(function () {
 
-		Route::get('/download', 'InformeController@download')->name('informes.download.pdf');
+		Route::get('/pdf', 'InformeController@downloadPdf')->name('informes.download.pdf');
+		Route::get('/excel', 'InformeController@downloadExcel')->name('informes.download.excel');
 		Route::get('/', 'InformeController@index')->name('informes.index');
 	});
 });

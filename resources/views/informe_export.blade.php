@@ -1,35 +1,48 @@
-<table style="width: 100%">
+<style type="text/css">
+	table
+	{
+		width: 100%; font-size: 12px;
+	}
+</style>
+
+<table>
 	<tr>
 		<td>Estados: {!! is_null($estados) ? 'TODOS' : $estados_array[$estados]!!}</td>
-		<td>Conceptos: {!! $conceptos !!}</td>
-		<td>Sedes: {!! $sedes !!}</td>
-		<td>Proudctos: {!! $productos !!}</td>
+		<td colspan="2">Conceptos: {!! $conceptos !!}</td>
 	</tr>
 	<tr>
-		<td>Asignación: {!! $asig_start ? strtoupper(date('d/M/Y', strtotime($asig_start))) : '' !!} - {!! $asig_end ? strtoupper(date('d/M/Y', strtotime($asig_end))) : '' !!}</td>
+		<td>Asignaci&oacute;n: {!! $asig_start ? strtoupper(date('d/M/Y', strtotime($asig_start))) : '' !!} - {!! $asig_end ? strtoupper(date('d/M/Y', strtotime($asig_end))) : '' !!}</td>
 		<td>Vencimiento: {!! $venci_start ? strtoupper(date('d/M/Y', strtotime($venci_start))) : '' !!} - {!! $venci_end ? strtoupper(date('d/M/Y', strtotime($venci_end))) : '' !!}</td>
-		<td>Cancelación: {!! $cance_start ? strtoupper(date('d/M/Y', strtotime($cance_start))) : '' !!} - {!! $cance_end ? strtoupper(date('d/M/Y', strtotime($cance_end))) : '' !!}</td>
+		<td>Cancelaci&oacute;n: {!! $cance_start ? strtoupper(date('d/M/Y', strtotime($cance_start))) : '' !!} - {!! $cance_end ? strtoupper(date('d/M/Y', strtotime($cance_end))) : '' !!}</td>
+	</tr>
+
+	<tr>
+		<td colspan="3">Productos: {!! $productos !!}</td>
+	</tr>
+
+	<tr>
+		<td colspan="3">Sedes: {!! $sedes !!}</td>
 	</tr>
 </table>
 
 <table style="width: 100%">
     <thead>
         <tr>
-            <th>Código</th>
+            <th>C&oacute;digo</th>
 			<th>Estado</th>
 			<th>Precio</th>
-			<!-- <th>Consumió</th> -->
-			<th>Asignó</th>
+			<!-- <th>Consumi&oacute;</th> -->
+			<th>Asign&oacute;</th>
 			<th>Concepto</th>
-			<!-- <th>Consumición</th> -->
+			<th>Venta</th>
 			<th>Vencimiento</th>
-			<th>Asignación</th>
-			<th>Cancelación</th>
+			<th>Asignaci&oacute;n</th>
+			<th>Cancelaci&oacute;n</th>
 			<th>Cant.</th>
 			<th>Prod.</th>
-			<th>N° Mesa</th>
+			<th>N&deg; Mesa</th>
 			<th>Sede</th>
-			<th>Canceló</th>
+			<th>Cancel&oacute;</th>
 			<th>Motivo</th>
         </tr>
     </thead>
@@ -51,7 +64,7 @@
 			<!-- <td>{!! $array['consumio'] !!}</td> -->
 			<td>{!! $array['asigno'] !!}</td>
 			<td>{!! $array['concepto'] !!}</td>
-			<!-- <td>{!! $array['fecha_consumicion'] !!}</td> -->
+			<td>{!! $array['fecha_venta'] !!}</td>
 			<td>{!! $array['fecha_vencimiento'] !!}</td>
 			<td>{!! $array['fecha_asignacion'] !!}</td>
 			<td>{!! $array['fecha_cancelacion'] !!}</td>

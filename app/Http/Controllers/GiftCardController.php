@@ -61,4 +61,16 @@ class GiftCardController extends Controller
 
         return view('giftcard_qr', ['gc' => $gc]);
     }
+
+    public function script(Request $request)
+    {
+        $giftcards = VentaProducto::whereNotNull('codigo_gift_card')->whereNull('precio')->get();
+
+        foreach ($giftcards as $key => $gc) {
+            
+            echo 'cod: ' . $gc->codigo_gift_card . '<br>';
+            echo $gc->updatePrecioFromTiendaNube() . '<br>';
+
+        }
+    }
 }
