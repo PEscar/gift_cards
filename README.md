@@ -1,58 +1,33 @@
-## Herramienta para administrar ventas mayoritas y validar giftcards vendidas a travéz de TiendaNube
+# Gift Cards
 
-Autor: Pedro Scarselletta
+Gift Cards es un sistema de venta de gift cards sincronizado con la plataforma TiendaNube.
 
-## Deploy
+Permite administrar usuarios, productos , importar ventas desde TiendaNube y generar ventas manuales.
 
-Clone Repo
-```git clone https://github.com/pe-sca/gift_cards.git```
+Envía las giftcards a los clientes, ya sea en formato PDF o en formato .zip para que las descarguen.
 
-Enter dir
-```cd gift_cards```
+## Requisitos
+* mysql (5.6 - 8)
+* php 7.3
+* composer
+* npm
 
-Copiar .env de ejemplo y compĺetar:
-1. credenciales de bd
-2. credenciales mail
-3. credenciales TiendaNube
-4.  setear app url
+## Installation
 
-```cp .env.example .env```
+Clonar el repositorio, y una vez dentro de la carpeta raíz del mismo:
 
-Permisos para .env
-```sudo chown www-data:www-data .env```
+```bash
+cp .env.example .env -> set up credenciales db, key tienda nube (de ser necesario)
+composer install
+npm run dev
+```
 
-Permisos para storage
-```sudo chown -R www-data:www-data storage/```
+## Contribuir
+Pull request / issues / tests son bienvenidos
 
-Build docker app
-```docker-compose build app```
-
-Run containers
-```docker-compose up```
-
-Enter app container
-```docker-compose exec app /bin/bash```
-
-Install composer dependencies
-```composer install```
-
-Generate app key
-```php artisan key:generate```
-
-Migrate & seed db
-```php artisan migrate:fresh --seed```
-
-Install node dependencies
-```npm install```
-
-Build for prod
-```npm run production```
-
-## Requerimentos
-
-- **[Docker Compose.](https://docs.docker.com/compose/)**
+## Docker
+Experimental, no se usa en producción (en el caso del autor)
 
 
-- [x] probando
-
-- [ ] asas
+## License
+-
