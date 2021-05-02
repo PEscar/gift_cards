@@ -403,7 +403,6 @@ class GiftCardController extends Controller
         $results = GiftCardResource::collection($data->get());
 
         return [
-            'direciton' => $direction,
             'data' => $results,
             'count' => $count,
         ];

@@ -54,12 +54,8 @@ class InformeController extends Controller
 
     public function downloadExcel(Request $request)
     {
-        // \Log::channel('informes')->info('informe excel generado! ' . json_encode($request->all()));
+        \Log::channel('informes')->info('informe excel generado! ' . json_encode($request->all()));
 
-        // $data = $this->getDataToExportFromRequest($request);
-
-        // return Excel::download(new ExportUsers($data),
-        //         'informe.xlsx');
         header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
         header("Content-Disposition: attachment; filename=abc.xls");  //File name extension was wrong
         header("Expires: 0");
