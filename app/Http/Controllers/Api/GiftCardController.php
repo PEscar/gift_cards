@@ -95,7 +95,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('estado', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
+                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Válida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
                 })
 
                 ->rawColumns(['estado'])
@@ -191,7 +191,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('estado', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_CANCELADA ? 'Cancelada' : ( $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) ) );
+                    return $row->estado == VentaProducto::ESTADO_CANCELADA ? 'Cancelada' : ( $row->estado == VentaProducto::ESTADO_VALIDA ? 'Válida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) ) );
                 })
 
                 ->rawColumns(['estado'])

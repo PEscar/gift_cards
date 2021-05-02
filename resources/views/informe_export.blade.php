@@ -54,22 +54,22 @@
     	@foreach($results as $result)
 
     	@php
-    		$total += $array['precio'] ?? 0;
-    		$array = $result->toArray('*');
+			$array = $result->toArray('*');
+			$total += $array['precio'] ?? 0;
     	@endphp
         <tr>
             <td>{!! $array['codigo'] !!}</td>
-            <td>{!! $array['estado_label'] !!}</td>
+            <td>{!! htmlentities($array['estado_label']) !!}</td>
             <td>{!! $array['precio'] ? number_format($array['precio'], 2, ',', '.') : '' !!}</td>
 			<!-- <td>{!! $array['consumio'] !!}</td> -->
-			<td>{!! $array['asigno'] !!}</td>
-			<td>{!! $array['concepto'] !!}</td>
+			<td>{!! htmlentities($array['asigno']) !!}</td>
+			<td>{!! htmlentities($array['concepto']) !!}</td>
 			<td>{!! $array['fecha_venta'] !!}</td>
 			<td>{!! $array['fecha_vencimiento'] !!}</td>
 			<td>{!! $array['fecha_asignacion'] !!}</td>
 			<td>{!! $array['fecha_cancelacion'] !!}</td>
 			<td>{!! $array['cantidad'] !!}</td>
-			<td>{!! $array['descripcion'] !!}</td>
+			<td>{!! htmlentities($array['descripcion']) !!}</td>
 			<td>{!! $array['nro_mesa'] !!}</td>
 			<td>{!! $array['sede'] !!}</td>
 			<td>{!! $array['cancelo'] !!}</td>

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\InformeExcelExport;
 use App\Http\Resources\GiftCardResource;
 use App\Models\Producto;
 use App\Models\Sede;
 use App\Models\VentaProducto;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
 
 class InformeController extends Controller
 {
@@ -57,7 +55,7 @@ class InformeController extends Controller
         \Log::channel('informes')->info('informe excel generado! ' . json_encode($request->all()));
 
         header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
-        header("Content-Disposition: attachment; filename=abc.xls");  //File name extension was wrong
+        header("Content-Disposition: attachment; filename=informe.xlsx");
         header("Expires: 0");
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Cache-Control: private",false);
