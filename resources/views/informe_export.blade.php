@@ -76,11 +76,9 @@
 			<td>{!! $array['motivo_cancelacion'] !!}</td>
         </tr>
         @endforeach
-    </tbody>
-    <tfoot>
         <tr>
             <td><b>TOTAL</b></td>
-            <td>{!! number_format($total, 2, ',', '.') !!}</td>
+            <td colspan="14">{!! number_format($total, 2, ',', '.') !!}</td>
         </tr>
-    </tfoot>
+    </tbody>
 </table>

@@ -366,7 +366,7 @@ class GiftCardController extends Controller
         // Filtro de fecha de asignación
         if ( $request->get('asig_start') && $request->get('asig_end') )
         {
-            $data->whereBetween('fecha_asignacion', [$request->get('asig_start'), $request->get('asig_end')]);
+            $data->whereBetween('fecha_asignacion', [$request->get('asig_start') . ' 00:00:00', $request->get('asig_end') . ' 23:59:59']);
         }
 
         // Filtro de fecha de vencimiento
@@ -381,18 +381,16 @@ class GiftCardController extends Controller
             $data->whereBetween('fecha_cancelacion', [$request->get('cance_start'), $request->get('cance_end')]);
         }
 
+        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
+
         // Filtro de fecha de venta
         if ( $request->get('venta_start') && $request->get('venta_end') )
         {
             $venta_start = $request->get('venta_start');
             $venta_end = $request->get('venta_end');
 
-            $data->whereHas('venta', function (Builder $query) use ($venta_start, $venta_end) {
-                $query->whereBetween('date', [$venta_start, $venta_end]);
-            });
+            $data->whereBetween('ventas.date', [$venta_start . ' 00:00:00', $venta_end . ' 23:59:59']);
         }
-
-        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
 
         $count = $data->count();
         $data->limit($limit)
@@ -400,7 +398,8 @@ class GiftCardController extends Controller
 
         $data->orderBy('ventas.date', $direction);
 
-        $results = GiftCardResource::collection($data->get());
+        $todo = $data->get();
+        $results = GiftCardResource::collection($todo);
 
         return [
             'data' => $results,

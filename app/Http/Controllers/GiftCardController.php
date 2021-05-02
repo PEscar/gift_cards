@@ -65,16 +65,18 @@ class GiftCardController extends Controller
 
     public function script(Request $request)
     {
-        $giftcards = VentaProducto::whereNotNull('codigo_gift_card')->whereHas('venta', function ($query) {
-            $query->whereNotNull('external_id')
-                ->where('source_id', Venta::SOURCE_TIENDA_NUBE);
-        })->whereNull('precio')->get();
+        // $giftcards = VentaProducto::whereNotNull('codigo_gift_card')->whereHas('venta', function ($query) {
+        //     $query->whereNotNull('external_id')
+        //         ->where('source_id', Venta::SOURCE_TIENDA_NUBE);
+        // })->whereNull('precio')->get();
 
-        foreach ($giftcards as $key => $gc) {
+        // foreach ($giftcards as $key => $gc) {
             
-            echo 'cod: ' . $gc->codigo_gift_card . '<br>';
-            echo $gc->updatePrecioFromTiendaNube() . '<br>';
+        //     echo 'cod: ' . $gc->codigo_gift_card . PHP_EOL;
+        //     echo $gc->updatePrecioFromTiendaNube() . PHP_EOL;
 
-        }
+        // }
+
+        phpinfo(8);
     }
 }
