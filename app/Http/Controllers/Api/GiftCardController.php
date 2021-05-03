@@ -393,6 +393,7 @@ class GiftCardController extends Controller
         }
 
         $count = $data->count();
+        $total = $data->sum('precio');
         $data->limit($limit)
             ->skip($limit * ($page - 1));
 
@@ -404,6 +405,7 @@ class GiftCardController extends Controller
         return [
             'data' => $results,
             'count' => $count,
+            'total' => $total,
         ];
     }
 }

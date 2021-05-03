@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\GiftCardResource;
 use App\Models\Producto;
 use App\Models\Sede;
+use App\Models\Venta;
 use App\Models\VentaProducto;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -208,16 +209,18 @@ class InformeController extends Controller
         }
 
         $count = $data->count();
+        $total = $data->sum('precio');
         $data->orderBy('ventas.date', $request->get('direction'));
-        $results = $data->get();
+        $results = $data;
 
         $data = $request->all();
         $data['estados_array'] = [1 => 'V&aacute;lida', 2 => 'Consumida', 3 => 'Asignada', 4 => 'Vencida', 5 => 'Cancelada'];
-        $data['results'] = GiftCardResource::collection($results);
+        // $data['results'] = GiftCardResource::collection($results);
+        $data['results'] = $results;
 
         $sedes_labels = Sede::whereIn('id', $sedes)->get()->pluck('nombre')->all();
 
-        \Log::info('sedes: ' . json_encode($sedes));
+        // \Log::info('sedes: ' . json_encode($sedes));
 
         if ( in_array(0, $sedes) )
         {
@@ -226,6 +229,31 @@ class InformeController extends Controller
 
         $data['sedes'] = implode(', ', $sedes_labels);
         $data['productos'] = implode(', ', Producto::whereIn('id', $productos)->get()->pluck('nombre')->all());
+        $data['total'] = $total;
+
+        if ( $request->get('conceptos') == '' )
+        {
+            $data['conceptos'] = 'Todos';
+        }
+        else
+        {
+            $data['conceptos'] = [];
+
+            if ( in_array(Venta::SOURCE_TIENDA_NUBE, $conceptos) )
+                $data['conceptos'][] = 'Tienda Nube';
+
+            if ( in_array(Venta::SOURCE_CANJE, $conceptos) )
+                $data['conceptos'][] = 'Canje';
+
+            if ( in_array(Venta::SOURCE_INVITACION, $conceptos) )
+                $data['conceptos'][] = 'Invitación';
+
+            if ( in_array(Venta::SOURCE_MAYORISTA, $conceptos) )
+                $data['conceptos'][] = 'Mayorista';
+
+            $data['conceptos'] = implode(', ', $data['conceptos']);
+        }
+
 
         return $data;
     }

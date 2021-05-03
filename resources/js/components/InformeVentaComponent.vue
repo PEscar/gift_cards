@@ -180,7 +180,7 @@
             sedes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             selectedProductos: [],
             options: {
-            	pagination: false,
+				perPageValues: [10,25,50,100, 200, 500],
                 sortable: ['fecha_venta'],
                 filterByColumn: false,
                 filterable: false,
@@ -206,31 +206,6 @@
                   defaultOption: "Seleccionar {column}",
                   columns: "Columnas"
                 },
-                // requestAdapter(data) {
-
-                //     console.log('data: ', data)
-
-                //      // + '&sort=fecha_vencimiento&direction=desc&estados=' + this.estados + '&conceptos=' + this.conceptos + '&sedes=' + this.sedes + '&asig_start=' + this.formatDate(this.asignacion.startDate) + '&asig_end=' + this.formatDate(this.asignacion.endDate) + '&venci_start=' + this.formatDate(this.vencimiento.startDate) + '&venci_end=' + this.formatDate(this.vencimiento.endDate)  + '&cance_start=' + this.formatDate(this.cancelacion.startDate) + '&cance_end=' + this.formatDate(this.cancelacion.endDate) + '&productos=' + this.selectedProductos + '&venta_start=' + this.formatDate(this.venta.startDate) + '&venta_end=' + this.formatDate(this.venta.endDate
-
-                //     return {
-                //       sort: data.orderBy ? data.orderBy : 'ventas.fecha_vencimiento',
-                //       direction: data.ascending ? 'asc' : 'desc',
-                //       limit: data.limit ? data.limit : 10,
-                //       page: data.page ? data.page : 1,
-                //       estados: this.estados,
-                //       conceptos: this.conceptos,
-                //       sedes: this.sedes,
-                //       asig_start: this.asignacion ? this.formatDate(this.asignacion.startDate) : '',
-                //       asig_end: this.asignacion ? this.formatDate(this.asignacion.endDate) : '',
-                //       venci_start: this.vencimiento ? this.formatDate(this.vencimiento.startDate) : '',
-                //       venci_end: this.vencimiento ? this.formatDate(this.vencimiento.endDate) : '',
-                //       cance_start: this.cancelacion ? this.formatDate(this.cancelacion.startDate) : '',
-                //       cance_end: this.cancelacion ? this.formatDate(this.cancelacion.endDate) : '',
-                //       productos: this.selectedProductos,
-                //       venta_start: this.venta ? this.formatDate(this.venta.startDate) : '',
-                //       venta_end: this.venta ? this.formatDate(this.venta.endDate) : ''
-                //     }
-                // }
             },
         }
     },
@@ -277,17 +252,14 @@
                 let offset = date.getTimezoneOffset()
                 let yourDate = new Date(date.getTime() - (offset*60*1000))
                 return date.toISOString().split('T')[0]
-                
             }
 
             return ''
         },
 
-        onLoaded: function()
+        onLoaded: function(e)
         {
-            this.total = this.$refs.table.data.reduce(function(prev, cur) {
-              return prev + cur.precio;
-            }, 0)
+            this.total = e.data.total
         },
     },
 

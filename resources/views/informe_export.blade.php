@@ -8,7 +8,7 @@
 <table>
 	<tr>
 		<td>Estados: {!! is_null($estados) ? 'TODOS' : $estados_array[$estados]!!}</td>
-		<td colspan="2">Conceptos: {!! $conceptos !!}</td>
+		<td colspan="2">Conceptos: {!! htmlentities($conceptos) !!}</td>
 	</tr>
 	<tr>
 		<td>Asignaci&oacute;n: {!! $asig_start ? strtoupper(date('d/M/Y', strtotime($asig_start))) : '' !!} - {!! $asig_end ? strtoupper(date('d/M/Y', strtotime($asig_end))) : '' !!}</td>
@@ -48,14 +48,11 @@
     </thead>
     <tbody>
     	@php
-    		$total = 0;
-    	@endphp
+			$results->each(function (App\Models\VentaProducto $result) {
 
-    	@foreach($results as $result)
+				$result = new App\Http\Resources\GiftCardResource($result);
+				$array = $result->toArray('*');
 
-    	@php
-			$array = $result->toArray('*');
-			$total += $array['precio'] ?? 0;
     	@endphp
         <tr>
             <td>{!! $array['codigo'] !!}</td>
@@ -75,7 +72,9 @@
 			<td>{!! $array['cancelo'] !!}</td>
 			<td>{!! $array['motivo_cancelacion'] !!}</td>
         </tr>
-        @endforeach
+        @php
+			});
+        @endphp
         <tr>
             <td><b>TOTAL</b></td>
             <td colspan="14">{!! number_format($total, 2, ',', '.') !!}</td>
