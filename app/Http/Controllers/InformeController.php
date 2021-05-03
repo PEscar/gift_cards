@@ -132,20 +132,42 @@ class InformeController extends Controller
         }
 
         // Filtro de sedes
-        $sedes = explode(',', $request->get('sedes'));
-        if ( count($sedes) > 0 )
+        // $sedes = explode(',', $request->get('sedes'));
+        // if ( count($sedes) > 0 )
+        // {
+        //     // La opción con valor 0, es "Sin Sede"
+        //     if ( in_array('0', $sedes) )
+        //     {
+        //         $data->where(function ($query) use ($sedes) {
+        //             $query->whereIn('sede_id', $sedes)
+        //                 ->orWhereNull('sede_id');
+        //        });
+        //     }
+        //     else
+        //     {
+        //         $data->whereIn('sede_id', $sedes);
+        //     }
+        // }
+
+        $sedes = [];
+        if ( $request->get('sedes') != '' )
         {
-            // La opción con valor 0, es "Sin Sede"
-            if ( in_array('0', $sedes) )
+            $sedes = explode(',', $request->get('sedes'));
+
+            if ( count($sedes) > 0 )
             {
-                $data->where(function ($query) use ($sedes) {
-                    $query->whereIn('sede_id', $sedes)
-                        ->orWhereNull('sede_id');
-               });
-            }
-            else
-            {
-                $data->whereIn('sede_id', $sedes);
+                // La opción con valor 0, es "Sin Sede"
+                if ( in_array('0', $sedes) )
+                {
+                    $data->where(function ($query) use ($sedes) {
+                        $query->whereIn('sede_id', $sedes)
+                            ->orWhereNull('sede_id');
+                   });
+                }
+                else
+                {
+                    $data->whereIn('sede_id', $sedes);
+                }
             }
         }
 
@@ -194,6 +216,8 @@ class InformeController extends Controller
         $data['results'] = GiftCardResource::collection($results);
 
         $sedes_labels = Sede::whereIn('id', $sedes)->get()->pluck('nombre')->all();
+
+        \Log::info('sedes: ' . json_encode($sedes));
 
         if ( in_array(0, $sedes) )
         {

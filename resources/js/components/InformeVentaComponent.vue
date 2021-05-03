@@ -4,49 +4,41 @@
         <div class="row">
             <div class="col-xl-2">
                 <label>Estados</label><br>
-                <select v-model="estados" ref="estados">
-                    <option value="">Todos</option>
-                    <option value="1">Válida</option>
-                    <option value="2">Consumida</option>
-                    <option value="3">Asignada</option>
-                    <option value="4">Vencida</option>
-                    <option value="5">Cancelada</option>
-                </select>
+                <label class="font-weight-normal"><input v-model="estados" type="radio" value="">&nbsp;Todos</label><br>
+                <label class="font-weight-normal"><input v-model="estados" type="radio" value="1">&nbsp;Válida</label><br>
+                <label class="font-weight-normal"><input v-model="estados" type="radio" value="2">&nbsp;Consumida</label><br>
+                <label class="font-weight-normal"><input v-model="estados" type="radio" value="3">&nbsp;Asignada</label><br>
+                <label class="font-weight-normal"><input v-model="estados" type="radio" value="4">&nbsp;Vencida</label><br>
+                <label class="font-weight-normal"><input v-model="estados" type="radio" value="5">&nbsp;Cancelada</label><br>
             </div>
 
             <div class="col-xl-2">
-                <label>Conceptos</label> <input type="checkbox" checked @click="selectAll($event, 'conceptos')"><br>
-                <select v-model="conceptos" ref="concepto" multiple>
-                    <option value="0">Tienda Nube</option>
-                    <option value="1">Canje</option>
-                    <option value="2">Invitación</option>
-                    <option value="3">Venta</option>
-                </select>
+                <label><input type="checkbox" checked @click="selectAll($event, 'conceptos')">&nbsp;Conceptos</label><br>
+                <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="0">&nbsp;Tienda</label><br>
+                <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="1">&nbsp;Canje</label><br>
+                <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="2">&nbsp;Invitación</label><br>
+                <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="3">&nbsp;Venta</label><br>
             </div>
 
             <div class="col-xl-2">
-                <label>Sedes</label> <input type="checkbox" checked @click="selectAll($event, 'sedes')"><br>
-                <select v-model="sedes" ref="sede" multiple>
-                    <option value="0">Sin Sede</option>
-                    <option value="1">Madero 1</option>
-                    <option value="2">Madero 2</option>
-                    <option value="3">Madero 3</option>
-                    <option value="4">Madero 5</option>
-                    <option value="5">Libertador</option>
-                    <option value="6">Dolce</option>
-                    <option value="7">Riobamba</option>
-                    <option value="8">Botánico</option>
-                    <option value="9">Recoleta</option>
-                    <option value="10">San Isidro</option>
-                    <option value="11">Pilar</option>
-                </select>
+                <label><input type="checkbox" checked @click="selectAll($event, 'sedes')">&nbsp;Sedes</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="0">&nbsp;Sin Sede</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="1">&nbsp;Madero 1</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="2">&nbsp;Madero 2</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="3">&nbsp;Madero 3</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="4">&nbsp;Madero 5</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="5">&nbsp;Libertador</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="6">&nbsp;Dolce</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="7">&nbsp;Riobamba</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="8">&nbsp;Botánico</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="9">&nbsp;Recoleta</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="10">&nbsp;San Isidro</label><br>
+                <label class="font-weight-normal"><input v-model="sedes" type="checkbox" value="11">&nbsp;Pilar</label><br>
             </div>
 
             <div class="col-xl-3">
-                <label>Productos</label> <input type="checkbox" checked @click="selectAll($event, 'selectedProductos')"><br>
-                <select v-model="selectedProductos" ref="productos" multiple>
-                    <option v-for="producto in productos" :value="producto.id">{{ producto.nombre }}</option>
-                </select>
+                <label><input type="checkbox" checked @click="selectAll($event, 'selectedProductos')">&nbsp;Productos</label><br>
+                <label v-for="producto in productos" class="font-weight-normal"><input v-model="selectedProductos" type="checkbox" :value="producto.id">&nbsp;{{ producto.nombre }}</label><br>
             </div>
 
             <div class="col-xl-3">
@@ -188,6 +180,7 @@
             sedes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             selectedProductos: [],
             options: {
+            	pagination: false,
                 sortable: ['fecha_venta'],
                 filterByColumn: false,
                 filterable: false,
@@ -304,11 +297,7 @@
         {
             let ruta = this.urlBase + '&' + this.params
 
-            console.log('this.direction: ' + this.direction)
-            console.log('ruta pdf: ' + ruta)
             return ruta
-
-            // return this.urlBase
         },
 
         params: function()
