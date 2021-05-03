@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\InformeExcelExport;
 use App\Http\Resources\GiftCardResource;
 use App\Models\Producto;
 use App\Models\Sede;
 use App\Models\VentaProducto;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
 
 class InformeController extends Controller
 {
@@ -54,18 +52,16 @@ class InformeController extends Controller
 
     public function downloadExcel(Request $request)
     {
-        // \Log::channel('informes')->info('informe excel generado! ' . json_encode($request->all()));
+        \Log::channel('informes')->info('informe excel generado! ' . json_encode($request->all()));
 
-        // $data = $this->getDataToExportFromRequest($request);
+        $data = $this->getDataToExportFromRequest($request);
 
-        // return Excel::download(new ExportUsers($data),
-        //         'informe.xlsx');
         header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
-        header("Content-Disposition: attachment; filename=abc.xls");  //File name extension was wrong
+        header("Content-Disposition: attachment; filename=informe.xlsx");
         header("Expires: 0");
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Cache-Control: private",false);
-        $data = $this->getDataToExportFromRequest($request);
+
         echo view('informe_export', $data);
     }
 
@@ -163,7 +159,7 @@ class InformeController extends Controller
         // Filtro de fecha de asignación
         if ( $request->get('asig_start') && $request->get('asig_end') )
         {
-            $data->whereBetween('fecha_asignacion', [$request->get('asig_start'), $request->get('asig_end')]);
+            $data->whereBetween('fecha_asignacion', [$request->get('asig_start') . ' 00:00:00', $request->get('asig_end') . ' 23:59:59']);
         }
 
         // Filtro de fecha de vencimiento
@@ -172,18 +168,22 @@ class InformeController extends Controller
             $data->whereBetween('fecha_vencimiento', [$request->get('venci_start'), $request->get('venci_end')]);
         }
 
+        // Filtro de fecha de cancelación
+        if ( $request->get('cance_start') && $request->get('cance_end') )
+        {
+            $data->whereBetween('fecha_cancelacion', [$request->get('cance_start'), $request->get('cance_end')]);
+        }
+
+        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
+
         // Filtro de fecha de venta
         if ( $request->get('venta_start') && $request->get('venta_end') )
         {
             $venta_start = $request->get('venta_start');
             $venta_end = $request->get('venta_end');
 
-            $data->whereHas('venta', function (Builder $query) use ($venta_start, $venta_end) {
-                $query->whereBetween('date', [$venta_start, $venta_end]);
-            });
+            $data->whereBetween('ventas.date', [$venta_start . ' 00:00:00', $venta_end . ' 23:59:59']);
         }
-
-        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
 
         $count = $data->count();
         $data->orderBy('ventas.date', $request->get('direction'));

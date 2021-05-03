@@ -69,7 +69,7 @@
                     v-bind:autoApply="true"
                     >
                 </date-range-picker>
-                <button v-if="asignacion.startDate" @click="clearFilter('asignacion')" type="button">&times;</button>
+                <button v-if="venta.startDate" @click="clearFilter('venta')" type="button">&times;</button>
             </div>
 
             <div class="col-xl-6">
