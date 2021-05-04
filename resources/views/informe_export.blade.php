@@ -3,6 +3,11 @@
 	{
 		width: 100%; font-size: 12px;
 	}
+
+	table tbody tr td, table thead tr th{
+		text-align: center!important;
+		border: solid 1px;
+	}
 </style>
 
 <table>
@@ -25,7 +30,7 @@
 	</tr>
 </table>
 
-<table style="width: 100%">
+<table style="width: 100%;">
     <thead>
         <tr>
             <th>C&oacute;digo</th>
@@ -77,7 +82,7 @@
         @endphp
         <tr>
             <td><b>TOTAL</b></td>
-            <td colspan="14">{!! number_format($total, 2, ',', '.') !!}</td>
+            <td colspan="14"><strong>{!! number_format($total, 2, ',', '.') !!}</strong></td>
         </tr>
     </tbody>
 </table>

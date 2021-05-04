@@ -118,6 +118,7 @@
     transform: rotate(360deg);
   }
 }
+
 </style>
 
 
@@ -165,6 +166,12 @@
             </div>
 
             <div class="col-xl-3">
+				<label>Orden</label><br>
+				<label class="font-weight-normal"><input v-model="direction" type="radio" value="asc">&nbsp;Ascendente</label><br>
+				<label class="font-weight-normal"><input v-model="direction" type="radio" value="desc">&nbsp;Descendente</label><br>
+
+                <hr>
+
                 <button @click="refresh" class="btn btn-primary">Buscar</button>
 
                 <a target="_blank" :href="urlExcel + '?' + params" class="btn btn-success">Excel</a>
@@ -239,7 +246,6 @@
                     >
                       <div
                         key="fecha_venta"
-                        @click="direction = direction == 'desc' ? 'asc' : 'desc'"
                       >Fecha Venta</div>
                     </template>
 
@@ -304,8 +310,8 @@
             sedes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             selectedProductos: [],
             options: {
+				sortable: [],
 				perPageValues: [10,25,50,100, 200, 500],
-                sortable: ['fecha_venta'],
                 filterByColumn: false,
                 filterable: false,
                 sortIcon: {

@@ -65,3 +65,9 @@ Route::prefix('vouchers')->group(function () {
 	Route::get('/download/{id}', 'VentaController@downloadVoucher')->name('voucher.download');
 
 });
+
+Route::get('info', function(){
+
+	phpinfo();
+
+});
