@@ -31,3 +31,10 @@ Experimental, no se usa en producción (en el caso del autor)
 
 ## License
 -
+
+## Supervisor
+
+copiar archivo de ejemplo a la ruta configurada en supervisor e indicar las rutas correctas hacia los archivos de log y la carpeta del proyecto
+
+sudo supervisorctl reread
+sudo supervisorctl update

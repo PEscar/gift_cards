@@ -141,7 +141,7 @@
                 <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="0">&nbsp;Tienda</label><br>
                 <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="1">&nbsp;Canje</label><br>
                 <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="2">&nbsp;Invitación</label><br>
-                <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="3">&nbsp;Venta</label><br>
+                <label class="font-weight-normal"><input v-model="conceptos" type="checkbox" value="3">&nbsp;Mayorista</label><br>
             </div>
 
             <div class="col-xl-2">
