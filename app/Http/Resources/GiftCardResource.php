@@ -25,6 +25,8 @@ class GiftCardResource extends JsonResource
             'fecha_vencimiento' => strtoupper(date('d/m/Y', strtotime($this->fecha_vencimiento))),
             'fecha_asignacion' => $this->asignadaPor ? strtoupper(date('d/m/Y', strtotime($this->fecha_asignacion))) : null,
             'fecha_cancelacion' => $this->canceladaPor ? strtoupper(date('d/m/Y', strtotime($this->fecha_cancelacion))) : null,
+            'fecha_venta' => strtoupper(date('d/m/Y', strtotime($this->venta->date))),
+            'fecha_venta_full' => $this->venta->date,
             'cantidad' => $this->cantidad,
             'descripcion' => $this->producto->nombre,
             'nro_mesa' => $this->nro_mesa,

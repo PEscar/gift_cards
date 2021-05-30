@@ -186,5 +186,36 @@ class VentaProducto extends Model
         return $this;
     }
 
+    public function updatePrecioFromTiendaNube()
+    {
+        $api = new \TiendaNube\API(1222005, env('TIENDA_NUBE_ACCESS_TOKEN', null), 'La Parolaccia (comercial@fscarg.com)');
+
+        echo 'pidiendo datos de orden: ' . $this->venta->external_id . PHP_EOL;
+
+        $order = $api->get("orders/" . $this->venta->external_id);
+
+        // Save products
+        foreach ($order->body->products as $key => $orderProduct) {
+
+            if ( $this->producto->sku != $orderProduct->sku )
+            {
+                echo 'distintos!: ' . $this->producto->sku . ' != ' . $orderProduct->sku . PHP_EOL;
+                echo '---------------------------------------' . PHP_EOL;
+                continue;
+            }
+
+            echo 'id venta producto: ' . $this->id . PHP_EOL;
+            echo 'prod: ' . $orderProduct->name . PHP_EOL;
+            echo 'mi sku: ' . $this->producto->sku . PHP_EOL;
+            echo 'sku: ' . $orderProduct->sku . PHP_EOL;
+            echo 'precio: ' . $orderProduct->price . PHP_EOL;
+
+            $this->precio = $orderProduct->price;
+            $this->save();
+
+            echo 'actualizado!' . PHP_EOL;
+        }
+    }
+
     // END FUNCTIONS
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use App\Models\Producto;
+use App\Models\Venta;
 use App\Models\VentaProducto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,5 +61,20 @@ class GiftCardController extends Controller
         $gc = VentaProducto::giftCards()->get()->random();
 
         return view('giftcard_qr', ['gc' => $gc]);
+    }
+
+    public function script(Request $request)
+    {
+        $giftcards = VentaProducto::whereNotNull('codigo_gift_card')->whereHas('venta', function ($query) {
+            $query->whereNotNull('external_id')
+                ->where('source_id', Venta::SOURCE_TIENDA_NUBE);
+        })->whereNull('precio')->get();
+
+        foreach ($giftcards as $key => $gc) {
+            
+            echo 'cod: ' . $gc->codigo_gift_card . PHP_EOL;
+            echo $gc->updatePrecioFromTiendaNube() . PHP_EOL;
+
+        }
     }
 }

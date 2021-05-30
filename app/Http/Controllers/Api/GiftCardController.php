@@ -95,7 +95,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('estado', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
+                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Válida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
                 })
 
                 ->rawColumns(['estado'])
@@ -191,7 +191,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('estado', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_CANCELADA ? 'Cancelada' : ( $row->estado == VentaProducto::ESTADO_VALIDA ? 'Valida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) ) );
+                    return $row->estado == VentaProducto::ESTADO_CANCELADA ? 'Cancelada' : ( $row->estado == VentaProducto::ESTADO_VALIDA ? 'Válida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) ) );
                 })
 
                 ->rawColumns(['estado'])
@@ -337,7 +337,18 @@ class GiftCardController extends Controller
 
             if ( count($sedes) > 0 )
             {
-                $data->whereIn('sede_id', $sedes);
+                // La opción con valor 0, es "Sin Sede"
+                if ( in_array('0', $sedes) )
+                {
+                    $data->where(function ($query) use ($sedes) {
+                        $query->whereIn('sede_id', $sedes)
+                            ->orWhereNull('sede_id');
+                   });
+                }
+                else
+                {
+                    $data->whereIn('sede_id', $sedes);
+                }
             }
         }
 
@@ -355,7 +366,7 @@ class GiftCardController extends Controller
         // Filtro de fecha de asignación
         if ( $request->get('asig_start') && $request->get('asig_end') )
         {
-            $data->whereBetween('fecha_asignacion', [$request->get('asig_start'), $request->get('asig_end')]);
+            $data->whereBetween('fecha_asignacion', [$request->get('asig_start') . ' 00:00:00', $request->get('asig_end') . ' 23:59:59']);
         }
 
         // Filtro de fecha de vencimiento
@@ -364,17 +375,37 @@ class GiftCardController extends Controller
             $data->whereBetween('fecha_vencimiento', [$request->get('venci_start'), $request->get('venci_end')]);
         }
 
+        // Filtro de fecha de cancelación
+        if ( $request->get('cance_start') && $request->get('cance_end') )
+        {
+            $data->whereBetween('fecha_cancelacion', [$request->get('cance_start'), $request->get('cance_end')]);
+        }
+
+        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
+
+        // Filtro de fecha de venta
+        if ( $request->get('venta_start') && $request->get('venta_end') )
+        {
+            $venta_start = $request->get('venta_start');
+            $venta_end = $request->get('venta_end');
+
+            $data->whereBetween('ventas.date', [$venta_start . ' 00:00:00', $venta_end . ' 23:59:59']);
+        }
+
         $count = $data->count();
+        $total = $data->sum('precio');
         $data->limit($limit)
             ->skip($limit * ($page - 1));
 
-        $data->orderBy($sort, $direction);
+        $data->orderBy('ventas.date', $direction);
 
-        $results = $data->get();
+        $todo = $data->get();
+        $results = GiftCardResource::collection($todo);
 
         return [
-            'data' => GiftCardResource::collection($results),
+            'data' => $results,
             'count' => $count,
+            'total' => $total,
         ];
     }
 }

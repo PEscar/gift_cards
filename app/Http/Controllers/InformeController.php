@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GiftCardResource;
 use App\Models\Producto;
+use App\Models\Sede;
+use App\Models\Venta;
 use App\Models\VentaProducto;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -37,12 +39,35 @@ class InformeController extends Controller
         }
     }
 
-    public function download(Request $request)
+    public function downloadPdf(Request $request)
     {
-        \Log::channel('informes')->info('informe generado! ' . json_encode($request->all()));
+        \Log::channel('informes')->info('informe pdf generado! ' . json_encode($request->all()));
+
+        $data = $this->getDataToExportFromRequest($request);
 
         $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->loadView('informe_export', $data);
+        return $pdf->download();
+    }
 
+    public function downloadExcel(Request $request)
+    {
+        \Log::channel('informes')->info('informe excel generado! ' . json_encode($request->all()));
+
+        $data = $this->getDataToExportFromRequest($request);
+
+        header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
+        header("Content-Disposition: attachment; filename=informe.xlsx");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private",false);
+
+        echo view('informe_export', $data);
+    }
+
+    private function getDataToExportFromRequest(Request $request)
+    {
         $data = VentaProducto::whereNotNull('codigo_gift_card');
 
         // Filtro de estados
@@ -108,31 +133,56 @@ class InformeController extends Controller
         }
 
         // Filtro de sedes
+        // $sedes = explode(',', $request->get('sedes'));
+        // if ( count($sedes) > 0 )
+        // {
+        //     // La opción con valor 0, es "Sin Sede"
+        //     if ( in_array('0', $sedes) )
+        //     {
+        //         $data->where(function ($query) use ($sedes) {
+        //             $query->whereIn('sede_id', $sedes)
+        //                 ->orWhereNull('sede_id');
+        //        });
+        //     }
+        //     else
+        //     {
+        //         $data->whereIn('sede_id', $sedes);
+        //     }
+        // }
+
+        $sedes = [];
         if ( $request->get('sedes') != '' )
         {
             $sedes = explode(',', $request->get('sedes'));
 
             if ( count($sedes) > 0 )
             {
-                $data->whereIn('sede_id', $sedes);
+                // La opción con valor 0, es "Sin Sede"
+                if ( in_array('0', $sedes) )
+                {
+                    $data->where(function ($query) use ($sedes) {
+                        $query->whereIn('sede_id', $sedes)
+                            ->orWhereNull('sede_id');
+                   });
+                }
+                else
+                {
+                    $data->whereIn('sede_id', $sedes);
+                }
             }
         }
 
         // Filtro de productos
-        if ( $request->get('productos') != '' )
+        $productos = explode(',', $request->get('productos'));
+        if ( count($productos) > 0 )
         {
-            $productos = explode(',', $request->get('productos'));
-
-            if ( count($productos) > 0 )
-            {
-                $data->whereIn('producto_id', $productos);
-            }
+            $data->whereIn('producto_id', $productos);
         }
 
         // Filtro de fecha de asignación
         if ( $request->get('asig_start') && $request->get('asig_end') )
         {
-            $data->whereBetween('fecha_asignacion', [$request->get('asig_start'), $request->get('asig_end')]);
+            $data->whereBetween('fecha_asignacion', [$request->get('asig_start') . ' 00:00:00', $request->get('asig_end') . ' 23:59:59']);
         }
 
         // Filtro de fecha de vencimiento
@@ -141,17 +191,70 @@ class InformeController extends Controller
             $data->whereBetween('fecha_vencimiento', [$request->get('venci_start'), $request->get('venci_end')]);
         }
 
-        $count = $data->count();
-        $data->orderBy($request->sort, $request->direction);
-        $results = $data->get();
+        // Filtro de fecha de cancelación
+        if ( $request->get('cance_start') && $request->get('cance_end') )
+        {
+            $data->whereBetween('fecha_cancelacion', [$request->get('cance_start'), $request->get('cance_end')]);
+        }
 
-        $pdf->setPaper('A4', 'landscape');
+        $data->join('ventas', 'ventas.id', '=', 'venta_producto.venta_id');
+
+        // Filtro de fecha de venta
+        if ( $request->get('venta_start') && $request->get('venta_end') )
+        {
+            $venta_start = $request->get('venta_start');
+            $venta_end = $request->get('venta_end');
+
+            $data->whereBetween('ventas.date', [$venta_start . ' 00:00:00', $venta_end . ' 23:59:59']);
+        }
+
+        $count = $data->count();
+        $total = $data->sum('precio');
+        $data->orderBy('ventas.date', $request->get('direction'));
+        $results = $data;
 
         $data = $request->all();
-        $data['estados_array'] = [1 => 'Válida', 2 => 'Consumida', 3 => 'Asignada', 4 => 'Vencida', 5 => 'Cancelada'];
-        $data['results'] = GiftCardResource::collection($results);
+        $data['estados_array'] = [1 => 'V&aacute;lida', 2 => 'Consumida', 3 => 'Asignada', 4 => 'Vencida', 5 => 'Cancelada'];
+        // $data['results'] = GiftCardResource::collection($results);
+        $data['results'] = $results;
 
-        $pdf->loadView('informe_export', $data);
-        return $pdf->download();
+        $sedes_labels = Sede::whereIn('id', $sedes)->get()->pluck('nombre')->all();
+
+        // \Log::info('sedes: ' . json_encode($sedes));
+
+        if ( in_array(0, $sedes) )
+        {
+            $sedes_labels[] = 'Sin Sede';
+        }
+
+        $data['sedes'] = implode(', ', $sedes_labels);
+        $data['productos'] = implode(', ', Producto::whereIn('id', $productos)->get()->pluck('nombre')->all());
+        $data['total'] = $total;
+
+        if ( $request->get('conceptos') == '' )
+        {
+            $data['conceptos'] = 'Todos';
+        }
+        else
+        {
+            $data['conceptos'] = [];
+
+            if ( in_array(Venta::SOURCE_TIENDA_NUBE, $conceptos) )
+                $data['conceptos'][] = 'Tienda Nube';
+
+            if ( in_array(Venta::SOURCE_CANJE, $conceptos) )
+                $data['conceptos'][] = 'Canje';
+
+            if ( in_array(Venta::SOURCE_INVITACION, $conceptos) )
+                $data['conceptos'][] = 'Invitación';
+
+            if ( in_array(Venta::SOURCE_MAYORISTA, $conceptos) )
+                $data['conceptos'][] = 'Mayorista';
+
+            $data['conceptos'] = implode(', ', $data['conceptos']);
+        }
+
+
+        return $data;
     }
 }
