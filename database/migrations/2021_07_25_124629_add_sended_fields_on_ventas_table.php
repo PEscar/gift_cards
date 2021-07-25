@@ -16,7 +16,6 @@ class AddSendedFieldsOnVentasTable extends Migration
         Schema::table('ventas', function($table) {
             $table->text('error_envio')->after('fecha_ultima_edicion')->nullable();
             $table->datetime('fecha_error')->after('fecha_ultima_edicion')->nullable()->default(null);
-            $table->bigInteger('job_error_id')->after('fecha_ultima_edicion')->nullable()->default(null);
         });
     }
 
@@ -30,7 +29,6 @@ class AddSendedFieldsOnVentasTable extends Migration
         Schema::table('ventas', function($table) {
             $table->dropColumn('error_envio');
             $table->dropColumn('fecha_error');
-            $table->dropColumn('job_error_id');
         });
     }
 }
