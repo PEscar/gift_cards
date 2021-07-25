@@ -60,4 +60,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/', 'Api\VentaController@store')->name('api.ventas.create');
         Route::put('/{id}', 'Api\VentaController@update')->name('api.ventas.update');
     });
+
+    Route::prefix('errores')->group(function () {
+        Route::get('/', 'Api\ErrorController@index')->name('api.errores.index');
+    });
 });

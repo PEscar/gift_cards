@@ -100,6 +100,12 @@ class Venta extends Model
         return $query->where('pagada', 1);
     }
 
+    public function scopeEnvioFallido($query)
+    {
+        return $query->whereNotNull('error_envio')
+            ->whereNotNull('fecha_error');
+    }
+
     // END SCOPES
 
     // METHODS

@@ -65,6 +65,9 @@ class GiftCardZipMailNotification extends Notification implements ShouldQueue
     public function failed(\Exception $e)
     {
         \Log::info('failed GiftCardZipMailNotification: ' . $this->venta->id);
-        User::find(1)->notify(new FailedGiftCardMailNotification($this->venta, $e));
+        // User::find(1)->notify(new FailedGiftCardMailNotification($this->venta, $e));
+        $this->venta->fecha_error = date('Y-m-d H:i:s');
+        $this->venta->error_envio = $e->getMessage();
+        $this->venta->save();
     }
 }
