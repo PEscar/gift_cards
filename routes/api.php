@@ -63,6 +63,5 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('errores')->group(function () {
         Route::get('/', 'Api\ErrorController@index')->name('api.errores.index');
-        Route::post('/create', 'Api\ErrorController@store')->name('api.errores.create');
     });
 });
