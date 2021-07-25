@@ -51,6 +51,12 @@ Route::middleware('auth:web')->group(function () {
 		Route::get('/excel', 'InformeController@downloadExcel')->name('informes.download.excel');
 		Route::get('/', 'InformeController@index')->name('informes.index');
 	});
+
+	Route::prefix('errores')->group(function () {
+
+		Route::get('/', 'ErrorController@index')->name('errores.index');
+		Route::get('/{id}', 'ErrorController@retry')->name('errores.retry');
+	});
 });
 
 Route::prefix('orders')->group(function () {

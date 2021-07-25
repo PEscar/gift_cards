@@ -61,6 +61,8 @@
                         <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('configuracion.update.show') }}">Configuración</a></li>
 
                         <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('informes.index') }}">Informes</a></li>
+
+                        <li class="nav-item navbar-brand"><a class="nav-link" href="{{ route('errores.index') }}">Errores</a></li>
                         @endif
                     </ul>
 
@@ -108,6 +110,13 @@
         <div id="snackbar"></div>
 
         <main class="py-4">
+
+            @if(Session::has('success'))
+            <div class="row column alert alert-success">
+                {{ Session::get('success') }}
+            </div>
+            @endif
+
             @yield('content')
         </main>
     </div>
