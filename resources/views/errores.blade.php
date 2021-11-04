@@ -18,7 +18,8 @@
                                 <th>Venta ID</th>
                                 <th>Error</th>
                                 <th>Fecha</th>
-                                <th>Acciones</th>
+                                <th>Estado</th>
+                                <th>Fecha Envío</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,7 +55,9 @@
 
                     {data: 'fecha', name: 'fecha'},
 
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'estado', name: 'estado'},
+
+                    {data: 'fecha_envio', name: 'fecha_envio'}
 
                 ],
 

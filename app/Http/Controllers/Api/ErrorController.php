@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Venta;
+use App\Models\VentaProducto;
 use DataTables;
 use Illuminate\Http\Request;
 use Response;
@@ -17,7 +18,7 @@ class ErrorController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Venta::envioFallido()->get();
+        $data = Venta::reenvio()->get();
 
         return Datatables::of($data)
 
@@ -42,14 +43,19 @@ class ErrorController extends Controller
 
                 ->rawColumns(['fecha'])
 
-                ->addColumn('action', function($row){
+                ->addColumn('estado', function($row){
 
-                    $btn = '<a href="' . route('errores.retry', ['id' => $row->id]) . '" class="btn btn-danger">Reintentar</a>' ;
-
-                    return $btn;
+                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Válida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['estado'])
+
+                ->addColumn('fecha_envio', function($row){
+
+                    return $row->fecha_envio ? strtoupper(date('d/M/Y H:i:s', strtotime($row->fecha_envio))) : '';
+                })
+
+                ->rawColumns(['fecha_envio'])
 
                 ->make(true);
     }

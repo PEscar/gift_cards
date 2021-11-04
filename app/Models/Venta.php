@@ -29,7 +29,7 @@ class Venta extends Model
     const TIPO_NOTIFICACION_PDF_ATTACH = 1;
     const TIPO_NOTIFICACION_ZIP_LINK = 2;
 
-    protected $fillable = ['update'];
+    protected $fillable = ['update', 'fecha_envio'];
 
     /**
      * Route notifications for the mail channel.
@@ -100,10 +100,50 @@ class Venta extends Model
         return $query->where('pagada', 1);
     }
 
+    /**
+     * Ventas que ha fallado el envio
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeEnvioFallido($query)
     {
         return $query->whereNotNull('error_envio')
             ->whereNotNull('fecha_error');
+    }
+
+    /**
+     * Ventas pagas que no se han enviado
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnvioPendiente($query)
+    {
+        return $query->where('pagada', 1)
+            ->whereNull('fecha_envio');
+    }
+
+    /**
+     * Ventas pagas que son reenvio. Puede que se hayan enviado o no (envio fallado)
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeReenvio($query)
+    {
+        return $query->where('reenvio', 1);
+    }
+
+    /**
+     * Ventas enviadas
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnviadas($query)
+    {
+        return $query->whereNotNull('fecha_envio');
     }
 
     // END SCOPES
@@ -125,7 +165,7 @@ class Venta extends Model
         return $tiene;
     }
 
-    public function entregarGiftcards()
+    public function entregarGiftcards($reenvio = false)
     {
         if ( $this->tipo_notificacion == self::TIPO_NOTIFICACION_PDF_ATTACH )
         {
@@ -136,6 +176,9 @@ class Venta extends Model
                 new SendGiftCardZipMailNotification($this)
             ])->dispatch($this);
         }
+
+        if ($reenvio)
+            $this->reenvio = true;
     }
 
     public function generatePdfs()
