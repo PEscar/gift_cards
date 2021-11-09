@@ -290,8 +290,7 @@ class Venta extends Model
         $api = new \TiendaNube\API(1222005, env('TIENDA_NUBE_ACCESS_TOKEN', null), 'La Parolaccia (comercial@fscarg.com)');
 
         // Obtenemos la última orden resincronizada, que es hasta donde estamos seguros que no nos falta ninguna
-        // $date_from = self::where('resync', 1)->max('date') ?: self::FIRST_RESYNC;
-        dump(env('MIN_RESYNC_EXTERNAL_ID', '331942372'));die;
+        $date_from = self::where('resync', 1)->max('date') ?: self::FIRST_RESYNC;
 
         $params = ['created_at_min' => $date_from, 'fields' => 'id,created_at', 'payment_status' => 'paid', 'per_page' => 200];
 
