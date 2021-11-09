@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
                 \Log::info('se ha enviado una gc correctamentaae: !' . $id_venta);
                 $venta = Venta::findOrFail($id_venta);
                 $venta->fecha_envio = date('Y-m-d H:i:s');
+                $venta->trying_send = false;
                 $venta->save();
             }
         });

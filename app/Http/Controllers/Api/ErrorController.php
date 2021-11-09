@@ -24,7 +24,7 @@ class ErrorController extends Controller
 
                 ->addColumn('id', function($row){
 
-                    return $row->id;
+                    return $row->external_id;
                 })
 
                 ->rawColumns(['id'])
@@ -43,19 +43,19 @@ class ErrorController extends Controller
 
                 ->rawColumns(['fecha'])
 
-                ->addColumn('estado', function($row){
-
-                    return $row->estado == VentaProducto::ESTADO_VALIDA ? 'Válida' : ( $row->estado == VentaProducto::ESTADO_CONSUMIDA ? 'Consumida' : ( $row->estado == VentaProducto::ESTADO_VENCIDA ? 'Vencida' : 'Asignada' ) );
-                })
-
-                ->rawColumns(['estado'])
-
                 ->addColumn('fecha_envio', function($row){
 
                     return $row->fecha_envio ? strtoupper(date('d/M/Y H:i:s', strtotime($row->fecha_envio))) : '';
                 })
 
                 ->rawColumns(['fecha_envio'])
+
+                ->addColumn('fecha_resync', function($row){
+
+                    return $row->resync ? strtoupper(date('d/M/Y', strtotime($row->created_at))) : '';
+                })
+
+                ->rawColumns(['fecha_resync'])
 
                 ->make(true);
     }

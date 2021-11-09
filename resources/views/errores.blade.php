@@ -15,11 +15,11 @@
                     <table id="errores_table" class="table table-bordered data-table">
                         <thead>
                             <tr>
-                                <th>Venta ID</th>
+                                <th>ID TN</th>
                                 <th>Error</th>
-                                <th>Fecha</th>
-                                <th>Estado</th>
-                                <th>Fecha Envío</th>
+                                <th>Fecha Pedido</th>
+                                <th>F. Envío</th>
+                                <th>F. Resync</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,10 +55,9 @@
 
                     {data: 'fecha', name: 'fecha'},
 
-                    {data: 'estado', name: 'estado'},
+                    {data: 'fecha_envio', name: 'fecha_envio'},
 
-                    {data: 'fecha_envio', name: 'fecha_envio'}
-
+                    {data: 'fecha_resync', name: 'fecha_resync'}
                 ],
 
                 language: {

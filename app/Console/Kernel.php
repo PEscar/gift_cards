@@ -25,9 +25,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        \Log::info(Venta::envioPendiente()->count() . ' GC pendientes de envio');
-        Venta::envioPendiente()->each(function ($item, $key) {
+        Venta::importOrderFromTiendaNubeByDate();
+
+        $ventas = Venta::envioPendiente()->notTryingSend()->get();
+        \Log::info($ventas->count() . ' GC pendientes de envio');
+        $ventas->each(function ($item, $key) {
             $item->entregarGiftcards(true);
+            \Log::info('Venta con ID/TN: ' . $item->id . '/' . $item->external_id . ' resend');
             $item->save(); // Guarda en BD reenvio = true
         });
     }
