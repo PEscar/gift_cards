@@ -38,7 +38,7 @@ class ErrorController extends Controller
 
                 ->addColumn('fecha', function($row){
 
-                    return strtoupper(date('d/M/Y H:i:s', strtotime($row->fecha_error)));
+                    return strtoupper(date('d/M/Y H:i:s', strtotime($row->date)));
                 })
 
                 ->rawColumns(['fecha'])
