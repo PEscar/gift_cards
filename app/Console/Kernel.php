@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Venta;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        Venta::importOrderFromTiendaNubeByDate();
+
+        $ventas = Venta::envioPendiente()->notTryingSend()->get();
+        \Log::info($ventas->count() . ' GC pendientes de envio');
+        $ventas->each(function ($item, $key) {
+            $item->entregarGiftcards(true);
+            \Log::info('Venta con ID/TN: ' . $item->id . '/' . $item->external_id . ' resend');
+            $item->save(); // Guarda en BD reenvio = true
+        });
     }
 
     /**

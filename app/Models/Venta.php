@@ -29,7 +29,9 @@ class Venta extends Model
     const TIPO_NOTIFICACION_PDF_ATTACH = 1;
     const TIPO_NOTIFICACION_ZIP_LINK = 2;
 
-    protected $fillable = ['update'];
+    const FIRST_RESYNC = '2021-11-03 00:00:00';
+
+    protected $fillable = ['update', 'fecha_envio'];
 
     /**
      * Route notifications for the mail channel.
@@ -100,10 +102,61 @@ class Venta extends Model
         return $query->where('pagada', 1);
     }
 
+    /**
+     * Ventas que ha fallado el envio
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeEnvioFallido($query)
     {
         return $query->whereNotNull('error_envio')
             ->whereNotNull('fecha_error');
+    }
+
+    /**
+     * Ventas pagas que no se han enviado
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnvioPendiente($query)
+    {
+        return $query->where('pagada', 1)
+            ->whereNull('fecha_envio');
+    }
+
+    /**
+     * Ventas pagas que son reenvio. Puede que se hayan enviado o no (envio fallado)
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeReenvio($query)
+    {
+        return $query->where('reenvio', 1);
+    }
+
+    /**
+     * Ventas enviadas
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnviadas($query)
+    {
+        return $query->whereNotNull('fecha_envio');
+    }
+
+    /**
+     * Ventas enviadas
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNotTryingSend($query)
+    {
+        return $query->where('trying_send', 0);
     }
 
     // END SCOPES
@@ -125,7 +178,7 @@ class Venta extends Model
         return $tiene;
     }
 
-    public function entregarGiftcards()
+    public function entregarGiftcards($reenvio = false)
     {
         if ( $this->tipo_notificacion == self::TIPO_NOTIFICACION_PDF_ATTACH )
         {
@@ -136,6 +189,9 @@ class Venta extends Model
                 new SendGiftCardZipMailNotification($this)
             ])->dispatch($this);
         }
+
+        if ($reenvio)
+            $this->reenvio = true;
     }
 
     public function generatePdfs()
@@ -167,7 +223,7 @@ class Venta extends Model
     // Método que importa una orden desde tienda nube, a partir de su ID.
     // Si la venta contiene giftcards, les genera un codigo y fecha de vencimient oa cada una. el tiemp ode validez es configurable
     // desde .env
-    public static function importOrderFromTiendaNubeById($order_id)
+    public static function importOrderFromTiendaNubeById($order_id, $resync = false)
     {
         $api = new \TiendaNube\API(1222005, env('TIENDA_NUBE_ACCESS_TOKEN', null), 'La Parolaccia (comercial@fscarg.com)');
         $order = $api->get("orders/" . $order_id);
@@ -180,6 +236,9 @@ class Venta extends Model
         $venta->client_email = $order->body->customer->email;
         $venta->comentario = $order->body->note;
         $venta->fecha_pago = $venta->pagada ? date('Y-m-d H:i:s', strtotime($order->body->paid_at)) : null;
+        $venta->resync = $resync;
+        $venta->reenvio = $resync;
+        $venta->error_envio = 'Pedido Resincronizado';
         $venta->save();
         $venta->refresh();
 
@@ -222,5 +281,34 @@ class Venta extends Model
         }
 
         return $venta;
+    }
+
+    // Método que imrpota ordenes de tiendanube que por algún motivo no llegaron las notificaciones
+    // Consulta pedidos pagos a partir de una determinada fecha. Luego se fija que no estén ya registrados por external_id, y si no lo están, los guarda y luego serán enviadas sus correspondientes giftcads
+    public static function importOrderFromTiendaNubeByDate()
+    {
+        $api = new \TiendaNube\API(1222005, env('TIENDA_NUBE_ACCESS_TOKEN', null), 'La Parolaccia (comercial@fscarg.com)');
+
+        // Obtenemos la última orden resincronizada, que es hasta donde estamos seguros que no nos falta ninguna
+        $date_from = self::where('resync', 1)->max('date') ?: self::FIRST_RESYNC;
+
+        $params = ['created_at_min' => $date_from, 'fields' => 'id,created_at', 'payment_status' => 'paid', 'per_page' => 200];
+
+        $orders = $api->get('orders', $params);
+
+        \Log::info('Resincronizando pedidos desde: ' . $date_from);
+
+        foreach ($orders->body as $key => $venta) {
+
+            \Log::info('Venta: ' . $venta->id);
+
+            if ( !Venta::where('external_id', '=', $venta->id)->exists() )
+            {
+                \Log::info('Venta con ID TN: ' . $venta->id . ' resincronizada');
+                Venta::importOrderFromTiendaNubeById($venta->id, true);
+            }
+        }
+
+        return true;
     }
 }

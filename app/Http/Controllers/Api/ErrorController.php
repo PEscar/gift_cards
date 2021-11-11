@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Venta;
+use App\Models\VentaProducto;
 use DataTables;
 use Illuminate\Http\Request;
 use Response;
@@ -17,13 +18,13 @@ class ErrorController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Venta::envioFallido()->get();
+        $data = Venta::reenvio()->get();
 
         return Datatables::of($data)
 
                 ->addColumn('id', function($row){
 
-                    return $row->id;
+                    return $row->external_id;
                 })
 
                 ->rawColumns(['id'])
@@ -42,14 +43,19 @@ class ErrorController extends Controller
 
                 ->rawColumns(['fecha'])
 
-                ->addColumn('action', function($row){
+                ->addColumn('fecha_envio', function($row){
 
-                    $btn = '<a href="' . route('errores.retry', ['id' => $row->id]) . '" class="btn btn-danger">Reintentar</a>' ;
-
-                    return $btn;
+                    return $row->fecha_envio ? strtoupper(date('d/M/Y H:i:s', strtotime($row->fecha_envio))) : '';
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['fecha_envio'])
+
+                ->addColumn('fecha_resync', function($row){
+
+                    return $row->resync ? strtoupper(date('d/M/Y', strtotime($row->created_at))) : '';
+                })
+
+                ->rawColumns(['fecha_resync'])
 
                 ->make(true);
     }

@@ -29,6 +29,8 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
      */
     public function __construct(Venta $venta)
     {
+        $venta->trying_send = true;
+        $venta->save();
         $this->venta = $venta;
     }
 
@@ -80,6 +82,7 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
         \Log::info('failed GiftCardMailNotification: ' . $this->venta->id);
         $this->venta->fecha_error = date('Y-m-d H:i:s');
         $this->venta->error_envio = $e->getMessage();
+        $this->venta->trying_send = false;
         $this->venta->save();
         // User::find(1)->notify(new FailedGiftCardMailNotification($this->venta, $e));
     }
