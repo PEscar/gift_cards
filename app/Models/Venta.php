@@ -291,23 +291,30 @@ class Venta extends Model
 
         // Obtenemos la última orden resincronizada, que es hasta donde estamos seguros que no nos falta ninguna
         $date_from = self::where('resync', 1)->max('date') ?: self::FIRST_RESYNC;
+        $page = 1;
 
-        $params = ['created_at_min' => $date_from, 'fields' => 'id,created_at', 'payment_status' => 'paid', 'per_page' => 200];
+        do
+        {
+            $params = ['created_at_min' => $date_from, 'fields' => 'id,created_at', 'payment_status' => 'paid', 'page' => $page];
 
-        $orders = $api->get('orders', $params);
+            $orders = $api->get('orders', $params);
 
-        \Log::info('Resincronizando pedidos desde: ' . $date_from);
+            \Log::info('Resincronizando pedidos desde: ' . $date_from);
 
-        foreach ($orders->body as $key => $venta) {
+            foreach ($orders->body as $key => $venta) {
 
-            \Log::info('Venta: ' . $venta->id);
+                \Log::info('Venta: ' . $venta->id);
 
-            if ( !Venta::where('external_id', '=', $venta->id)->exists() )
-            {
-                \Log::info('Venta con ID TN: ' . $venta->id . ' resincronizada');
-                Venta::importOrderFromTiendaNubeById($venta->id, true);
+                if ( !Venta::where('external_id', '=', $venta->id)->exists() )
+                {
+                    \Log::info('Venta con ID TN: ' . $venta->id . ' resincronizada');
+                    Venta::importOrderFromTiendaNubeById($venta->id, true);
+                }
             }
-        }
+
+            $page++;
+
+        } while (true);
 
         return true;
     }

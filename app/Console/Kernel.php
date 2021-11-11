@@ -25,8 +25,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        Venta::importOrderFromTiendaNubeByDate();
-
         $ventas = Venta::envioPendiente()->notTryingSend()->get();
         \Log::info($ventas->count() . ' GC pendientes de envio');
         $ventas->each(function ($item, $key) {
@@ -34,6 +32,10 @@ class Kernel extends ConsoleKernel
             \Log::info('Venta con ID/TN: ' . $item->id . '/' . $item->external_id . ' resend');
             $item->save(); // Guarda en BD reenvio = true
         });
+
+        // Lo pongo después porque cuando la pagina esta vacía retorna 404 y sale por la excepción.
+        // Las ventas importadas de esta éjecución serán enviadas la próx.
+        Venta::importOrderFromTiendaNubeByDate();
     }
 
     /**
