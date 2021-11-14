@@ -123,7 +123,8 @@ class Venta extends Model
     public function scopeEnvioPendiente($query)
     {
         return $query->where('pagada', 1)
-            ->whereNull('fecha_envio');
+            ->whereNull('fecha_envio')
+            ->has('giftcards');
     }
 
     /**
