@@ -16,7 +16,7 @@ class GiftCardController extends Controller
 {
     public function indexMinoristas(Request $request)
     {
-        $data = VentaProducto::giftCards()->pagas()->minoristas()->get();
+        $data = VentaProducto::giftCards()->pagas()->minoristas();
 
         return Datatables::of($data)
 
@@ -88,7 +88,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('usuario_asignacion', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? $row->asignadaPor->name : null;
+                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? ( $row->asignadaPor ? $row->asignadaPor->name : 'Usuario no disponible') : null;
                 })
 
                 ->rawColumns(['usuario_asignacion'])
@@ -112,7 +112,7 @@ class GiftCardController extends Controller
 
     public function indexMayoristas(Request $request)
     {
-        $data = VentaProducto::giftCards()->mayoristas()->get();
+        $data = VentaProducto::giftCards()->mayoristas();
 
         return Datatables::of($data)
 
@@ -139,7 +139,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('empresa', function($row){
 
-                    return $row->venta->empresa->nombre;
+                    return $row->venta->empresa ? $row->venta->empresa->nombre : 'Empresa no disponible';
                 })
 
                 ->rawColumns(['empresa'])
@@ -184,7 +184,7 @@ class GiftCardController extends Controller
 
                 ->addColumn('usuario_asignacion', function($row){
 
-                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? $row->asignadaPor->name : null;
+                    return $row->estado == VentaProducto::ESTADO_ASIGNADA ? ( $row->asignadaPor ? $row->asignadaPor->name : 'Usuario no disponible') : null;
                 })
 
                 ->rawColumns(['usuario_asignacion'])

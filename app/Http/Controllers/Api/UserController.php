@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::all();
+        $data = User::query();
 
         return Datatables::of($data)
 

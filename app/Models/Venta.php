@@ -122,8 +122,9 @@ class Venta extends Model
      */
     public function scopeEnvioPendiente($query)
     {
-        return $query->where('pagada', 1)
+        return $query->whereRaw('( ( source_id = 0 AND pagada = 1 ) OR ( source_id in (1, 2, 3) ) )')
             ->whereNull('fecha_envio')
+            ->where('date', '>=', '2023-03-01 00:00:00')
             ->has('giftcards');
     }
 

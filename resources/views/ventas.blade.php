@@ -156,7 +156,7 @@
 
                 processing: true,
 
-                serverSide: false,
+                serverSide: true,
 
                 ajax: "{{ route('api.ventas.index') }}?api_token={{ auth()->user()->api_token }}",
 

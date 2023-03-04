@@ -18,7 +18,7 @@ class ErrorController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Venta::reenvio()->get();
+        $data = Venta::reenvio();
 
         return Datatables::of($data)
 

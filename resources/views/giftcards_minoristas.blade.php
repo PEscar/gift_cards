@@ -74,7 +74,7 @@
 
                 processing: true,
 
-                serverSide: false,
+                serverSide: true,
 
                 ajax: "{{ route('api.giftcards.minoristas.index') }}?api_token={{ auth()->user()->api_token }}",
 

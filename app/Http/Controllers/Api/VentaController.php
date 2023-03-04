@@ -159,7 +159,7 @@ class VentaController extends Controller
 
     public function index(Request $request)
     {
-        $data = Venta::mayoristas()->get();
+        $data = Venta::mayoristas();
 
         return Datatables::of($data)
 
