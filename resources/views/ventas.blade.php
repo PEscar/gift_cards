@@ -18,8 +18,8 @@
                     <table id="ventas_table" class="table table-bordered data-table">
                         <thead>
                             <tr>
-                                <th>codigos</th>
                                 <th>ID</th>
+                                <th>Firma</th>
                                 <th>Producto</th>
                                 <th>Concepto</th>
                                 <th>Venta</th>
@@ -29,6 +29,7 @@
                                 <th>Factura</th>
                                 <th>Comentario</th>
                                 <th>Acciones</th>
+                                <th>Codigos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,7 +125,7 @@
                         let data = cellData ? moment(cellData).format('DD/MM/YYYY') : '';
                         $(td).html(data);
                     }
-                }, { targets: [0], visible: false}],
+                }],
 
                 dom: 'Bfrtip',
 
@@ -162,9 +163,9 @@
 
                 columns: [
 
-                    {data: 'codigos', name: 'codigos'},
-
                     {data: 'id', name: 'id'},
+
+                    {data: 'firma', name: 'firma'},
 
                     {data: 'producto', name: 'producto'},
 
@@ -183,6 +184,8 @@
                     {data: 'comentario', name: 'comentario', searchable: false},
 
                     {data: 'action', name: 'action'},
+
+                    {data: 'codigos', name: 'codigos'},
                 ],
 
                 language: {

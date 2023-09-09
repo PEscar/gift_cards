@@ -136,6 +136,20 @@
                             </div>
 
                             <div class="form-group row">
+                                <div class="col-2">
+                                    <label for="notificacion" class="col-form-label">Firma</label>
+                                </div>
+
+                                <div class="col-9">
+                                    <select class="form-control" v-bind:class="{ 'is-valid': firma, 'is-invalid': !firma }" v-model="firma" id="firma">
+                                        <option selected value="null" disabled>Seleccionar Firma</option>
+                                        <option value="1">Parolaccia</option>
+                                        <option value="2">Bistecca</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <div class="col text-center">
                                     <input type="submit" name="Crear" value="Crear" class="btn btn-success" v-bind:class="{ disabled: !validateNuevaVentaForm }">
                                 </div>
@@ -165,6 +179,7 @@
             concepto: null,
             notificacion: null,
             precio: null,
+            firma: null
         }),
         methods: {
             crearVentaMayorista: function() {
@@ -183,7 +198,8 @@
                         concepto: this.concepto,
                         comentario: this.comentario,
                         tipo_notificacion: this.notificacion,
-                        precio: this.precio
+                        precio: this.precio,
+                        firma: this.firma
                     }
 
                     this.resetFormNuevaVenta()
@@ -216,6 +232,7 @@
                 this.concepto = null
                 this.notificacion = null
                 this.precio = null
+                this.firma = null
             },
 
             resetFechaPago: function() {
@@ -252,7 +269,7 @@
             },
 
             validateNuevaVentaForm: function() {
-                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.concepto && this.notificacion && this.precio
+                return this.empresa && this.validateSku && this.validateCantidad && this.validez && ( !this.pagada || ( this.pagada && this.fecha_pago ) ) && this.concepto && this.notificacion && this.precio && this.firma
             },
 
             empresaEmail: function() {

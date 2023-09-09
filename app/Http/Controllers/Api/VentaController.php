@@ -36,6 +36,7 @@ class VentaController extends Controller
         $venta->comentario = $request->comentario;
         $venta->nro_factura = $request->nro_factura;
         $venta->tipo_notificacion = $request->tipo_notificacion;
+        $venta->firma = $request->firma;
 
         $ventaProductos = factory(VentaProducto::class, (int) $request->cantidad)->make(['producto_id' => $producto->id, 'cantidad' => 1, 'fecha_vencimiento' => \Illuminate\Support\Carbon::now()->addDays($request->validez)->toDate(), 'precio' => $request->precio]);
 
@@ -48,9 +49,7 @@ class VentaController extends Controller
         }
 
         if ( $venta->tieneGiftcards() )
-        {
             $venta->entregarGiftcards();
-        }
 
         return Response::json(null, 201);
     }
@@ -159,7 +158,7 @@ class VentaController extends Controller
 
     public function index(Request $request)
     {
-        $data = Venta::mayoristas();
+        $data = Venta::mayoristas()->orderByDesc('id');
 
         return Datatables::of($data)
 
@@ -169,6 +168,13 @@ class VentaController extends Controller
                 })
 
                 ->rawColumns(['id'])
+
+                ->addColumn('firma', function($row){
+
+                    return $row->getFirmaLabel();
+                })
+
+                ->rawColumns(['firma'])
 
                 ->addColumn('producto', function($row){
 

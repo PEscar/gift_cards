@@ -1,0 +1,42 @@
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+body {
+  background: url("http://laparolaccia-online.com/gift_cards_test/public/img/giftcard_bistecca_template.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  font-size: 1.7rem;
+  font-weight: bold;
+  width: 100%;
+  position: absolute;
+}
+
+.caption-producto {
+  top: 43%;
+  left: 27%;
+  font-size: 1.4rem;
+}
+
+.caption-vencimiento {
+  top: 56.2%;
+  left: 26.5%;
+}
+
+.caption-codigo {
+  top: 56.2%;
+  left: 54.5%;
+}
+
+.caption-qr {
+  top: 63.5%;
+  left: 36%;
+}

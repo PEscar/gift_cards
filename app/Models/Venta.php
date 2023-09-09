@@ -31,6 +31,9 @@ class Venta extends Model
 
     const FIRST_RESYNC = '2021-11-03 00:00:00';
 
+    const FIRMA_PAROLACCIA = 1;
+    const FIRMA_BISTECCA = 2;
+
     protected $fillable = ['update', 'fecha_envio'];
 
     /**
@@ -214,13 +217,36 @@ class Venta extends Model
             {
                 $qr_code = new \Illuminate\Support\HtmlString($writer->writeString(route('giftcards.show', ['codigo' => $ventaProduct->codigo_gift_card])));
 
-                $pdf = PDF::loadView('emails.giftcard_pdf', ['qr_code' => $qr_code, 'notifiable' => $this, 'item' => $ventaProduct]);
+                $css_file = $this->firma == self::FIRMA_PAROLACCIA ?  'css/mail.css' : 'css/mail_bistecca.css';
+
+                $pdf = PDF::loadView('emails.giftcard_pdf', ['qr_code' => $qr_code, 'notifiable' => $this, 'item' => $ventaProduct, 'css_file' => $css_file]);
                 $pdfs[] = ['pdf' => $pdf, 'pdf_filename' => $ventaProduct->codigo_gift_card . '.pdf'];
             }
         }
 
         return $pdfs;
     }
+
+    public function getFirmaLabel() {
+
+        switch ($this->firma) {
+            case 1:
+                return 'Parolaccia';
+                break;
+
+            case 2:
+                return 'Bistecca';
+                break;
+
+            default:
+                return 'Firma Inválida: ' . $this->firma;
+                break;
+        }
+    }
+
+    // END METHODS
+
+    // STATIC METHODS
 
     // Método que importa una orden desde tienda nube, a partir de su ID.
     // Si la venta contiene giftcards, les genera un codigo y fecha de vencimient oa cada una. el tiemp ode validez es configurable
@@ -320,4 +346,6 @@ class Venta extends Model
 
         return true;
     }
+
+    // END STATIC METHODS
 }

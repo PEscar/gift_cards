@@ -13,6 +13,7 @@ npm-debug.log
 yarn-error.log
 /public/css/app.css
 /public/css/mail.css
+/public/css/mail_bistecca.css
 /public/js/app.js
 /js/app.js.LICENSE.txt
 /public/mix-manifest.json
