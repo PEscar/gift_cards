@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('mail::message', ['salutation' => $salutation, 'logo_url' => $__data['logo_url'], 'firma' => $__data['firma']])
 {{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}
