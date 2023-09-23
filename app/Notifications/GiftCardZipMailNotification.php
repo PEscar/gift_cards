@@ -65,7 +65,7 @@ class GiftCardZipMailNotification extends Notification implements ShouldQueue
 
         $mail->salutation($salutation);
 
-        $mail->markdown('notifications::email', ['firma' => $this->venta->firma, 'logo_url' => $this->venta->firma == 1 ? asset('favicon.ico') : 'http://laparolaccia-online.com/gift_cards_test/public/img/logo_bistecca.png']);
+        $mail->markdown('notifications::email', ['firma' => $this->venta->firma, 'logo_url' => $this->venta->firma == 1 ? asset('favicon.ico') : 'http://laparolaccia-online.com/gift_cards_test/public/img/logo_bistecca.jpeg']);
 
         return $mail;
     }
