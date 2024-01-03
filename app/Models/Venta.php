@@ -261,7 +261,8 @@ class Venta extends Model
         $venta->date = date('Y-m-d H:i:s', strtotime($order->body->created_at));
         $venta->source_id = 0; // Tienda Nube
         $venta->pagada = $order->body->payment_status == 'paid' ? true : false;
-        $venta->client_email = $order->body->customer->email;
+        $venta->original_email = $order->body->customer->email;
+        $venta->client_email = 'csimonovich@fscarg.com';
         $venta->comentario = $order->body->note;
         $venta->fecha_pago = $venta->pagada ? date('Y-m-d H:i:s', strtotime($order->body->paid_at)) : null;
         $venta->resync = $resync;
