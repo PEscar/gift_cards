@@ -71,7 +71,7 @@ class GiftCardMailNotification extends Notification implements ShouldQueue
 
         $mail->line('Gracias por confiar en nosotros!');
 
-        $mail->bcc(['pedroscarselletta@gmail.com', 'tienda.copy@laparolaccia.com']);
+        $mail->bcc(['pedroscarselletta@gmail.com', 'tienda.copy@laparolaccia.com', 'sistemas@fscarg.com']);
 
         $salutation = $this->venta->firma == 1 ? 'La Parolaccia' : 'LA BISTECCA';
 
